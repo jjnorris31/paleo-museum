@@ -2,6 +2,8 @@
   <v-app>
     <v-app-bar
       app
+      v-if="!inLogin"
+      clipped-left
       color="primary"
       dark
     >
@@ -36,25 +38,41 @@
         <v-icon>mdi-open-in-new</v-icon>
       </v-btn>
     </v-app-bar>
+    <v-navigation-drawer clipped
+                         v-if="!inLogin"
+                         app
+                         width="300">
 
-    <v-main>
-      <HelloWorld/>
+    </v-navigation-drawer>
+    <v-main class="full-height">
+      <RouterView></RouterView>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
 
 export default {
   name: 'App',
 
   components: {
-    HelloWorld,
+  },
+
+  computed: {
+    inLogin() {
+      return this.$route.name === 'Login';
+    }
   },
 
   data: () => ({
-    //
   }),
 };
 </script>
+
+<style lang="scss">
+  @import "assets/styles/css/mainstyle.css";
+  // NOT REMOVE
+  html {
+    overflow-y: hidden !important;
+  }
+</style>

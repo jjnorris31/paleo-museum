@@ -1,0 +1,30 @@
+.selectable-text {
+}
+
+.full-height {
+    height: 100%;
+}
+
+
+.selectable-text:hover {
+    text-decoration: underline;
+    color: #2196F3;
+}
+
+.input-label {
+    font-size: .925rem;
+    color: #828282;
+    font-weight: 300;
+    margin-left: 8px;
+}
+
+h1 {
+    font-weight: 500;
+    line-height: 2.2rem;
+}
+
+h4 {
+    font-weight: 300;
+    color: #757575;
+}
+
