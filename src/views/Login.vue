@@ -39,9 +39,9 @@
                   </v-form>
                   <div class="d-flex justify-space-between no-gutters mb-2">
                     <v-btn depressed outlined color="blue" height="40px">Acceso público</v-btn>
-                    <v-btn depressed color="blue" dark height="40px" @click="recoverPass = true">Iniciar sesión</v-btn>
+                    <v-btn depressed color="blue" dark height="40px" @click="goToDashboard()">Iniciar sesión</v-btn>
                   </div>
-                  <p class="text-center caption selectable-text ">¿Olvidaste tu contraseña?</p>
+                  <p class="text-center caption selectable-text" @click="recoverPass = true">¿Olvidaste tu contraseña?</p>
                 </v-col>
               </v-row>
               <!-- end normal login -->
@@ -101,6 +101,9 @@ export default {
     resetRecover() {
       this.recoverPass = false;
       this.stepRecover = 1;
+    },
+    goToDashboard() {
+      this.$router.push({name: 'Dashboard'});
     }
   }
 }

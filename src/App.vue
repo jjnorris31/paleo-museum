@@ -8,40 +8,53 @@
       dark
     >
       <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
+        <v-img src="@/assets/icons/mamut-logo.png" width="50px" contain class="mr-4"></v-img>
+        <h1>Mi museo</h1>
       </div>
 
       <v-spacer></v-spacer>
 
       <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
         target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
+        icon>
+        <v-icon>mdi-dots-vertical</v-icon>
       </v-btn>
     </v-app-bar>
     <v-navigation-drawer clipped
                          v-if="!inLogin"
                          app
                          width="300">
+      <v-row no-gutters>
+        <v-col cols="12" class="mb-4">
+          <v-img src="@/assets/images/profile.jpg" height="150px" cover gradient="to top right, rgba(100,115,201,.33), rgba(25,32,72,.7)">
+            <div class="full-height d-flex justify-center flex-wrap no-gutters mt-4">
+              <div class="col-10">
+                <h1 style="color: white">Martha</h1>
+                <h3 style="color: white">Administrador</h3>
+              </div>
+            </div>
+          </v-img>
+        </v-col>
+        <v-col cols="12">
+          <v-list flat>
+            <v-list-item-group v-model="item">
+              <v-list-item
+                  active-class="blue"
+                  color="white"
+                  v-for="(item, i) in items"
+                  :key="i"
+              >
+                <v-list-item-icon>
+                  <v-icon v-text="item.icon"></v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title v-text="item.text"></v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
+        </v-col>
+      </v-row>
 
     </v-navigation-drawer>
     <v-main class="full-height">
@@ -65,6 +78,12 @@ export default {
   },
 
   data: () => ({
+    item: 1,
+    items: [
+      { text: 'Dashboard', icon: 'mdi-home' },
+      { text: 'Reportes', icon: 'mdi-table' },
+      { text: 'Usuarios', icon: 'mdi-account-multiple' },
+    ],
   }),
 };
 </script>
