@@ -14,11 +14,22 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn
-        target="_blank"
-        icon>
-        <v-icon>mdi-dots-vertical</v-icon>
-      </v-btn>
+      <v-menu offset-y>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+              icon
+              v-bind="attrs"
+              v-on="on"
+          >
+            <v-icon>mdi-dots-vertical</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item @click="goToLogin()">
+            <v-list-item-title>Salir</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </v-app-bar>
     <v-navigation-drawer clipped
                          v-if="!inLogin"
@@ -85,6 +96,12 @@ export default {
       { text: 'Usuarios', icon: 'mdi-account-multiple' },
     ],
   }),
+
+  methods: {
+    goToLogin(){
+      this.$router.push({name: 'Login'})
+    }
+  }
 };
 </script>
 

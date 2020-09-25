@@ -91,9 +91,13 @@
                     :key="item">
                   <v-row no-gutters style="height: 300px">
                     <v-col cols="12"
-                           style="background-color: lightgray"
-                           class="d-flex align-center justify-center grey--text text--darken-3 text-h4">
-                      {{item}}
+                           style="background-color: lightgray">
+                      <v-data-table
+                          height="300px"
+                          :headers="headers"
+                          :items="desserts"
+                          :items-per-page="5"
+                      ></v-data-table>
                     </v-col>
                   </v-row>
                 </v-tab-item>
@@ -116,6 +120,44 @@ export default {
     tab: null,
     items: [
       'Pieza', 'Especie', 'Persona', 'Almacenamiento',
+    ],
+    headers: [
+      {
+        text: 'No. de catálogo',
+        align: 'start',
+        sortable: false,
+        value: 'name',
+      },
+      { text: 'Género', value: 'calories' },
+      { text: 'Especie', value: 'fat' },
+      { text: 'Persona', value: 'carbs' },
+    ],
+    desserts: [
+      {
+        name: 'PXX-10211',
+        calories: 'Mammalia',
+        fat: 'Dino',
+        carbs: 'Martha',
+      },
+      {
+        name: 'PXX-1011',
+        calories: 'Mammalia',
+        fat: 'Dino',
+        carbs: 'Estudiante 2',
+      },
+      {
+        name: 'PXX-10261',
+        calories: 'Mammalia',
+        fat: 'Dino',
+        carbs: 'Ramiro',
+      },
+      {
+        name: 'PXX-1711',
+        calories: 'Mammalia',
+        fat: 'Dino',
+        carbs: 'Bernardo',
+      },
+
     ],
     dialog: false,
   })
