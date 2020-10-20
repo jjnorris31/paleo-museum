@@ -2,7 +2,7 @@
   <v-app>
     <v-app-bar
       app
-      v-if="!inLogin"
+      v-if="false"
       clipped-left
       color="primary"
       dark
@@ -32,7 +32,7 @@
       </v-menu>
     </v-app-bar>
     <v-navigation-drawer clipped
-                         v-if="!inLogin"
+                         v-if="false"
                          app
                          width="300">
       <v-row no-gutters>

@@ -66,7 +66,7 @@
             </v-col>
             <!-- end of tabs -->
             <v-col cols="12" class="d-flex justify-end align-end no-gutters mb-2">
-              <v-btn class="lighten-2 green mr-4" dark depressed height="40px" @click="dialog = true">Añadir especie</v-btn>
+              <v-btn class="mr-4 primary" dark depressed height="40px" @click="dialog = true">Añadir especie</v-btn>
               <div style="width: 200px" class="mr-4">
                 <div class="input-label ">Selecciona</div>
                 <v-select outlined
