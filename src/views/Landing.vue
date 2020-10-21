@@ -1,70 +1,65 @@
 <template>
-  <v-container class="fill-height">
-    <div class="main-container">
-      <nav class="d-flex align-center justify-end px-4">
-        <div class="nav-item">
-          Búsqueda avanzada
-        </div>
-        <v-btn color="primary"
-               outlined class="mr-2">LOGIN</v-btn>
-      </nav>
-      <main class="flex-grow-1">
-        <v-row no-gutters class="fill-height">
-          <v-col cols="7"
-                 class="d-flex align-center justify-center no-gutters">
-            <div class="col-8 info--text">
-              <!-- begin logo with text -->
-              <v-row no-gutters justify="center">
-                <v-col cols="4">
-                  <v-img src="../assets/images/mamut-logo.svg" height="100px" contain></v-img>
-                </v-col>
-                <v-col cols="5">
-                  <h1 class="primary--text">Museo de paleontología</h1>
-                  <div>Fernando A. Solórzano Barreto</div>
-                </v-col>
-              </v-row>
-              <!-- ends logo with text -->
-              <v-row no-gutters class="mt-8">
-                <v-col cols="12">
-                  <v-img src="../assets/images/fossils.svg" height="350px" contain>
-                  </v-img>
-                </v-col>
-              </v-row>
-            </div>
-          </v-col>
-          <v-col cols="5" class="d-flex no-gutters align-center justify-center">
-            <v-row no-gutters
-                   style="max-width: 400px"
-                   align-content="center">
-              <div>
-                <h2>Explora</h2>
-              </div>
-              <v-col cols="12"
-                     class="d-flex flex-wrap">
-                <div class="item-collection warning mr-2 mb-2">
-                  Especie
-                </div>
+  <div class="main-container white">
+    <main class="flex-grow-1">
+      <v-row no-gutters
+             style="position: relative;"
+             class="fill-height">
 
-                <div class="item-collection primary ml-2 mb-2">
-                  Dino
-                </div>
+        <v-col cols="7"
+               style="position: absolute; left: 0; top: 0"
+               class="mt-8 gray">
+          <v-row no-gutters>
+            <v-col cols="7" offset="1">
+              <v-img src="../assets/images/museum_full_logo.png"
+                     contain
+                     width="320px"
+                     height="200px">
+              </v-img>
+            </v-col>
+          </v-row>
+        </v-col>
 
-                <div class="item-collection info mr-2 my-2">
-                  Otro dino
-                </div>
+        <!-- begin left container -->
+        <v-col cols="7">
+          <v-row no-gutters
+                 align-content="center"
+                 class="fill-height">
+            <v-col cols="9" offset="1">
+              <h1 class="text-h1 font-weight-medium" style="color: #222222">Conoce la nueva forma de visitar el museo</h1>
+            </v-col>
+            <v-col cols="8" offset="1">
+              <p style="color: #5f5f5f"
+                 class="text-h6 font-weight-light">Ahora nuestra colección está disponible para
+                consulta pública, consulta cualquier pieza desde la comodidad de tu hogar</p>
+            </v-col>
+            <v-col cols="8" offset="1">
+              <v-btn height="40px"
+                     color="secondary"
+                     depressed
+                     class="mr-3">Explorar colección</v-btn>
+              <v-btn height="40px"
+                     outlined
+                     style="border-width: 2px"
+                     class="ml-3"
+                     color="#5F5F5F">Iniciar sesión</v-btn>
+            </v-col>
+          </v-row>
+        </v-col>
+        <!-- ends left container -->
 
-                <div class="item-collection  ml-2 my-2" style="background-color: #837B9C">
-                  Dino increíble
-                </div>
-
-
-              </v-col>
-            </v-row>
-          </v-col>
-        </v-row>
-      </main>
-    </div>
-  </v-container>
+        <!-- begin right container-->
+        <v-col cols="5" class="d-flex no-gutters align-center justify-center">
+          <v-row no-gutters
+                 style="height: 500px"
+                 align-content="center">
+            <v-img src="../assets/images/paleon_fossils.svg" height="100%" contain>
+            </v-img>
+          </v-row>
+        </v-col>
+        <!-- ends right container -->
+      </v-row>
+    </main>
+  </div>
 </template>
 
 <script>
@@ -76,7 +71,7 @@ name: "Landing"
 <style scoped>
 
   nav {
-    height: 60px;
+    height: 90px;
   }
   .main-container {
     width: 100%;
@@ -84,7 +79,7 @@ name: "Landing"
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    background-color: #FAF8FB;
+    background-color: #FFFFFF;
   }
 
   .item-collection {

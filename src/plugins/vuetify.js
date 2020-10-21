@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuetify from 'vuetify/lib';
 import es from 'vuetify/es5/locale/es';
-import '@/assets/styles/variables.scss'
+import '@/scss/variables.scss'
 
 Vue.use(Vuetify);
 
@@ -18,13 +18,13 @@ export default new Vuetify({
         },
         themes: {
             light: {
-                primary: '#bb272a',
-                secondary: '#57A7F5',
+                primary: '#262261', // signal blue
+                secondary: '#00A4E1', // aquamarine
                 accent: '#65D9AC',
-                error: '#f44336',
-                info: '#191820',
-                success: '#6d8645',
-                warning: '#eb760d',
+                error: '#FF3D33', // south coral
+                info: '#e4e4e4',
+                success: '#54BF00', // green law
+                warning: '#FFCC17', // egg yolk
                 anchor: '#979797',
             },
             dark: {

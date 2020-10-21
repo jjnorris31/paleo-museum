@@ -1,0 +1,17 @@
+// use this file to override the default style of Vuetify
+// if you don't have any idea of this, check out
+// https://vuetifyjs.com/en/customization/sass-variables/#example-variable-file
+
+$body-font-family: 'Poppins', serif;
+
+$headings: (
+        'h1': (
+                'size': 4rem,
+                'line-height': 1.15em,
+                'font-family': $body-font-family
+        ),
+        'h2': (
+                'size': 2.25rem,
+                'line-height': 1.5em
+        )
+);
