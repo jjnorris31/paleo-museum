@@ -5,6 +5,14 @@
     height: 100%;
 }
 
+.museum-text--grey {
+    color: #222222;
+}
+
+.museum-grey {
+    background: #222222;
+}
+
 
 .selectable-text:hover {
     text-decoration: underline;
@@ -14,8 +22,9 @@
 .input-label {
     font-size: .925rem;
     color: #828282;
-    font-weight: 300;
+    font-weight: 400;
     margin-left: 8px;
+    margin-bottom: 2px;
 }
 
 h1 {

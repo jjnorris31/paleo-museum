@@ -25,7 +25,7 @@
                  align-content="center"
                  class="fill-height">
             <v-col cols="9" offset="1">
-              <h1 class="text-h1 font-weight-medium" style="color: #222222">Conoce la nueva forma de visitar el museo</h1>
+              <h1 class="text-h1 font-weight-medium museum-text--grey">Conoce la nueva forma de visitar el museo</h1>
             </v-col>
             <v-col cols="8" offset="1">
               <p style="color: #5f5f5f"

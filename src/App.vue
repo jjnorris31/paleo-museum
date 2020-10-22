@@ -1,38 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar
-      app
-      v-if="false"
-      clipped-left
-      color="primary"
-      dark
-    >
-      <div class="d-flex align-center">
-        <v-img src="@/assets/icons/mamut-logo.png" width="50px" contain class="mr-4"></v-img>
-        <h1>Mi museo</h1>
-      </div>
-
-      <v-spacer></v-spacer>
-
-      <v-menu offset-y>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-              icon
-              v-bind="attrs"
-              v-on="on"
-          >
-            <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
-        </template>
-        <v-list>
-          <v-list-item @click="goToLogin()">
-            <v-list-item-title>Salir</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-    </v-app-bar>
     <v-navigation-drawer clipped
-                         v-if="false"
                          app
                          width="300">
       <v-row no-gutters>
