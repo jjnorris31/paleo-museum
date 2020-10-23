@@ -4,40 +4,307 @@
            justify="center"
            class="white">
       <!-- begin dialog -->
-      <v-dialog v-model="dialog" width="50%">
-        <v-row no-gutters style="background-color: white" justify="center" class="pt-5">
-          <v-col cols="11">
-            <h1 class="mb-1">Nuevo fósil</h1>
-            <h4 class="mb-4">Introduce la información requerida</h4>
-            <v-form ref="piece-form">
-              <div class="input-label">Número de registro INAH</div>
-              <v-text-field outlined
-                            dense
-                            placeholder="example@gmail.com">
-              </v-text-field>
-              <div class="input-label">Género</div>
-              <v-text-field outlined
-                            dense
-                            placeholder="example@gmail.com">
-              </v-text-field>
-              <div class="input-label">Clase</div>
-              <v-text-field outlined
-                            dense
-                            placeholder="example@gmail.com">
-              </v-text-field>
-              <div class="input-label">Descripción</div>
-              <v-text-field outlined
-                            dense
-                            placeholder="example@gmail.com">
-              </v-text-field>
-              <div class="input-label">Datación</div>
-              <v-text-field outlined
-                            dense
-                            placeholder="example@gmail.com">
-              </v-text-field>
+      <v-dialog v-model="dialog"
+                fullscreen
+                transition="dialog-bottom-transition"
+                hide-overlay
+                class="full-height">
+        <v-row no-gutters
+               style="background-color: white; height: 100%"
+               class="pt-15 pl-15">
+          <v-col cols="6">
+            <h1 class="mb-6 text-h4 font-weight-medium">Nueva pieza</h1>
+            <v-form ref="piece-form"
+                    class="d-flex no-gutters flex-wrap">
+
+              <!-- begin basic information -->
+              <div class="col-12 text-h6">
+                Información básica
+              </div>
+              <div class="d-flex flex-wrap row--dense">
+
+                <!-- begin INAH number -->
+                <div class="col-4">
+                  <div class="input-label">
+                    No. de registro INAH
+                  </div>
+                  <v-text-field outlined
+                                placeholder="XXX-X-0000"
+                                v-model="piece.inahRecNum"
+                                dense>
+                  </v-text-field>
+                </div>
+                <!-- begin INAH number -->
+
+                <!-- begin anatomical element -->
+                <div class="col-4">
+                  <div class="input-label">
+                    Elemento anatómico
+                  </div>
+                  <v-text-field outlined
+                                placeholder="Mandíbula"
+                                v-model="piece.anatoElement"
+                                dense>
+                  </v-text-field>
+                </div>
+                <!-- begin anatomical element -->
+
+                <!-- begin income form -->
+                <div class="col-4">
+                  <div class="input-label">
+                    Forma de ingreso
+                  </div>
+                  <v-text-field outlined
+                                placeholder="Legal"
+                                v-model="piece.incomeForm"
+                                dense>
+                  </v-text-field>
+                </div>
+                <!-- begin income form -->
+
+                <!-- begin status -->
+                <div class="col-4">
+                  <div class="input-label">
+                    Estado
+                  </div>
+                  <v-text-field outlined
+                                placeholder="Buen estado"
+                                v-model="piece.status"
+                                dense>
+                  </v-text-field>
+                </div>
+                <!-- ends status -->
+
+                <!-- begin description -->
+                <div class="col-4">
+                  <div class="input-label">
+                    Descripción
+                  </div>
+                  <v-text-field outlined
+                                placeholder="Pieza muy rara"
+                                v-model="piece.description"
+                                dense>
+                  </v-text-field>
+                </div>
+                <!-- ends description -->
+
+                <!-- begin dating -->
+                <div class="col-4">
+                  <div class="input-label">
+                    Datación
+                  </div>
+                  <v-text-field outlined
+                                placeholder="10.000 B.C."
+                                v-model="piece.dating"
+                                dense>
+                  </v-text-field>
+                </div>
+                <!-- ends dating -->
+
+              </div>
+              <!-- ends basic information -->
+
+              <!-- begin taxonomic -->
+              <div class="col-12 text-h6">
+                Taxonomía
+              </div>
+              <div class="d-flex flex-wrap row--dense">
+
+                <!-- begin specie -->
+                <div class="col-4">
+                  <div class="input-label">
+                    Especie
+                  </div>
+                  <v-text-field outlined
+                                placeholder="C. Hesternus"
+                                v-model="piece.specie"
+                                dense>
+                  </v-text-field>
+                </div>
+                <!-- ends specie -->
+
+                <!-- begin collection -->
+                <div class="col-4">
+                  <div class="input-label">
+                    Colección
+                  </div>
+                  <v-autocomplete outlined
+                                  :items="getCollections"
+                                  item-value="idc"
+                                  placeholder="COLECCIÓN 1"
+                                  item-text="nombre"
+                                  v-model="piece.idCollection"
+                                  dense>
+                  </v-autocomplete>
+                </div>
+                <!-- ends collection -->
+
+                <!-- begin taxonomic notes -->
+                <div class="col-4">
+                  <div class="input-label">
+                    Notas taxónomicas
+                  </div>
+                  <v-text-field outlined
+                                placeholder="Nota increíble"
+                                v-model="piece.taxoStatNote"
+                                dense>
+                  </v-text-field>
+                </div>
+                <!-- ends taxonomic notes -->
+
+                <!-- begin taxonomic notes -->
+                <div class="col-4">
+                  <div class="input-label">
+                    Estado taxonómico
+                  </div>
+                  <v-text-field outlined
+                                placeholder="Estado increíble"
+                                v-model="piece.taxoStat"
+                                dense>
+                  </v-text-field>
+                </div>
+                <!-- ends taxonomic notes -->
+
+                <!-- begin institution -->
+                <div class="col-4">
+                  <div class="input-label">
+                    Institución
+                  </div>
+                  <v-select outlined
+                            :items="getInstitutions"
+                            item-text="nombre"
+                            item-value="idi"
+                            placeholder="INSTITUCIÓN 1"
+                            v-model="piece.idInstitute"
+                            dense>
+                  </v-select>
+                </div>
+                <!-- ends institution -->
+
+                <!-- begin institution -->
+                <div class="col-4">
+                  <div class="input-label">
+                    Localidad
+                  </div>
+                  <v-select outlined
+                            :items="getLocalities"
+                            item-text="nombre"
+                            item-value="idl"
+                            placeholder="LOCALIDAD 1"
+                            v-model="piece.idLocality"
+                            dense>
+                  </v-select>
+                </div>
+                <!-- ends institution -->
+              </div>
+              <!-- ends taxonomic -->
+
+              <!-- begin location -->
+              <div class="col-12 text-h6">
+                Ubicación
+              </div>
+              <div class="d-flex flex-wrap row--dense" style="width: 100%">
+
+                <!-- begin country -->
+                <div class="col-4">
+                  <div class="input-label">
+                    País
+                  </div>
+                  <v-autocomplete outlined
+                                  :items="locations"
+                                  item-value="pais"
+                                  placeholder="MEXICO"
+                                  item-text="pais"
+                                  v-model="countrySltd"
+                                  dense>
+                  </v-autocomplete>
+                </div>
+                <!-- ends country -->
+
+                <!-- begin state -->
+                <div class="col-4">
+                  <div class="input-label">
+                    Entidad federativa
+                  </div>
+                  <v-autocomplete outlined
+                                  :items="states"
+                                  item-value="estado"
+                                  :disabled="states.length === 0"
+                                  placeholder="JALISCO"
+                                  item-text="estado"
+                                  v-model="stateSltd"
+                                  :loading="states.length === 0 && countrySltd !== ''"
+                                  dense>
+                  </v-autocomplete>
+                </div>
+                <!-- ends state -->
+
+                <!-- begin state -->
+                <div class="col-4">
+                  <div class="input-label">
+                    Municipio
+                  </div>
+                  <v-autocomplete outlined
+                                  item-text="municipio"
+                                  :disabled="municipalities.length === 0"
+                                  item-value="municipio"
+                                  :items="municipalities"
+                                  placeholder="ZAPOPAN"
+                                  v-model="piece.idLocation"
+                                  :loading="municipalities.length === 0 && stateSltd !== ''"
+                                  dense>
+                  </v-autocomplete>
+                </div>
+                <!-- ends state -->
+
+                <!-- begin long -->
+                <div class="col-4">
+                  <div class="input-label">
+                    Longitud
+                  </div>
+                  <v-text-field outlined
+                                v-model="piece.lon"
+                                placeholder="123"
+                                dense>
+                  </v-text-field>
+                </div>
+                <!-- ends long -->
+
+                <!-- begin lat -->
+                <div class="col-4">
+                  <div class="input-label">
+                    Latitud
+                  </div>
+                  <v-text-field outlined
+                                v-model="piece.lat"
+                                placeholder="456"
+                                dense>
+                  </v-text-field>
+                </div>
+                <!-- ends lat -->
+
+              </div>
+              <!-- ends location -->
+
+
+
             </v-form>
-            <div class="col-12 d-flex justify-center mb-5">
-              <v-btn class="blue" dark depressed height="40px">Cambiar vista</v-btn>
+            <div class="col-12 d-flex justify-center mb-5 no-gutters">
+              <div class="col-5 d-flex">
+                <v-btn color="secondary"
+                       dark
+                       class="mr-2"
+                       outlined
+                       @click="dialog = false"
+                       style="border-width: 2px"
+                       height="40px">Cancelar</v-btn>
+
+                <v-btn color="secondary"
+                       dark
+                       class="ml-2"
+                       elevation="4"
+                       height="40px">Guardar pieza</v-btn>
+              </div>
             </div>
           </v-col>
         </v-row>
@@ -46,16 +313,10 @@
 
       <!-- begin header -->
       <v-col cols="12"
-             class="upper-container mt-12 px-12">
+             class="mt-12 mb-4 px-12">
         <v-row no-gutters>
           <v-col cols="8">
             <h2 class="text-h4 font-weight-medium">Vista general</h2>
-          </v-col>
-          <v-col cols="4" class="d-flex no-gutters justify-end">
-            <v-btn height="40px"
-                   color="primary"
-                   outlined
-                   style="border-width: 2px">Nueva pieza</v-btn>
           </v-col>
         </v-row>
       </v-col>
@@ -111,18 +372,19 @@
               </v-col>
               <v-col cols="12" class="mb-4">
                 <v-data-table
-                    height="500px"
+                    v-if="!dialog"
+                    height="400px"
                     :headers="tableColumnsSelected"
                     :items="desserts"
                     :items-per-page="10">
                 </v-data-table>
               </v-col>
               <v-col cols="12">
-                <v-btn class=" blue mr-4"
-                       dark
+                <v-btn height="40px"
                        depressed
-                       height="40px">Cambiar vista
-                </v-btn>
+                       elevation="4"
+                       @click="postPiece()"
+                       color="secondary">Agregar pieza</v-btn>
               </v-col>
             </v-row>
           </v-col>
@@ -134,6 +396,8 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
+
 export default {
   name: "Dashboard",
   data: () => ({
@@ -141,6 +405,7 @@ export default {
     items: [
       'Pieza', 'Especie', 'Persona', 'Almacenamiento',
     ],
+    locations: null,
     tableColumns: [
       'No. INAH',
       'Forma ingreso',
@@ -152,6 +417,32 @@ export default {
       'Longitud',
       'Nombre científico'
     ],
+    info: '',
+    piece: {
+      inahRecNum: '',
+      anatoElement: '',
+      incomeForm: '',
+      status: '',
+      description: '',
+      dating: '',
+      state: '',
+      municipality: '',
+      lon: '',
+      lat: '',
+      taxoStat: '',
+      taxoStatNote: '',
+      specie: '',
+      idCollection: '',
+      idInstitute: '',
+      idLocality: '',
+      idLocation: '',
+    }, // a new piece to be saved
+    countries: [],
+    states: [],
+    municipalities: [],
+    countrySltd: '',
+    stateSltd: '',
+    institutions: [],
     tableColumnsSelected: [
       {
         text: 'No. INAH',
@@ -243,10 +534,59 @@ export default {
       },
     ],
     dialog: false,
-  })
+  }),
+  computed: {
+    storeLocations() {
+      return this.$store.getters.locations;
+    },
+    ...mapGetters(
+        ['states',
+          'getCollections',
+          'getInstitutions',
+          'getLocalities']
+    ),
+  },
+  watch: {
+    storeLocations: {
+      handler: function (val) {
+        this.locations = val;
+      },
+      immediate: true,
+    },
+    async countrySltd(val) {
+      console.log(val);
+      let states =  await this.$store.dispatch('retrieveStates', val);
+      this.states = Array.from(new Set(states));
+    },
+    async stateSltd(val) {
+      let payload = {
+        country: this.countrySltd,
+        state: val,
+      }
+      let muns =  await this.$store.dispatch('retrieveMun', payload);
+      this.municipalities = Array.from(new Set(muns));
+    },
+  },
+  async mounted() {
+    await this.$store.dispatch('retrieveLocations');
+    await this.$store.commit('SET_STATES');
+    await this.$store.dispatch('retrieveInst');
+    await this.$store.dispatch('retrieveColl');
+    await this.$store.dispatch('retrieveLocl');
+  },
+  methods: {
+    async postPiece() {
+     let res = await this.$store.dispatch('postPiece', {ida: 6, edificio: "Edificio 6", estante: "Estante 6", numanaquel: "6"});
+     console.log(res);
+    }
+  }
 }
-</script>
+</script>npm
 
 <style scoped>
+
+div + .museum-input:focus {
+  color: darkred;
+}
 
 </style>

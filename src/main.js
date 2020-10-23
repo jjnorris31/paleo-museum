@@ -7,7 +7,7 @@ import vuetify from './plugins/vuetify';
 
 Vue.config.productionTip = false;
 
-function getToken() {
+/*function getToken() {
   let url = "https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/oauth/token"
   let headers = new Headers({
     'Authorization': `Basic ${window.btoa("ugniaGRo-CvpKHPE66RE0A..:sTG4i1EniRNnkOgZytB2ag..")}`,
@@ -35,7 +35,8 @@ function getToken() {
 
 }
 
-getToken();
+getToken();*/
+
 
 new Vue({
   router,
