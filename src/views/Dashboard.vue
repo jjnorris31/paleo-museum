@@ -29,6 +29,8 @@
                     No. de registro INAH
                   </div>
                   <v-text-field outlined
+                                :rules="stdRules"
+                                type="text"
                                 placeholder="XXX-X-0000"
                                 v-model="piece.inahRecNum"
                                 dense>
@@ -43,6 +45,8 @@
                   </div>
                   <v-text-field outlined
                                 placeholder="Mandíbula"
+                                :rules="nameRules"
+                                type="text"
                                 v-model="piece.anatoElement"
                                 dense>
                   </v-text-field>
@@ -55,6 +59,8 @@
                     Forma de ingreso
                   </div>
                   <v-text-field outlined
+                                type="text"
+                                :rules="nameRules"
                                 placeholder="Legal"
                                 v-model="piece.incomeForm"
                                 dense>
@@ -68,6 +74,8 @@
                     Estado
                   </div>
                   <v-text-field outlined
+                                type="text"
+                                :rules="nameRules"
                                 placeholder="Buen estado"
                                 v-model="piece.status"
                                 dense>
@@ -81,6 +89,9 @@
                     Descripción
                   </div>
                   <v-text-field outlined
+                                type="text"
+
+                                :rules="stdRules"
                                 placeholder="Pieza muy rara"
                                 v-model="piece.description"
                                 dense>
@@ -94,6 +105,9 @@
                     Datación
                   </div>
                   <v-text-field outlined
+                                type="text"
+
+                                :rules="stdRules"
                                 placeholder="10.000 B.C."
                                 v-model="piece.dating"
                                 dense>
@@ -115,11 +129,14 @@
                   <div class="input-label">
                     Especie
                   </div>
-                  <v-text-field outlined
-                                placeholder="C. Hesternus"
-                                v-model="piece.specie"
-                                dense>
-                  </v-text-field>
+                  <v-autocomplete outlined
+                                  :items="getSpecies"
+                                  item-value="nombrecientifico"
+                                  placeholder="ESPECIE 1"
+                                  item-text="nombrecientifico"
+                                  v-model="piece.specie"
+                                  dense>
+                  </v-autocomplete>
                 </div>
                 <!-- ends specie -->
 
@@ -145,6 +162,7 @@
                     Notas taxónomicas
                   </div>
                   <v-text-field outlined
+                                :rules="stdRules"
                                 placeholder="Nota increíble"
                                 v-model="piece.taxoStatNote"
                                 dense>
@@ -158,6 +176,7 @@
                     Estado taxonómico
                   </div>
                   <v-text-field outlined
+                                :rules="nameRules"
                                 placeholder="Estado increíble"
                                 v-model="piece.taxoStat"
                                 dense>
@@ -203,8 +222,8 @@
               <div class="col-12 text-h6">
                 Ubicación
               </div>
-              <div class="d-flex flex-wrap row--dense" style="width: 100%">
-
+              <div class="d-flex flex-wrap row--dense"
+                   style="width: 100%">
                 <!-- begin country -->
                 <div class="col-4">
                   <div class="input-label">
@@ -247,7 +266,7 @@
                   <v-autocomplete outlined
                                   item-text="municipio"
                                   :disabled="municipalities.length === 0"
-                                  item-value="municipio"
+                                  item-value="idu"
                                   :items="municipalities"
                                   placeholder="ZAPOPAN"
                                   v-model="piece.idLocation"
@@ -263,7 +282,10 @@
                     Longitud
                   </div>
                   <v-text-field outlined
+                                :rules="decimalRules"
                                 v-model="piece.lon"
+                                validate-on-blur
+                                type="number"
                                 placeholder="123"
                                 dense>
                   </v-text-field>
@@ -276,6 +298,8 @@
                     Latitud
                   </div>
                   <v-text-field outlined
+                                type="number"
+                                :rules="decimalRules"
                                 v-model="piece.lat"
                                 placeholder="456"
                                 dense>
@@ -295,7 +319,7 @@
                        dark
                        class="mr-2"
                        outlined
-                       @click="dialog = false"
+                       @click="getFmtPiece(piece)"
                        style="border-width: 2px"
                        height="40px">Cancelar</v-btn>
 
@@ -383,8 +407,8 @@
                 <v-btn height="40px"
                        depressed
                        elevation="4"
-                       @click="postPiece()"
-                       color="secondary">Agregar pieza</v-btn>
+                       @click="dialog = true"
+                       color="secondary">Añadir pieza</v-btn>
               </v-col>
             </v-row>
           </v-col>
@@ -397,11 +421,15 @@
 
 <script>
 import {mapGetters} from 'vuex'
+import {stdRules, nameRules, decimalRules} from "@/misc/rules";
 
 export default {
   name: "Dashboard",
   data: () => ({
     tab: null,
+    stdRules,
+    decimalRules,
+    nameRules,
     items: [
       'Pieza', 'Especie', 'Persona', 'Almacenamiento',
     ],
@@ -543,6 +571,8 @@ export default {
         ['states',
           'getCollections',
           'getInstitutions',
+          'getSpecies',
+          'getPieces',
           'getLocalities']
     ),
   },
@@ -573,32 +603,36 @@ export default {
     await this.$store.dispatch('retrieveInst');
     await this.$store.dispatch('retrieveColl');
     await this.$store.dispatch('retrieveLocl');
+    await this.$store.dispatch('retrieveSpecies');
+    await this.$store.dispatch('retrievePieces');
   },
   methods: {
-    async postPiece() {
-     let res = await this.$store.dispatch('postPiece', {ida: 6, edificio: "Edificio 6", estante: "Estante 6", numanaquel: "6"});
+    async postPiece(fmtPiece) {
+     let res = await this.$store.dispatch('postPiece', fmtPiece);
      console.log(res);
     },
-    getFmtPiece(piece) {
-      return {
+    async getFmtPiece(piece) {
+      let fmtPiece = {
+        "imagen": '',
         'nregistroinah': piece.inahRecNum,
         'elematomico': piece.anatoElement,
         'formaingreso': piece.incomeForm,
         'estatus': piece.status,
         'descripcion': piece.description,
         'datacion': piece.dating,
-        'notaesttaxo': piece.taxoStatNote,
+        'notasesttaxo': piece.taxoStatNote,
         'estatustaxonomico': piece.taxoStat,
-        'longitud': Number(piece.lon),
-        'latitud': Number(piece.lat),
+        'longitud': parseFloat(piece.lon),
+        'latitud': parseFloat(piece.lat),
         'idc': Number(piece.idCollection),
         'nombrecientifico': piece.specie,
         'idi': Number(piece.idInstitute),
         'idu': Number(piece.idLocation),
         'idl': Number(piece.idLocality),
-      }
-
-    }
+      };
+      console.log(fmtPiece);
+      await this.postPiece(fmtPiece);
+    },
   }
 }
 </script>npm

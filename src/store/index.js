@@ -11,6 +11,8 @@ export default new Vuex.Store({
     institutions: [],
     collections: [],
     localities: [],
+    species: [],
+    pieces: [],
   },
   getters: {
     locations(state)  {
@@ -27,6 +29,12 @@ export default new Vuex.Store({
     },
     getLocalities: state => {
       return state.localities;
+    },
+    getSpecies: state => {
+      return state.species;
+    },
+    getPieces: state => {
+      return state.pieces;
     }
   }
   ,
@@ -45,6 +53,12 @@ export default new Vuex.Store({
     },
     SET_LOCALITIES(state, localities) {
       state.localities = localities;
+    },
+    SET_SPECIES(state, species) {
+      state.species = species;
+    },
+    SET_PIECES(state, pieces) {
+      state.pieces = pieces;
     }
   },
   actions: {
@@ -90,8 +104,15 @@ export default new Vuex.Store({
       let localities = await res.json();
       commit('SET_LOCALITIES', localities.items);
     },
+    async retrieveSpecies({commit}) {
+      let res = await fetch('https://tpzok3gzaufsnmg-db202010212124.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/especie', {
+        method: 'GET'
+      })
+      let species = await res.json();
+      commit('SET_SPECIES', species.items);
+    },
     async postPiece(context, piece) {
-      let res = await fetch('https://tpzok3gzaufsnmg-db202010212124.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/almacenamiento/', {
+      let res = await fetch('https://tpzok3gzaufsnmg-db202010212124.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/piezas/', {
         method: 'POST',
         body: JSON.stringify(piece),
         headers: new Headers({
@@ -99,6 +120,13 @@ export default new Vuex.Store({
         })
       })
       return res.ok;
+    },
+    async retrievePieces({commit}) {
+      let res = await fetch('https://tpzok3gzaufsnmg-db202010212124.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/piezas', {
+        method: 'GET'
+      })
+      let pieces = await res.json();
+      commit('SET_PIECES', pieces.items);
     }
   },
 })

@@ -2,6 +2,7 @@
   <v-app>
     <v-navigation-drawer clipped
                          app
+                         v-if="false"
                          width="300">
       <v-row no-gutters>
         <v-col cols="12" class="mb-4">
@@ -78,5 +79,17 @@ export default {
   // NOT REMOVE
   html {
     overflow-y: hidden !important;
+  }
+
+  /* Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  input[type=number] {
+    -moz-appearance: textfield;
   }
 </style>
