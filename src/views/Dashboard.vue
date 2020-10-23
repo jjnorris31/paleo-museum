@@ -3,12 +3,32 @@
     <v-row no-gutters
            justify="center"
            class="white">
+
       <!-- begin dialog -->
       <v-dialog v-model="dialog"
                 fullscreen
                 transition="dialog-bottom-transition"
                 hide-overlay
                 class="full-height">
+        <!-- begins photo dialog overlay -->
+        <v-overlay v-model="saveOverlay"
+                   absolute>
+          <v-row no-gutters>
+            <v-col cols="12"
+                   class="d-flex justify-center">
+              <v-progress-circular width="4"
+                                   size="64"
+                                   indeterminate
+                                   color="white">
+              </v-progress-circular>
+            </v-col>
+            <v-col cols="12"
+                   class="text-h6 text-center mt-2">
+              <div>Guardando pieza</div>
+            </v-col>
+          </v-row>
+        </v-overlay>
+        <!-- ends photo dialog overlay -->
         <v-row no-gutters
                style="background-color: white; height: 100%"
                class="pt-15 pl-15">
@@ -335,6 +355,8 @@
       </v-dialog>
       <!-- ends dialog -->
 
+
+
       <!-- begin header -->
       <v-col cols="12"
              class="mt-12 mb-4 px-12">
@@ -366,10 +388,12 @@
                      class="mr-4">
                   <div class="input-label">Columnas</div>
                   <v-select outlined
+                            id="column-select"
                             hide-details
                             dense
                             placeholder="No. INAH"
                             multiple
+                            color="warning"
                             return-object
                             item-text="text"
                             v-model="tableColumnsSelected"
@@ -386,9 +410,10 @@
                   </v-select>
                 </div>
                 <div style="width: 200px">
-                  <div class="input-label ">Búsqueda</div>
+                  <div class="input-label">Búsqueda</div>
                   <v-text-field outlined
                                 hide-details
+                                v-model="search"
                                 placeholder="MPF-985"
                                 dense>
                   </v-text-field>
@@ -397,9 +422,13 @@
               <v-col cols="12" class="mb-4">
                 <v-data-table
                     v-if="!dialog"
+                    :search="search"
                     height="400px"
+                    :loading="getPieces.length === 0"
+                    loader-height="4"
+                    loading-text="Desenterrando los fósiles..."
                     :headers="tableColumnsSelected"
-                    :items="desserts"
+                    :items="getPieces"
                     :items-per-page="10">
                 </v-data-table>
               </v-col>
@@ -430,9 +459,11 @@ export default {
     stdRules,
     decimalRules,
     nameRules,
+    saveOverlay: false,
     items: [
       'Pieza', 'Especie', 'Persona', 'Almacenamiento',
     ],
+    search: '',
     locations: null,
     tableColumns: [
       'No. INAH',
@@ -474,30 +505,126 @@ export default {
     tableColumnsSelected: [
       {
         text: 'No. INAH',
+        disabled: true,
         align: 'start',
-        sortable: false,
-        value: 'name',
+        sortable: true,
+        value: 'nregistroinah',
       },
-      { text: 'Forma ingreso', value: 'calories' },
-      { text: 'Ingreso', value: 'fat' },
+      {
+        text: 'Elemento anatómico',
+        align: 'start',
+        disabled: true,
+        sortable: true,
+        value: 'elematomico',
+      },
+      {
+        text: 'Forma ingreso',
+        disabled: true,
+        align: 'start',
+        sortable: true,
+        value: 'formaingreso',
+      },
+      {
+        text: 'Estatus',
+        align: 'start',
+        sortable: true,
+        value: 'estatus',
+      },
+      {
+        text: 'Descripción',
+        align: 'start',
+        sortable: true,
+        value: 'descripcion',
+      },
+      {
+        text: 'Datación',
+        align: 'start',
+        sortable: true,
+        value: 'datacion',
+      },
+      {
+        text: 'Notas taxonómicas',
+        align: 'start',
+        sortable: true,
+        value: 'notasesttaxo',
+      },
+      {
+        text: 'Estado taxonómico',
+        align: 'start',
+        sortable: true,
+        value: 'estatustaxonomico',
+      },
     ],
     headers: [
       {
         text: 'No. INAH',
+        disabled: true,
         align: 'start',
-        sortable: false,
-        value: 'name',
+        sortable: true,
+        value: 'nregistroinah',
       },
-      { text: 'Forma ingreso', value: 'calories' },
-      { text: 'Ingreso', value: 'fat' },
-      { text: 'Estatus', value: 'carbs' },
-      { text: 'Notas taxonómicas', value: 'other' },
-      { text: 'Datación', value: 'carbs' },
-      { text: 'Descripción', value: 'carbs' },
-      { text: 'Nombre científico', value: 'carbs' },
-      { text: 'Estado taxonómico', value: 'carbs' },
-      { text: 'Longitud', value: 'carbs' },
-
+      {
+        text: 'Elemento anatómico',
+        align: 'start',
+        disabled: true,
+        sortable: true,
+        value: 'elematomico',
+      },
+      {
+        text: 'Forma ingreso',
+        disabled: true,
+        align: 'start',
+        sortable: true,
+        value: 'formaingreso',
+      },
+      {
+        text: 'Estatus',
+        align: 'start',
+        sortable: true,
+        value: 'estatus',
+      },
+      {
+        text: 'Descripción',
+        align: 'start',
+        sortable: true,
+        value: 'descripcion',
+      },
+      {
+        text: 'Datación',
+        align: 'start',
+        sortable: true,
+        value: 'datacion',
+      },
+      {
+        text: 'Notas taxonómicas',
+        align: 'start',
+        sortable: true,
+        value: 'notasesttaxo',
+      },
+      {
+        text: 'Estado taxonómico',
+        align: 'start',
+        sortable: true,
+        value: 'estatustaxonomico',
+      },
+      {
+        text: 'Longitud',
+        align: 'start',
+        sortable: true,
+        value: 'longitud',
+      },
+      {
+        text: 'Latitud',
+        align: 'start',
+        sortable: true,
+        value: 'latitud',
+      },
+      {
+        text: 'Nombre científico',
+        align: 'start',
+        sortable: true,
+        value: 'nombrecientifico',
+      },
     ],
     desserts: [
       {
@@ -608,8 +735,16 @@ export default {
   },
   methods: {
     async postPiece(fmtPiece) {
+      this.saveOverlay = true;
      let res = await this.$store.dispatch('postPiece', fmtPiece);
      console.log(res);
+     if (res) {
+       this.saveOverlay = false;
+     } else {
+       console.log('something has happened!');
+       this.saveOverlay = false;
+     }
+     this.dialog = false;
     },
     async getFmtPiece(piece) {
       let fmtPiece = {
@@ -637,10 +772,7 @@ export default {
 }
 </script>npm
 
-<style scoped>
+<style>
 
-div + .museum-input:focus {
-  color: darkred;
-}
 
 </style>

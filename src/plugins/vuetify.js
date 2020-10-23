@@ -6,19 +6,19 @@ import '@/scss/variables.scss'
 Vue.use(Vuetify);
 
 export default new Vuetify({
+    lang: {
+        locales: { es },
+        current: 'es',
+    },
     theme: {
         options: {
             customProperties: true,
             variations: true,
         },
         light: true,
-        lang: {
-            locales: { es },
-            current: 'es',
-        },
         themes: {
             light: {
-                primary: '#262261', // signal blue
+                primary: '#1460AA', // signal blue
                 secondary: '#00A4E1', // aquamarine
                 accent: '#65D9AC',
                 error: '#FF3D33', // south coral
