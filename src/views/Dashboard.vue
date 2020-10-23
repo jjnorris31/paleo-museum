@@ -339,7 +339,7 @@
                        dark
                        class="mr-2"
                        outlined
-                       @click="getFmtPiece(piece)"
+                       @click="dialog = false"
                        style="border-width: 2px"
                        height="40px">Cancelar</v-btn>
 
@@ -347,6 +347,7 @@
                        dark
                        class="ml-2"
                        elevation="4"
+                       @click="getFmtPiece(piece)"
                        height="40px">Guardar pieza</v-btn>
               </div>
             </div>

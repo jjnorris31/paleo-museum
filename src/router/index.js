@@ -6,18 +6,13 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'Login',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Login.vue')
+    name: 'landing',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Landing.vue')
   },
   {
     path: '/Dashboard',
     name: 'dashboard',
     component: () => import(/* webpackChunkName: "about" */ '../views/Dashboard.vue')
-  },
-  {
-    path: '/Landing',
-    name: 'Landing',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Landing.vue')
   },
   {
     path: '/about',
