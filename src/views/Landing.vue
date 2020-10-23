@@ -36,6 +36,7 @@
               <v-btn height="40px"
                      color="secondary"
                      depressed
+                     @click="toDashboard()"
                      class="mr-3">Explorar colección</v-btn>
               <v-btn height="40px"
                      outlined
@@ -64,7 +65,12 @@
 
 <script>
 export default {
-name: "Landing"
+  name: "Landing",
+  methods: {
+    toDashboard() {
+      this.$router.push({name: 'dashboard'});
+    }
+  }
 }
 </script>
 
