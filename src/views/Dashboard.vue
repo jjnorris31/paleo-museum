@@ -695,8 +695,7 @@ export default {
       return this.$store.getters.locations;
     },
     ...mapGetters(
-        ['states',
-          'getCollections',
+        ['getCollections',
           'getInstitutions',
           'getSpecies',
           'getPieces',
