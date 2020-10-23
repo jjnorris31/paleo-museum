@@ -578,6 +578,26 @@ export default {
     async postPiece() {
      let res = await this.$store.dispatch('postPiece', {ida: 6, edificio: "Edificio 6", estante: "Estante 6", numanaquel: "6"});
      console.log(res);
+    },
+    getFmtPiece(piece) {
+      return {
+        'nregistroinah': piece.inahRecNum,
+        'elematomico': piece.anatoElement,
+        'formaingreso': piece.incomeForm,
+        'estatus': piece.status,
+        'descripcion': piece.description,
+        'datacion': piece.dating,
+        'notaesttaxo': piece.taxoStatNote,
+        'estatustaxonomico': piece.taxoStat,
+        'longitud': Number(piece.lon),
+        'latitud': Number(piece.lat),
+        'idc': Number(piece.idCollection),
+        'nombrecientifico': piece.specie,
+        'idi': Number(piece.idInstitute),
+        'idu': Number(piece.idLocation),
+        'idl': Number(piece.idLocality),
+      }
+
     }
   }
 }
