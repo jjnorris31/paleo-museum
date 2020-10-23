@@ -739,6 +739,7 @@ export default {
      let res = await this.$store.dispatch('postPiece', fmtPiece);
      console.log(res);
      if (res) {
+       await this.$store.dispatch('retrievePieces');
        this.saveOverlay = false;
      } else {
        console.log('something has happened!');
