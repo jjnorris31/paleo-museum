@@ -149,14 +149,33 @@
                   <div class="input-label">
                     Especie
                   </div>
-                  <v-autocomplete outlined
-                                  :items="getSpecies"
-                                  item-value="nombrecientifico"
-                                  placeholder="ESPECIE 1"
-                                  item-text="nombrecientifico"
-                                  v-model="piece.specie"
-                                  dense>
-                  </v-autocomplete>
+                  <div class="d-flex align-start">
+                    <v-autocomplete outlined
+                                    class="pr-1"
+                                    :items="getSpecies"
+                                    item-value="nombrecientifico"
+                                    placeholder="ESPECIE 1"
+                                    item-text="nombrecientifico"
+                                    v-model="piece.specie"
+                                    dense>
+                    </v-autocomplete>
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{on, attrs}">
+                        <div style="height: 40px" class="d-flex align-center">
+                          <v-btn icon
+                                 v-on="on"
+                                 text
+                                 @click="showMessage()"
+                                 v-bind="attrs"
+                                 rounded>
+                            <v-icon>mdi-plus-circle-outline
+                            </v-icon>
+                          </v-btn>
+                        </div>
+                      </template>
+                      <span>Nueva especie</span>
+                    </v-tooltip>
+                  </div>
                 </div>
                 <!-- ends specie -->
 
@@ -165,14 +184,33 @@
                   <div class="input-label">
                     Colección
                   </div>
-                  <v-autocomplete outlined
-                                  :items="getCollections"
-                                  item-value="idc"
-                                  placeholder="COLECCIÓN 1"
-                                  item-text="nombre"
-                                  v-model="piece.idCollection"
-                                  dense>
-                  </v-autocomplete>
+                  <div class="d-flex align-start">
+                    <v-autocomplete outlined
+                                    class="pr-1"
+                                    :items="getCollections"
+                                    item-value="idc"
+                                    placeholder="COLECCIÓN 1"
+                                    item-text="nombre"
+                                    v-model="piece.idCollection"
+                                    dense>
+                    </v-autocomplete>
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{on, attrs}">
+                        <div style="height: 40px" class="d-flex align-center">
+                          <v-btn icon
+                                 v-on="on"
+                                 text
+                                 @click="showMessage()"
+                                 v-bind="attrs"
+                                 rounded>
+                            <v-icon>mdi-plus-circle-outline
+                            </v-icon>
+                          </v-btn>
+                        </div>
+                      </template>
+                      <span>Nueva colección</span>
+                    </v-tooltip>
+                  </div>
                 </div>
                 <!-- ends collection -->
 
@@ -209,14 +247,34 @@
                   <div class="input-label">
                     Institución
                   </div>
-                  <v-select outlined
-                            :items="getInstitutions"
-                            item-text="nombre"
-                            item-value="idi"
-                            placeholder="INSTITUCIÓN 1"
-                            v-model="piece.idInstitute"
-                            dense>
-                  </v-select>
+                  <div class="d-flex align-start">
+                    <v-select outlined
+                              :items="getInstitutions"
+                              item-text="nombre"
+                              item-value="idi"
+                              class="pr-1"
+                              placeholder="INSTITUCIÓN 1"
+                              v-model="piece.idInstitute"
+                              dense>
+                    </v-select>
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{on, attrs}">
+                        <div style="height: 40px" class="d-flex align-center">
+                          <v-btn icon
+                                 v-on="on"
+                                 text
+                                 @click="showMessage()"
+                                 v-bind="attrs"
+                                 rounded>
+                            <v-icon>mdi-plus-circle-outline
+                            </v-icon>
+                          </v-btn>
+                        </div>
+                      </template>
+                      <span>Nueva institución</span>
+                    </v-tooltip>
+
+                  </div>
                 </div>
                 <!-- ends institution -->
 
@@ -225,14 +283,34 @@
                   <div class="input-label">
                     Localidad
                   </div>
-                  <v-select outlined
-                            :items="getLocalities"
-                            item-text="nombre"
-                            item-value="idl"
-                            placeholder="LOCALIDAD 1"
-                            v-model="piece.idLocality"
-                            dense>
-                  </v-select>
+                  <div class="d-flex align-start">
+                    <v-select outlined
+                              :items="getLocalities"
+                              item-text="nombre"
+                              class="pr-1"
+                              item-value="idl"
+                              placeholder="LOCALIDAD 1"
+                              v-model="piece.idLocality"
+                              dense>
+                    </v-select>
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{on, attrs}">
+                        <div style="height: 40px" class="d-flex align-center">
+                          <v-btn icon
+                                 v-on="on"
+                                 text
+                                 @click="showMessage()"
+                                 v-bind="attrs"
+                                 rounded>
+                            <v-icon>mdi-plus-circle-outline
+                            </v-icon>
+                          </v-btn>
+                        </div>
+                      </template>
+                      <span>Nueva localidad</span>
+                    </v-tooltip>
+                  </div>
+
                 </div>
                 <!-- ends institution -->
               </div>
@@ -249,14 +327,33 @@
                   <div class="input-label">
                     País
                   </div>
-                  <v-autocomplete outlined
-                                  :items="locations"
-                                  item-value="pais"
-                                  placeholder="MEXICO"
-                                  item-text="pais"
-                                  v-model="countrySltd"
-                                  dense>
-                  </v-autocomplete>
+                  <div class="d-flex align-start">
+                    <v-autocomplete outlined
+                                    class="pr-1"
+                                    :items="locations"
+                                    item-value="pais"
+                                    placeholder="MEXICO"
+                                    item-text="pais"
+                                    v-model="countrySltd"
+                                    dense>
+                    </v-autocomplete>
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{on, attrs}">
+                        <div style="height: 40px" class="d-flex align-center">
+                          <v-btn icon
+                                 v-on="on"
+                                 text
+                                 @click="showMessage()"
+                                 v-bind="attrs"
+                                 rounded>
+                            <v-icon>mdi-plus-circle-outline
+                            </v-icon>
+                          </v-btn>
+                        </div>
+                      </template>
+                      <span>Nueva ubicación</span>
+                    </v-tooltip>
+                  </div>
                 </div>
                 <!-- ends country -->
 
@@ -356,8 +453,6 @@
       </v-dialog>
       <!-- ends dialog -->
 
-
-
       <!-- begin header -->
       <v-col cols="12"
              class="mt-12 mb-4 px-12">
@@ -419,6 +514,32 @@
                                 dense>
                   </v-text-field>
                 </div>
+                <div style="width: 300px"
+                     class="mr-4">
+                  <div class="input-label">Mejor búsqueda</div>
+                  <v-select outlined
+                            id="column-select"
+                            hide-details
+                            dense
+                            placeholder="No. INAH"
+                            multiple
+                            color="warning"
+                            return-object
+                            item-text="text"
+                            v-model="tableColumnsSelected"
+                            :items="headers">
+                    <template v-slot:selection="{item, index}">
+                      <v-chip v-if="index === 0">
+                        <span>{{item.text}}</span>
+                      </v-chip>
+                      <span v-if="index === 1"
+                            class="grey--text caption">
+                        (+{{tableColumnsSelected.length - 1}} otros)
+                      </span>
+                    </template>
+                  </v-select>
+                </div>
+
               </v-col>
               <v-col cols="12" class="mb-4">
                 <v-data-table
@@ -453,8 +574,11 @@
 import {mapGetters} from 'vuex'
 import {stdRules, nameRules, decimalRules} from "@/misc/rules";
 
+
 export default {
   name: "Dashboard",
+  components: {
+  },
   data: () => ({
     tab: null,
     stdRules,
@@ -734,6 +858,9 @@ export default {
     await this.$store.dispatch('retrievePieces');
   },
   methods: {
+    showMessage() {
+      console.log("messageeeeee");
+    },
     async postPiece(fmtPiece) {
       this.saveOverlay = true;
      let res = await this.$store.dispatch('postPiece', fmtPiece);
