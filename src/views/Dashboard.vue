@@ -573,6 +573,26 @@
                 <h6 class="subtitle-1">Nombre científico</h6>
                 <p>{{indItem.nombrecientifico}}</p>
               </v-col>
+              <v-col cols="6">
+                <h6 class="subtitle-1">País</h6>
+                <p>{{indItem.country}}</p>
+              </v-col>
+              <v-col cols="6">
+                <h6 class="subtitle-1">Estado</h6>
+                <p>{{indItem.state}}</p>
+              </v-col>
+              <v-col cols="6">
+                <h6 class="subtitle-1">Municipio</h6>
+                <p>{{indItem.municipality}}</p>
+              </v-col>
+              <v-col cols="6">
+                <h6 class="subtitle-1">Latitud</h6>
+                <p>{{indItem.latitud}}</p>
+              </v-col>
+              <v-col cols="6">
+                <h6 class="subtitle-1">Longitud</h6>
+                <p>{{indItem.longitud}}</p>
+              </v-col>
               <v-col cols="12">
                 <h6 class="subtitle-1">Descripción</h6>
                 <p>{{indItem.descripcion}}</p>
@@ -1034,9 +1054,13 @@ export default {
     showMessage() {
       console.log("messageeeeee");
     },
-    openIndividualItem(value) {
-      this.indivDialog = true;
+    async openIndividualItem(value) {
       this.indItem = value;
+      let res = await this.$store.dispatch('retrieveLocationById', value.idu);
+      this.indItem.country = res.pais;
+      this.indItem.state = res.estado;
+      this.indItem.municipality = res.municipio;
+      this.indivDialog = true;
     },
     closeDialog() {
       this.mainDialog = false;
