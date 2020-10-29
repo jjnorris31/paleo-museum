@@ -121,6 +121,16 @@ export default new Vuex.Store({
       })
       return res.ok;
     },
+    async updatePiece(context, piece) {
+      let res = await fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/pieza/${piece.nregistroinah}`, {
+        method: 'PUT',
+        body: JSON.stringify(piece),
+        headers: new Headers({
+          'Content-Type': 'application/json',
+        })
+      })
+      return res.ok;
+    },
     async retrievePieces({commit}) {
       let res = await fetch('https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/pieza/', {
         method: 'GET'
@@ -134,6 +144,14 @@ export default new Vuex.Store({
       })
 
       return res.status;
+    },
+    async retrieveLocationById(context, id) {
+      let res = await fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/ubicacion/${id}`, {
+        method: 'GET'
+      });
+
+      let location = await res.json();
+      return location;
     },
     async searchPiece({commit}, searchText) {
       let res = await fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/pieza/?q={"nregistroinah":{"$like":"%${searchText}%"}}`,  {
