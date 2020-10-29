@@ -84,28 +84,28 @@ export default new Vuex.Store({
       return countries.items;
     },
     async retrieveInst({commit}) {
-      let res = await fetch('https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/institucion', {
+      let res = await fetch('https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/institucion/', {
         method: 'GET'
       })
       let institutions = await res.json();
       commit('SET_INSTITUTIONS', institutions.items);
     },
     async retrieveColl({commit}) {
-      let res = await fetch('https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/coleccion', {
+      let res = await fetch('https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/coleccion/', {
         method: 'GET'
       })
       let collections = await res.json();
       commit('SET_COLLECTIONS', collections.items);
     },
     async retrieveLocl({commit}) {
-      let res = await fetch('https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/localidad', {
+      let res = await fetch('https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/localidad/', {
         method: 'GET'
       })
       let localities = await res.json();
       commit('SET_LOCALITIES', localities.items);
     },
     async retrieveSpecies({commit}) {
-      let res = await fetch('https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/especie', {
+      let res = await fetch('https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/especie/', {
         method: 'GET'
       })
       let species = await res.json();
@@ -122,11 +122,27 @@ export default new Vuex.Store({
       return res.ok;
     },
     async retrievePieces({commit}) {
-      let res = await fetch('https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/pieza', {
+      let res = await fetch('https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/pieza/', {
         method: 'GET'
       })
       let pieces = await res.json();
       commit('SET_PIECES', pieces.items);
-    }
+    },
+    async deletePiece(context, id) {
+      let res = await fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/pieza/${id}`, {
+        method: 'DELETE'
+      })
+
+      return res.status;
+    },
+    async searchPiece({commit}, searchText) {
+      let res = await fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/pieza/?q={"nregistroinah":{"$like":"%${searchText}%"}}`,  {
+        method: 'GET'
+      });
+
+      let pieces = await res.json();
+      commit('SET_PIECES', pieces.items);
+      return pieces;
+    },
   },
 })

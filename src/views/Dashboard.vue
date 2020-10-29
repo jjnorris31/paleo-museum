@@ -453,6 +453,77 @@
       </v-dialog>
       <!-- ends dialog -->
 
+      <!-- begin delete dialog -->
+      <v-dialog v-model="dialogDel"
+                width="600px"
+                class="full-height">
+        <!-- begins photo dialog overlay -->
+        <v-overlay v-model="deleteOverlay"
+                   absolute>
+          <v-row no-gutters>
+            <v-col cols="12"
+                   class="d-flex justify-center">
+              <v-progress-circular width="4"
+                                   size="64"
+                                   indeterminate
+                                   color="white">
+              </v-progress-circular>
+            </v-col>
+            <v-col cols="12"
+                   class="text-h6 text-center mt-2">
+              <div>Eliminando pieza</div>
+            </v-col>
+          </v-row>
+        </v-overlay>
+        <!-- ends photo dialog overlay -->
+        <v-row no-gutters
+               style="background-color: white; height: 100%"
+               class="pt-7 px-7">
+          <v-col cols="12">
+            <h1 class="mb-2 text-h6 font-weight-medium">Borrado de registros</h1>
+            <p class="grey--text">¿Estás seguro de borrar este registro?</p>
+            <div class="col-12 d-flex justify-end mb-5 no-gutters">
+              <div class="col-5 d-flex no-gutters">
+                <v-btn color="secondary"
+                       dark
+                       class="mr-2"
+                       outlined
+                       @click="dialogDel = false"
+                       style="border-width: 2px"
+                       height="40px">Cancelar</v-btn>
+                <v-btn color="error"
+                       dark
+                       class="ml-2"
+                       @click="deletePiece()"
+                       elevation="4"
+                       height="40px">Borrar</v-btn>
+              </div>
+            </div>
+          </v-col>
+        </v-row>
+      </v-dialog>
+      <!-- ends delete dialog -->
+
+      <!-- begin search overlay -->
+      <v-overlay v-model="searchOverlay"
+                 absolute>
+        <v-row no-gutters>
+          <v-col cols="12"
+                 class="d-flex justify-center">
+            <v-progress-circular width="4"
+                                 size="64"
+                                 indeterminate
+                                 color="white">
+            </v-progress-circular>
+          </v-col>
+          <v-col cols="12"
+                 class="text-h6 text-center mt-2">
+            <div>Buscando...</div>
+          </v-col>
+        </v-row>
+      </v-overlay>
+      <!-- ends search overlay -->
+
       <!-- begin header -->
       <v-col cols="12"
              class="mt-12 mb-4 px-12">
@@ -506,60 +577,46 @@
                   </v-select>
                 </div>
                 <div style="width: 200px">
-                  <div class="input-label">Búsqueda</div>
+                  <div class="input-label">Búsqueda (INAH)</div>
                   <v-text-field outlined
                                 hide-details
+                                @keyup="searchInDb()"
                                 v-model="search"
-                                placeholder="MPF-985"
+                                placeholder="Quo sunt"
                                 dense>
                   </v-text-field>
                 </div>
-                <div style="width: 300px"
-                     class="mr-4">
-                  <div class="input-label">Mejor búsqueda</div>
-                  <v-select outlined
-                            id="column-select"
-                            hide-details
-                            dense
-                            placeholder="No. INAH"
-                            multiple
-                            color="warning"
-                            return-object
-                            item-text="text"
-                            v-model="tableColumnsSelected"
-                            :items="headers">
-                    <template v-slot:selection="{item, index}">
-                      <v-chip v-if="index === 0">
-                        <span>{{item.text}}</span>
-                      </v-chip>
-                      <span v-if="index === 1"
-                            class="grey--text caption">
-                        (+{{tableColumnsSelected.length - 1}} otros)
-                      </span>
-                    </template>
-                  </v-select>
-                </div>
-
               </v-col>
-              <v-col cols="12" class="mb-4">
+              <v-col cols="12"
+                     class="mb-4">
                 <v-data-table
                     v-if="!dialog"
-                    :search="search"
+                    show-select
                     height="400px"
-                    :loading="getPieces.length === 0"
+                    v-model="selectedPieces"
+                    :loading="getPieces.length === 0 && this.search === ''"
                     loader-height="4"
+                    item-key="nregistroinah"
                     loading-text="Desenterrando los fósiles..."
                     :headers="tableColumnsSelected"
                     :items="getPieces"
-                    :items-per-page="10">
+                    :items-per-page="25">
                 </v-data-table>
               </v-col>
               <v-col cols="12">
                 <v-btn height="40px"
                        depressed
+                       class="mr-2"
                        elevation="4"
                        @click="dialog = true"
-                       color="secondary">Añadir pieza</v-btn>
+                       color="secondary">Añadir pieza
+                </v-btn>
+                <v-btn height="40px"
+                       depressed
+                       @click="dialogDel = true"
+                       elevation="4"
+                       color="error">Borrar pieza
+                </v-btn>
               </v-col>
             </v-row>
           </v-col>
@@ -585,6 +642,7 @@ export default {
     decimalRules,
     nameRules,
     saveOverlay: false,
+    deleteOverlay: false,
     items: [
       'Pieza', 'Especie', 'Persona', 'Almacenamiento',
     ],
@@ -814,6 +872,11 @@ export default {
       },
     ],
     dialog: false,
+    dialogDel: false,
+    pieces: [],
+    selectedPieces: [],
+    timeout: null,
+    searchOverlay: false,
   }),
   computed: {
     storeLocations() {
@@ -828,6 +891,12 @@ export default {
     ),
   },
   watch: {
+    getPieces: {
+      handler: function (val) {
+        this.pieces = val;
+      },
+      immediate: true,
+    },
     storeLocations: {
       handler: function (val) {
         this.locations = val;
@@ -868,11 +937,42 @@ export default {
      if (res) {
        await this.$store.dispatch('retrievePieces');
        this.saveOverlay = false;
+       this.search = '';
      } else {
        console.log('something has happened!');
        this.saveOverlay = false;
+       this.search = '';
      }
      this.dialog = false;
+    },
+    async searchInDb() {
+      this.searchOverlay = true;
+      if (this.search !== '') {
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout(async () => {
+          let res = await this.$store.dispatch('searchPiece', this.search);
+          console.log(res);
+          this.searchOverlay = false;
+        }, 1000);
+        console.log(this.search);
+      } else {
+        let res = await this.$store.dispatch('retrievePieces');
+        console.log(res);
+        this.searchOverlay = false;
+      }
+    },
+    /**
+     * Dispatch the action to delete an item in the database
+     * @returns {Promise<void>}
+     */
+    async deletePiece() {
+      this.deleteOverlay = true;
+      let res = await this.$store.dispatch('deletePiece', this.selectedPieces[0].nregistroinah);
+
+      if (res === 200) {
+        console.log("DELETED: ", res);
+        this.dialogDel = false;
+      }
     },
     async getFmtPiece(piece) {
       let fmtPiece = {
