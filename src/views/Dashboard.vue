@@ -699,6 +699,7 @@
                 </v-btn>
                 <v-btn height="40px"
                        depressed
+                       :disabled="selectedPieces.length === 0"
                        @click="deleteDialog = true"
                        elevation="4"
                        color="error">Borrar pieza
@@ -1023,7 +1024,7 @@ export default {
   },
   async mounted() {
     this.showMainOverlay();
-    this.setMainOverlayText('Recuperando información...');
+    this.setMainOverlayText('Recuperando información');
 
     /*await this.$store.dispatch('retrieveLocations');
     await this.$store.commit('SET_STATES');
@@ -1056,10 +1057,13 @@ export default {
     },
     async openIndividualItem(value) {
       this.indItem = value;
+      this.setMainOverlayText('Abriendo pieza');
+      this.showMainOverlay();
       let res = await this.$store.dispatch('retrieveLocationById', value.idu);
       this.indItem.country = res.pais;
       this.indItem.state = res.estado;
       this.indItem.municipality = res.municipio;
+      this.hideMainOverlay();
       this.indivDialog = true;
     },
     closeDialog() {
@@ -1090,7 +1094,7 @@ export default {
     async openEditItem(item) {
       this.editActive = true;
       this.showMainOverlay();
-      this.setMainOverlayText('Abriendo pieza...');
+      this.setMainOverlayText('Abriendo pieza');
       let res = await this.$store.dispatch('retrieveLocationById', item.idu);
       this.setCountrySlt(res.pais);
       this.setStateSlt(res.estado);
@@ -1180,7 +1184,7 @@ export default {
     },
     async searchInDb() {
       this.showMainOverlay();
-      this.setMainOverlayText('Buscando...');
+      this.setMainOverlayText('Buscando algo increíble');
       if (this.search !== '') {
         clearTimeout(this.timeout);
         // timeout to delay the search after the user ends typing
