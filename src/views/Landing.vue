@@ -36,12 +36,12 @@
               <v-btn height="40px"
                      color="secondary"
                      depressed
-                     @click="toDashboard()"
                      class="mr-3">Explorar colección</v-btn>
               <v-btn height="40px"
                      outlined
                      style="border-width: 2px"
                      class="ml-3"
+                     @click="toDashboard()"
                      color="#5F5F5F">Iniciar sesión</v-btn>
             </v-col>
           </v-row>

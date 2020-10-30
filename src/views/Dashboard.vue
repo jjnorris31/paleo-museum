@@ -30,8 +30,15 @@
         </v-overlay>
         <!-- ends photo dialog overlay -->
         <v-row no-gutters
-               style="background-color: white; height: 100%"
+               style="background-color: white; height: 100%; position: relative"
                class="pt-15 pl-15">
+          <div style="height: 40px; position: absolute; left: 0"
+               class="d-flex align-center ml-4">
+            <v-btn icon
+                   @click="editActive ? closeEditItem() : closeNewItem()">
+              <v-icon color="rgba(0, 0, 0, 0.87)" size="32">mdi-close</v-icon>
+            </v-btn>
+          </div>
           <v-col cols="6">
             <h1 class="mb-6 text-h4 font-weight-medium" v-if="newItemActive">Nueva pieza</h1>
             <h1 class="mb-6 text-h4 font-weight-medium" v-if="editActive">Editar pieza</h1>
@@ -906,6 +913,7 @@ export default {
         align: 'center',
         disabled: true,
         sortable: false,
+        value: 'actions'
       },
     ],
     desserts: [
@@ -1164,7 +1172,7 @@ export default {
         this.hideSaveOverlay();
         this.search = '';
       }
-      this.hideMainOverlay();
+      this.closeDialog();
     },
     async updatePiece() {
       this.showSaveOverlay();
@@ -1233,6 +1241,7 @@ export default {
       let res = await this.$store.dispatch('deletePiece', this.selectedPieces[0].nregistroinah);
 
       if (res === 200) {
+        await this.$store.dispatch('retrievePieces');
         console.log("DELETED: ", res);
         this.deleteDialog = false;
       }
