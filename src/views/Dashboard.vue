@@ -498,9 +498,9 @@
                style="background-color: white; height: 100%"
                class="pt-7 px-7">
           <v-col cols="12">
-            <h1 class="mb-2 text-h6 font-weight-medium">Borrado de registros</h1>
-            <p class="grey--text">¿Estás seguro de borrar este registro?</p>
-            <div class="col-12 d-flex justify-end mb-5 no-gutters">
+            <h1 class="mb-1 headline font-weight-medium">Borrado de pieza</h1>
+            <p class="grey--text">¿Estás seguro de borrar esta pieza?</p>
+            <div class="col-12 d-flex justify-end mb-2 no-gutters">
               <div class="col-5 d-flex no-gutters">
                 <v-btn color="secondary"
                        dark
@@ -708,7 +708,7 @@
                 <v-btn height="40px"
                        depressed
                        :disabled="selectedPieces.length === 0"
-                       @click="deleteDialog = true"
+                       @click="openDelDialog()"
                        elevation="4"
                        color="error">Borrar pieza
                 </v-btn>
@@ -1187,18 +1187,38 @@ export default {
       this.saveOverlay = false;
     },
     /**
+     * Shows the delete overlay
+     */
+    showDeleteOverlay() {
+      this.deleteOverlay = true;
+    },
+    /**
+     * Hide the delete overlay
+     */
+    hideDeleteOverlay() {
+      this.deleteOverlay = false;
+    },
+    openDelDialog() {
+      this.deleteDialog = true;
+    },
+    closeDelDialog() {
+      this.deleteDialog = false;
+    },
+    /**
      * Dispatch the action to delete an item in the database
      * @returns {Promise<void>}
      */
     async deletePiece() {
-      this.deleteOverlay = true;
+      this.showDeleteOverlay();
       let res = await this.$store.dispatch('deletePiece', this.selectedPieces[0].nregistroinah);
-
       if (res === 200) {
         await this.$store.dispatch('retrievePieces');
         console.log("DELETED: ", res);
+      } else if (res === 404) {
+        console.log("DELETED FAIL!");
       }
-      this.deleteDialog = false;
+      this.hideDeleteOverlay();
+      this.closeDelDialog();
       this.selectedPieces = [];
     },
   }
