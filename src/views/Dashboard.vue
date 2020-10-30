@@ -1126,7 +1126,7 @@ export default {
         this.hideSaveOverlay();
         this.search = '';
       }
-      this.closeDialog();
+      this.closeNewItem();
     },
     async updatePiece() {
       this.showSaveOverlay();
@@ -1197,8 +1197,9 @@ export default {
       if (res === 200) {
         await this.$store.dispatch('retrievePieces');
         console.log("DELETED: ", res);
-        this.deleteDialog = false;
       }
+      this.deleteDialog = false;
+      this.selectedPieces = [];
     },
   }
 }
