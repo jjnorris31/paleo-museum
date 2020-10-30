@@ -1040,8 +1040,10 @@ export default {
     openNewItem() {
       this.newItemActive = true;
       this.resetPiece();
-      this.openDialog();
-      this.$refs.pieceForm.reset();
+      this.openDialog()
+      if (this.$refs.pieceForm !== undefined) {
+        this.$refs.pieceForm.reset();
+      }
     },
     /**
      * Closes the new item dialog and reset the piece variable
