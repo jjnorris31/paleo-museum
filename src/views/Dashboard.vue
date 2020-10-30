@@ -652,6 +652,7 @@
                             color="warning"
                             return-object
                             item-text="text"
+                            @input="sortColumnsSelected"
                             v-model="tableColumnsSelected"
                             :items="headers">
                     <template v-slot:selection="{item, index}">
@@ -916,68 +917,6 @@ export default {
         value: 'actions'
       },
     ],
-    desserts: [
-      {
-        name: 'PXX-10211',
-        calories: 'Mammalia',
-        fat: 'Dino',
-        carbs: 'Martha',
-      },
-      {
-        name: 'PXX-1011',
-        calories: 'Mammalia',
-        fat: 'Dino',
-        carbs: 'Estudiante 2',
-      },
-      {
-        name: 'PXX-10261',
-        calories: 'Mammalia',
-        fat: 'Dino',
-        carbs: 'Ramiro',
-      },
-      {
-        name: 'PXX-1711',
-        calories: 'Mammalia',
-        fat: 'Dino',
-        carbs: 'Bernardo',
-      },
-      {
-        name: 'PXX-1711',
-        calories: 'Mammalia',
-        fat: 'Dino',
-        carbs: 'Bernardo',
-      },
-      {
-        name: 'PXX-10211',
-        calories: 'Mammalia',
-        fat: 'Dino',
-        carbs: 'Martha',
-      },
-      {
-        name: 'PXX-1011',
-        calories: 'Mammalia',
-        fat: 'Dino',
-        carbs: 'Estudiante 2',
-      },
-      {
-        name: 'PXX-10261',
-        calories: 'Mammalia',
-        fat: 'Dino',
-        carbs: 'Ramiro',
-      },
-      {
-        name: 'PXX-1711',
-        calories: 'Mammalia',
-        fat: 'Dino',
-        carbs: 'Bernardo',
-      },
-      {
-        name: 'PXX-1711',
-        calories: 'Mammalia',
-        fat: 'Dino',
-        carbs: 'Bernardo',
-      },
-    ],
     mainDialog: false,
     deleteDialog: false,
     indivDialog: false,
@@ -990,6 +929,7 @@ export default {
     editActive: false,
     newItemActive: false,
     editLocation: {},
+    numberOfColumns: 9,
   }),
   computed: {
     storeLocations() {
@@ -1061,8 +1001,22 @@ export default {
   },
   methods: {
     showMessage() {
-      console.log("messageeeeee");
+      console.log("mesageee!!")
     },
+    /**
+     * Keeps the actions column at the end of the table
+     */
+    sortColumnsSelected(value) {
+      let newColumnsSelected = value;
+      if (this.numberOfColumns < value.length) {
+        let actions = value[value.length - 2];
+        value[value.length - 2] = value[value.length - 1];
+        value[value.length - 1] = actions;
+      }
+      this.numberOfColumns = newColumnsSelected.length;
+      this.tableColumnsSelected = newColumnsSelected;
+    },
+
     async openIndividualItem(value) {
       this.indItem = value;
       this.setMainOverlayText('Abriendo pieza');

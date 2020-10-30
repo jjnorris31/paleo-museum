@@ -37,19 +37,28 @@
                      color="secondary"
                      depressed
                      class="mr-3">Explorar colección</v-btn>
-              <v-btn height="40px"
+              <!--<v-btn height="40px"
                      outlined
                      style="border-width: 2px"
                      class="ml-3"
                      @click="toDashboard()"
-                     color="#5F5F5F">Iniciar sesión</v-btn>
+                     color="#5F5F5F">Iniciar sesión</v-btn>-->
             </v-col>
           </v-row>
         </v-col>
         <!-- ends left container -->
 
         <!-- begin right container-->
-        <v-col cols="5" class="d-flex no-gutters align-center justify-center">
+        <v-col cols="5" class="d-flex no-gutters align-center justify-center" style="position:relative;">
+          <div style="position: absolute; right: 16px; top: 16px">
+            <v-btn height="40px"
+                   outlined
+                   style="border-width: 2px"
+                   class="ml-3"
+                   @click="toDashboard()"
+                   color="#5F5F5F">Iniciar sesión
+            </v-btn>
+          </div>
           <v-row no-gutters
                  style="height: 500px"
                  align-content="center">
