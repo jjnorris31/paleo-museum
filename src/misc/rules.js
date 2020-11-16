@@ -1,7 +1,7 @@
-const stdRules = [
-    v => !!v || 'Campo requerido',
-    v => /^([ñÑáéíóúÁÉÍÓÚaa-zA-Z0-9]+(\s)?)+$/.test(v) || 'Notamos algo raro...',
-];
+
+const stdRules = v => /^([ñÑáéíóúÁÉÍÓÚaa-zA-Z0-9]+(\s)?)+$|^$/.test(v) || 'Sólo aceptamos números y letras...';
+const requiredRules =  v => !!v || 'Campo requerido';
+const columnsRules = v => v.length > 6 || 'Sólo selecciona 6 columnas';
 
 const nameRules = [
     v => !!v || 'Campo requerido',
@@ -13,4 +13,4 @@ const decimalRules = [
     v => /^([0-9]{1,3}(\.)[0-9]{1,6})$/.test(v) || 'Solo XX.XX decimales',
 ];
 
-export {stdRules, nameRules, decimalRules}
+export {stdRules, requiredRules, nameRules, decimalRules, columnsRules}

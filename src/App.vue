@@ -2,7 +2,6 @@
   <v-app>
     <v-navigation-drawer clipped
                          app
-                         v-if="false"
                          style="background-color: #f3f4f5"
                          width="300">
       <v-row no-gutters>
@@ -14,13 +13,45 @@
           </v-img>
         </v-col>
         <v-col cols="12">
-          <v-list>
-            <v-list-item>
-              <v-list-item-icon>
-                <v-icon>mdi-home</v-icon>
-                <v-list-item>Dashboard</v-list-item>
-              </v-list-item-icon>
-            </v-list-item>
+          <v-list flat>
+            <v-list-item-group v-model="listItemSelected" >
+              <v-list-item @click="showMessage()"
+                           class="list-item">
+                <v-list-item-icon>
+                  <v-icon>mdi-home</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Inicio</v-list-item-title>
+              </v-list-item>
+
+
+              <v-list-group
+                :value="true"
+                no-action
+                prepend-icon="mdi-table">
+                <template v-slot:activator>
+                  <v-list-item-title>Tablas</v-list-item-title>
+                </template>
+                  <v-list-item @click="showMessage()"
+                               v-for="item in tableItems"
+                               :key="item.text">
+                    <v-list-item-icon>
+                      <v-icon>{{item.icon}}</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>{{item.text}}</v-list-item-title>
+                  </v-list-item>
+              </v-list-group>
+
+              <v-list-item @click="showMessage()"
+                           class="list-item">
+                <v-list-item-icon>
+                  <v-icon>mdi-pencil</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Usuarios
+                </v-list-item-title>
+              </v-list-item>
+
+
+            </v-list-item-group>
           </v-list>
         </v-col>
       </v-row>
@@ -48,10 +79,14 @@ export default {
 
   data: () => ({
     item: 1,
-    items: [
-      { text: 'Dashboard', icon: 'mdi-home' },
-      { text: 'Reportes', icon: 'mdi-table' },
-      { text: 'Usuarios', icon: 'mdi-account-multiple' },
+    listItemSelected: 1,
+    tableItems: [
+      { text: 'Personas', icon: 'mdi-account-supervisor-circle' },
+      { text: 'Almacenamiento', icon: 'mdi-office-building-outline' },
+      { text: 'Piezas', icon: 'mdi-bone' },
+      { text: 'Especies', icon: 'mdi-google-downasaur' },
+      { text: 'Preparadores', icon: 'mdi-account-star' },
+      { text: 'Determinadores', icon: 'mdi-account-question' },
     ],
   }),
 
@@ -69,8 +104,14 @@ export default {
 <style lang="scss">
   @import "assets/styles/css/mainstyle.css";
   // NOT REMOVE
+
   html {
     overflow-y: hidden !important;
+  }
+
+  .list-item {
+    font-size: 1rem;
+    font-weight: normal;
   }
 
   /* Chrome, Safari, Edge, Opera */

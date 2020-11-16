@@ -1,6 +1,6 @@
 /**
 * Returns the options correctly formatted as query parameters
-* @param { Object } options - The options to be included as query parameters
+* @param {{search: {columns: string[], pattern: string}}} options - The options to be included as query parameters
 * @param { number } options.limit - The limit of returned elements
 * @param { number } options.offset - The offset for the returned elements (intended for pagination)
 * @param { Object } options.search - The search object
@@ -11,7 +11,7 @@
 * @param { string } options.orderby.direction - Either 'ASC' or 'DESC'
 *
 */
-function addQueryParameters( options ) {
+const addQueryParameters = function ( options ) {
     let newURL = '?';
     if ( options.limit ) {
         newURL += 'limit=' + options.limit;
@@ -36,10 +36,10 @@ function addQueryParameters( options ) {
         if ( columns.length > 0 ) {
             newURL += '"$or":['
             for ( let i = 0; i < columns.length; i++ ) {
-                if ( i != 0 ) {
+                if ( i !== 0 ) {
                     newURL += ',';
                 }
-                newURL += `{"${ columns[ i ].toUpperCase() }":{"$instr":"${ pattern }"}}`;
+                newURL += `{"${ columns[i].toUpperCase() }":{"$instr":"${ pattern }"}}`;
             }
             newURL += ']}'
             trailingComma = true;
@@ -56,3 +56,5 @@ function addQueryParameters( options ) {
     newURL += '}'
     return newURL;
 }
+
+export {addQueryParameters}

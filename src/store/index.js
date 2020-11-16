@@ -74,6 +74,7 @@ export default new Vuex.Store({
         method: 'GET'
       })
       let countries = await res.json();
+
       return countries.items;
     },
     async retrieveMun(context, payload) {
@@ -137,6 +138,7 @@ export default new Vuex.Store({
       })
       let pieces = await res.json();
       commit('SET_PIECES', pieces.items);
+      return pieces.items;
     },
     async deletePiece(context, id) {
       let res = await fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/pieza/${id}`, {
@@ -154,13 +156,13 @@ export default new Vuex.Store({
       return location;
     },
     async searchPiece({commit}, searchText) {
-      let res = await fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/pieza/?q={"nregistroinah":{"$like":"%${searchText}%"}}`,  {
+      let res = await fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/pieza/?q={"ncatalogo":{"$like":"%${searchText}%"}}`,  {
         method: 'GET'
       });
 
       let pieces = await res.json();
       commit('SET_PIECES', pieces.items);
-      return pieces;
+      return pieces.items;
     },
   },
 })
