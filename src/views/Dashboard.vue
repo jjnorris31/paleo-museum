@@ -665,6 +665,7 @@
           <v-col cols="12">
             <v-row no-gutters>
               <v-col cols="12"
+                     style="position: relative"
                      class="d-flex align-end justify-start no-gutters">
 
                 <!-- begins search input -->
@@ -706,6 +707,16 @@
                   </v-select>
                 </div>
                 <!-- ends search input -->
+
+                <!-- begins add new item button -->
+                <v-btn height="40px"
+                       depressed
+                       style="margin-bottom: 26px; position: absolute; right: 0"
+                       elevation="4"
+                       @click="openNewItem()"
+                       color="primary">Añadir pieza
+                </v-btn>
+                <!-- ends add new item button -->
               </v-col>
 
 
@@ -747,7 +758,8 @@
                 <v-data-table
                     v-if="!formDialogActive"
                     @click:row="openIndividualItem"
-                    height="400px"
+                    height="550px"
+                    fixed-header
                     v-model="selectedPieces"
                     :loading="loadingTable"
                     loader-height="4"
@@ -808,15 +820,6 @@
                     <NoDataTableField :field="item.nregistroinah"></NoDataTableField>
                   </template>
                 </v-data-table>
-              </v-col>
-              <v-col cols="12">
-                <v-btn height="40px"
-                       depressed
-                       class="mr-2"
-                       elevation="4"
-                       @click="openNewItem()"
-                       color="secondary">Añadir pieza
-                </v-btn>
               </v-col>
             </v-row>
           </v-col>
