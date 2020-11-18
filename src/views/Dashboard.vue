@@ -467,7 +467,7 @@
       <!-- ends dialog -->
 
       <!-- begin delete dialog -->
-      <v-dialog v-model="deleteDialog"
+      <v-dialog v-model="deleteDialogActive"
                 width="600px"
                 class="full-height">
         <!-- begins photo dialog overlay -->
@@ -491,26 +491,24 @@
         <!-- ends photo dialog overlay -->
         <v-row no-gutters
                style="background-color: white; height: 100%"
-               class="pt-7 px-7">
-          <v-col cols="12">
-            <h1 class="mb-1 headline font-weight-medium">Borrado de pieza</h1>
-            <p class="grey--text">¿Estás seguro de borrar esta pieza?</p>
-            <div class="col-12 d-flex justify-end mb-2 no-gutters">
-              <div class="col-5 d-flex no-gutters">
-                <v-btn color="secondary"
-                       dark
-                       class="mr-2"
-                       outlined
-                       @click="deleteDialog = false"
-                       style="border-width: 2px"
-                       height="40px">Cancelar</v-btn>
-                <v-btn color="error"
-                       dark
-                       class="ml-2"
-                       @click="deletePiece()"
-                       elevation="4"
-                       height="40px">Borrar</v-btn>
-              </div>
+               class="pt-6 px-7">
+          <v-col cols="12" class="d-flex no-gutters flex-wrap">
+            <h1 class="mb-1 headline font-weight-medium col-12">Borrado de pieza</h1>
+            <div class="grey--text col-12 mb-4">¿Estás seguro de borrar esta pieza?</div>
+            <div class="col-12 justify-end mb-6 d-flex no-gutters flex-wrap">
+              <v-btn color="secondary"
+                     dark
+                     class="mr-2"
+                     outlined
+                     @click="deleteDialogActive = false"
+                     style="border-width: 2px"
+                     height="40px">Cancelar</v-btn>
+              <v-btn color="error"
+                     dark
+                     class="ml-2"
+                     @click="deleteItem()"
+                     elevation="4"
+                     height="40px">Borrar</v-btn>
             </div>
           </v-col>
         </v-row>
@@ -766,7 +764,6 @@
                      class="mb-4">
                 <v-data-table
                     v-if="!mainDialog"
-                    show-select
                     @click:row="openIndividualItem"
                     height="400px"
                     v-model="selectedPieces"
@@ -791,13 +788,15 @@
                           <v-icon color="grey">mdi-dots-vertical</v-icon>
                         </v-btn>
                       </template>
-                      <v-list>
-                        <v-list-item>
-                          <v-list-item-title @click="openEditItem(item)">Editar</v-list-item-title>
-                        </v-list-item>
-                        <v-list-item>
-                          <v-list-item-title>Eliminar</v-list-item-title>
-                        </v-list-item>
+                      <v-list flat dense>
+                        <v-list-item-group color="primary">
+                          <v-list-item dense>
+                            <v-list-item-title @click="openEditItem(item)">Editar</v-list-item-title>
+                          </v-list-item>
+                          <v-list-item>
+                            <v-list-item-title @click="openDeleteConfirmation(item)">Eliminar</v-list-item-title>
+                          </v-list-item>
+                        </v-list-item-group>
                       </v-list>
                     </v-menu>
 <!--                    <v-icon @click.stop="openEditItem(item)">mdi-pencil</v-icon>-->
@@ -839,7 +838,7 @@
                 <v-btn height="40px"
                        depressed
                        :disabled="selectedPieces.length === 0"
-                       @click="openDelDialog()"
+                       @click="openDeleteConfirmation()"
                        elevation="4"
                        color="error">Borrar pieza
                 </v-btn>
@@ -865,6 +864,7 @@ export default {
     NoDataTableField
   },
   data: () => ({
+    itemToDelete: null,
     options: {},
     filterOptions: {
       search: {
@@ -1040,7 +1040,7 @@ export default {
       },
     ],
     mainDialog: false,
-    deleteDialog: false,
+    deleteDialogActive: false,
     editDialog: false,
     indivDialog: false,
     pieces: [],
@@ -1487,29 +1487,60 @@ export default {
     hideDeleteOverlay() {
       this.deleteOverlay = false;
     },
-    openDelDialog() {
-      this.deleteDialog = true;
+    /**
+     * Set the item to be deleted
+     */
+    setItemToDelete(item) {
+      this.itemToDelete = item;
     },
-    closeDelDialog() {
-      this.deleteDialog = false;
+    /**
+     * Reset the item to be deleted
+     */
+    resetItemToDelete() {
+      this.itemToDelete = null;
+    },
+    /**
+     * Opens the delete confirm dialog
+     * @param item - The item to delete
+     */
+    openDeleteConfirmation(item) {
+      this.setItemToDelete(item);
+      this.deleteDialogActive = true;
+    },
+    /**
+     * Closes the delete confirm dialog
+     */
+    closeDeleteConfirmation() {
+      this.deleteDialogActive = false;
     },
     /**
      * Dispatch the action to delete an item in the database
+     */
+    async deleteItem() {
+      this.showDeleteOverlay();
+      try {
+        await this.$store.dispatch('deletePiece', this.itemToDelete.ncatalogo);
+      } catch (e) {
+        console.log({e});
+      }
+
+      await this.setPieces()
+      this.hideDeleteOverlay();
+      this.closeDeleteConfirmation();
+      this.resetItemToDelete();
+    },
+    /**
+     * Set the pieces with the information of the database
      * @returns {Promise<void>}
      */
-    async deletePiece() {
-      this.showDeleteOverlay();
-      let res = await this.$store.dispatch('deletePiece', this.selectedPieces[0].nregistroinah);
-      if (res === 200) {
-        await this.$store.dispatch('retrievePieces');
-        console.log("DELETED: ", res);
-      } else if (res === 404) {
-        console.log("DELETED FAIL!");
+    async setPieces() {
+      try {
+        this.pieces = await this.$store.dispatch('retrievePieces');
+      } catch (e) {
+        console.log({e});
       }
-      this.hideDeleteOverlay();
-      this.closeDelDialog();
-      this.selectedPieces = [];
-    },
+    }
+
   },
   async mounted() {
     this.showMainOverlay();
