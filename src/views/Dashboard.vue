@@ -378,7 +378,7 @@
                       <div class="d-flex align-start">
                         <v-autocomplete outlined
                                         :loading="loadingLocal"
-                                        :items="localItems"
+                                        :items="locationItems"
                                         cache-items
                                         :rules="[requiredRules]"
                                         item-text="nombre"
@@ -1034,7 +1034,7 @@ export default {
     countryItems: [],
     stateItems: [],
     municipalityItems: [],
-    localItems: [],
+    locationItems: [],
     loadingSpecies: false,
     loadingCountries: false,
     loadingState: false,
@@ -1220,9 +1220,9 @@ export default {
       fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/localidad?q=${query}`, {
         method: 'GET'
       }).then(res => res.json()).then(res => {
-        this.localItems = [];
+        this.locationItems = [];
         res.items.forEach(item => {
-          this.localItems.push(item.idl);
+          this.locationItems.push(item.idl);
         });
       }).catch(err => {
         console.log(err);
@@ -1259,7 +1259,7 @@ export default {
       this.indItem = value;
       this.setMainOverlayText('Abriendo pieza');
       this.showMainOverlay();
-      let res = await this.$store.dispatch('retrieveLocationById', value.idu);
+      let res = await this.$store.dispatch('getUbietyById', value.idu);
       this.indItem.country = res.pais;
       this.indItem.state = res.estado;
       this.indItem.municipality = res.municipio;
@@ -1323,6 +1323,30 @@ export default {
      */
     setPieceIdu(id) {
       this.piece.idu = id;
+    },
+    /**
+     * Sets the state selected to display it in the text field
+     */
+    setPieceIdl(id) {
+      this.piece.idl = id;
+    },
+    /**
+     * Sets the state items to be displayed in the state's list
+     */
+    setLocationItems(locations) {
+      this.locationItems = locations;
+    },
+    /**
+     * Sets the state items to be displayed in the state's list
+     */
+    setSpecieItems(species) {
+      this.specieItems = species;
+    },
+    /**
+     * Sets the state items to be displayed in the state's list
+     */
+    setPieceScientificName(scientificName) {
+      this.piece.nombrecientifico = scientificName;
     },
     /**
      * Sets the state items to be displayed in the state's list
@@ -1491,19 +1515,25 @@ export default {
       this.setEditItem(item);
       this.showMainOverlay();
       this.setMainOverlayText('Abriendo pieza');
-      let res = await this.$store.dispatch('retrieveLocationById', item.idu);
-      this.setCountryItems([res.pais]);
-      this.setCountrySelected(res.pais);
+      let ubietyResponse = await this.$store.dispatch('getUbietyById', item.idu);
+
+      this.setLocationItems([item.idl]);
+      this.setPieceIdl(item.idl);
+      this.setSpecieItems([item.nombrecientifico]);
+      this.setPieceScientificName(item.nombrecientifico);
+
+      this.setCountryItems([ubietyResponse.pais]);
+      this.setCountrySelected(ubietyResponse.pais);
 
       // execute this when the DOM was updated
       this.$nextTick(function () {
         this.municipalityEditAllowed = true;
-        this.setStateItems([res.estado]);
-        this.setStateSelected(res.estado);
+        this.setStateItems([ubietyResponse.estado]);
+        this.setStateSelected(ubietyResponse.estado);
       });
 
-      this.setPieceIdu(res.idu);
-      this.setMunicipalityItems([res]);
+      this.setPieceIdu(ubietyResponse.idu);
+      this.setMunicipalityItems([ubietyResponse]);
       this.municipalityEditAllowed = false;
       this.hideMainOverlay();
       this.closeFormDialog();

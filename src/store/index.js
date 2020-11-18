@@ -148,8 +148,20 @@ export default new Vuex.Store({
 
       return res.status;
     },
-    async retrieveLocationById(context, id) {
+    async getUbietyById(context, id) {
       let res = await fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/ubicacion/${id}`, {
+        method: 'GET'
+      });
+      return await res.json();
+    },
+    async getLocationById(context, id) {
+      let res = await fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/localidad/${id}`, {
+        method: 'GET'
+      });
+      return await res.json();
+    },
+    async getSpecieById(context, id) {
+      let res = await fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/especie/${id}`, {
         method: 'GET'
       });
       return await res.json();
