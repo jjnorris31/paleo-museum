@@ -4,7 +4,7 @@
            justify="center"
            class="white">
       <!-- begin dialog -->
-      <v-dialog v-model="mainDialog"
+      <v-dialog v-model="formDialogActive"
                 fullscreen
                 transition="dialog-bottom-transition"
                 hide-overlay
@@ -34,13 +34,13 @@
           <div style="height: 40px; position: absolute; left: 0"
                class="d-flex align-center ml-4">
             <v-btn icon
-                   @click="editActive ? closeEditItem() : closeNewItem()">
+                   @click="isEditingItem ? closeEditItem() : closeNewItem()">
               <v-icon color="rgba(0, 0, 0, 0.87)" size="32">mdi-close</v-icon>
             </v-btn>
           </div>
           <v-col cols="6">
-            <h1 class="mb-6 text-h4 font-weight-medium" v-if="newItemActive">Nueva pieza</h1>
-            <h1 class="mb-6 text-h4 font-weight-medium" v-if="editActive">Editar pieza</h1>
+            <h1 class="mb-6 text-h4 font-weight-medium" v-if="isAddingItem">Nueva pieza</h1>
+            <h1 class="mb-6 text-h4 font-weight-medium" v-if="isEditingItem">Editar pieza</h1>
             <v-form ref="pieceForm"
                     lazy-validation
                     class="d-flex no-gutters flex-wrap">
@@ -166,7 +166,8 @@
                 <div class="d-flex flex-wrap no-gutters image-container rounded align-center" style="border: 2px darkgray dashed">
                   <v-img height="50%"
                          contain
-                         width="50%" src="https://lh3.googleusercontent.com/proxy/R6FJITNpTCx70Ri1GDctyZu-AoYkSAOY5JG7UNXmzlWKXDIxvRG4xhM73IAdRGwUryVkGQvCePRDhgDnmTCwg7WZUDp3ns-04rzOku0xhegKPshUqIZeUiRhBBVW5kDktaLotb3wmGFNYqukwpiw8i4GSo0"></v-img>
+                         width="50%"
+                         src="https://lh3.googleusercontent.com/proxy/R6FJITNpTCx70Ri1GDctyZu-AoYkSAOY5JG7UNXmzlWKXDIxvRG4xhM73IAdRGwUryVkGQvCePRDhgDnmTCwg7WZUDp3ns-04rzOku0xhegKPshUqIZeUiRhBBVW5kDktaLotb3wmGFNYqukwpiw8i4GSo0"></v-img>
                 </div>
                 <!-- ends image -->
               </div>
@@ -301,7 +302,7 @@
                                           :search-input.sync="searchCountry"
                                           hide-no-data
                                           placeholder="México"
-                                          v-model="countrySltd"
+                                          v-model="countrySelected"
                                           dense>
                           </v-autocomplete>
                         </div>
@@ -317,12 +318,11 @@
                           <v-autocomplete outlined
                                           :loading="loadingState"
                                           :items="stateItems"
-                                          cache-items
                                           :rules="[requiredRules]"
                                           :search-input.sync="searchState"
                                           hide-no-data
                                           placeholder="Jalisco"
-                                          v-model="stateSltd"
+                                          v-model="stateSelected"
                                           dense>
                           </v-autocomplete>
                         </div>
@@ -337,12 +337,12 @@
                         <div class="d-flex align-start">
                           <v-autocomplete outlined
                                           :loading="loadingMun"
-                                          :items="munItems"
+                                          :items="municipalityItems"
                                           cache-items
                                           item-text="municipio"
                                           item-value="idu"
                                           :rules="[requiredRules]"
-                                          :search-input.sync="searchMun"
+                                          :search-input.sync="searchMunicipality"
                                           hide-no-data
                                           placeholder="Zapopan"
                                           v-model="piece.idu"
@@ -440,12 +440,12 @@
                        dark
                        class="mr-2"
                        outlined
-                       @click="editActive ? closeEditItem() : closeNewItem()"
+                       @click="isEditingItem ? closeEditItem() : closeNewItem()"
                        style="border-width: 2px"
                        height="40px">Cancelar</v-btn>
                 <v-btn color="secondary"
                        dark
-                       v-if="newItemActive"
+                       v-if="isAddingItem"
                        class="ml-2"
                        elevation="4"
                        @click="savePiece()"
@@ -453,7 +453,7 @@
                 </v-btn>
                 <v-btn color="secondary"
                        dark
-                       v-if="editActive"
+                       v-if="isEditingItem"
                        class="ml-2"
                        @click="editDialog = true"
                        elevation="4"
@@ -745,7 +745,7 @@
               <v-col cols="12"
                      class="mb-4">
                 <v-data-table
-                    v-if="!mainDialog"
+                    v-if="!formDialogActive"
                     @click:row="openIndividualItem"
                     height="400px"
                     v-model="selectedPieces"
@@ -772,7 +772,7 @@
                       </template>
                       <v-list flat dense>
                         <v-list-item-group>
-                          <v-list-item @click="openEditItem(item)">
+                          <v-list-item @click="openEditForm(item)">
                             <v-list-item-title>Editar</v-list-item-title>
                           </v-list-item>
                           <v-list-item @click="openDeleteConfirmation(item)">
@@ -839,6 +839,7 @@ export default {
     NoDataTableField
   },
   data: () => ({
+    municipalityEditAllowed: false,
     itemToDelete: null,
     options: {},
     filterOptions: {
@@ -902,14 +903,10 @@ export default {
       idl: '',
       idu: '',
       imagen: '',
-    }, // a new piece to be saved
-    countries: [],
-    states: [],
-    municipalities: [],
-    countrySltd: '',
-    stateSltd: '',
-    munSltd: '',
-    localSltd: '',
+    },
+    countrySelected: '',
+    stateSelected: '',
+    locationSelected: '',
     institutions: [],
     tableColumnsSelected: [
       {
@@ -1014,7 +1011,7 @@ export default {
         value: 'nombrecientifico'
       },
     ],
-    mainDialog: false,
+    formDialogActive: false,
     deleteDialogActive: false,
     editDialog: false,
     indivDialog: false,
@@ -1024,19 +1021,19 @@ export default {
     mainOverlay: false, // page's flag overlay
     mainOverlayText: '', // text page's overlay
     indItem: null,
-    editActive: false,
-    newItemActive: false,
+    isEditingItem: false,
+    isAddingItem: false,
     editLocation: {},
     numberOfColumns: 6,
     searchSpecie: null,
     searchCountry: null,
     searchState: null,
-    searchMun: null,
+    searchMunicipality: null,
     searchLocal: null,
     specieItems: [],
     countryItems: [],
     stateItems: [],
-    munItems: [],
+    municipalityItems: [],
     localItems: [],
     loadingSpecies: false,
     loadingCountries: false,
@@ -1089,13 +1086,13 @@ export default {
       newVal && newVal !== this.piece.nombrecientifico && this.querySpecies(newVal)
     },
     searchCountry(newVal) {
-      newVal && newVal !== this.countrySltd && this.queryCountries(newVal);
+      newVal && newVal !== this.countrySelected && this.queryCountries(newVal);
     },
     searchState(newVal) {
-      newVal && newVal !== this.stateSltd && this.queryStates(newVal);
+      newVal && newVal !== this.stateSelected && this.queryStates(newVal);
     },
-    searchMun(newVal) {
-      newVal && newVal !== this.piece.idu && this.queryMun(newVal);
+    searchMunicipality(newVal) {
+      newVal && newVal !== this.piece.idu && this.queryMunicipalities(newVal);
     },
     searchLocal(newVal) {
       newVal && newVal !== this.piece.idl && this.queryLocal(newVal);
@@ -1106,20 +1103,19 @@ export default {
       },
       immediate: true,
     },
-    async countrySltd(val) {
+    countrySelected(val) {
       if (val) {
-        this.resetStateSltd();
-        this.resetStateItems();
-        this.resetSearchState();
+        this.setStateSelected('');
+        this.setStateItems([]);
+        this.setSearchState(null);
       }
     },
-    async stateSltd(val) {
-      let payload = {
-        country: this.countrySltd,
-        state: val,
+    stateSelected(val) {
+      if (val && !this.municipalityEditAllowed) {
+        this.piece.idu = '';
+        this.setMunicipalityItems([]);
+        this.setSearchMunicipality(null);
       }
-      let muns =  await this.$store.dispatch('retrieveMun', payload);
-      this.municipalities = Array.from(new Set(muns));
     },
   },
   methods: {
@@ -1180,7 +1176,7 @@ export default {
     queryStates(v) {
       // Lazily load input items
       this.loadingState = true;
-      let query = encodeURIComponent(`{"pais":{"$like":"%${this.countrySltd}%"}, "estado":{"$like":"%${v}%"}}`);
+      let query = encodeURIComponent(`{"pais":{"$like":"%${this.countrySelected}%"}, "estado":{"$like":"%${v}%"}}`);
       fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/ubicacion?q=${query}`, {
         method: 'GET'
       }).then(res => res.json()).then(res => {
@@ -1197,16 +1193,16 @@ export default {
      * with the user start to typing
      * @param v: the text typed by the user
      */
-    queryMun(v) {
+    queryMunicipalities(v) {
       // Lazily load input items
       this.loadingMun = true;
-      let query = encodeURIComponent(`{"pais":{"$like":"%${this.countrySltd}%"}, "estado":{"$like":"%${this.stateSltd}%"},"municipio":{"$like":"%${v}%"}}`);
+      let query = encodeURIComponent(`{"pais":{"$like":"%${this.countrySelected}%"}, "estado":{"$like":"%${this.stateSelected}%"},"municipio":{"$like":"%${v}%"}}`);
       fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/ubicacion?q=${query}`, {
         method: 'GET'
       }).then(res => res.json()).then(res => {
-        this.munItems = [];
+        this.municipalityItems = [];
         res.items.forEach(item => {
-          this.munItems.push(item);
+          this.municipalityItems.push(item);
         });
       }).catch(err => {
         console.log(err);
@@ -1236,7 +1232,7 @@ export default {
      * Resets the state selected
      */
     resetStateSltd() {
-      this.stateSltd = '';
+      this.stateSelected = '';
     },
     /**
      * Resets the state items array
@@ -1247,8 +1243,14 @@ export default {
     /**
      * Resets the search state
      */
-    resetSearchState() {
-      this.searchState = null;
+    setSearchState(searchState) {
+      this.searchState = searchState;
+    },
+    /**
+     * Resets the search municipality
+     */
+    setSearchMunicipality(searchMunicipality) {
+      this.searchMunicipality = searchMunicipality;
     },
     showMessage() {
       console.log("mesageee!!")
@@ -1264,19 +1266,13 @@ export default {
       this.hideMainOverlay();
       this.indivDialog = true;
     },
-    closeDialog() {
-      this.mainDialog = false;
-    },
-    openDialog() {
-      this.mainDialog = true;
-    },
     /**
      * Open the new item dialog and reset the piece variable
      */
     openNewItem() {
-      this.newItemActive = true;
+      this.isAddingItem = true;
       this.resetPiece();
-      this.openDialog()
+      this.closeFormDialog()
       if (this.$refs.pieceForm !== undefined) {
         this.$refs.pieceForm.reset();
       }
@@ -1285,22 +1281,11 @@ export default {
      * Closes the new item dialog and reset the piece variable
      */
     closeNewItem() {
-      this.newItemActive = false;
-      this.closeDialog();
+      this.isAddingItem = false;
+      this.openFormDialog();
     },
-    /**
-     * Opens the edit item dialog
-     */
-    async openEditItem(item) {
-      this.editActive = true;
-      this.showMainOverlay();
-      this.setMainOverlayText('Abriendo pieza');
-      let res = await this.$store.dispatch('retrieveLocationById', item.idu);
-      this.setCountrySlt(res.pais);
-      this.setStateSlt(res.estado);
-      this.hideMainOverlay();
-      this.openDialog();
-      this.piece = item;
+    setEditItem(isEdit) {
+      this.isEditingItem = isEdit;
     },
     /**
      * Set the main's overlay text
@@ -1312,21 +1297,45 @@ export default {
     /**
      * Sets the country selected to display it in the text field
      */
-    setCountrySlt(country) {
-      this.countrySltd = country;
+    setCountrySelected(country) {
+      this.countrySelected = country;
+    },
+    /**
+     * Sets the countries items to be displayed in the country's list
+     */
+    setCountryItems(countries) {
+      this.countryItems = countries;
     },
     /**
      * Sets the state selected to display it in the text field
      */
-    setStateSlt(state) {
-      this.stateSltd = state;
+    setStateSelected(state) {
+      this.stateSelected = state;
+    },
+    /**
+     * Sets the state items to be displayed in the state's list
+     */
+    setStateItems(states) {
+      this.stateItems = states;
+    },
+    /**
+     * Sets the state selected to display it in the text field
+     */
+    setPieceIdu(id) {
+      this.piece.idu = id;
+    },
+    /**
+     * Sets the state items to be displayed in the state's list
+     */
+    setMunicipalityItems(municipalities) {
+      this.municipalityItems = municipalities;
     },
     /**
      * Closes the edit piece dialog and reset the piece variable
      */
     closeEditItem() {
-      this.editActive = false;
-      this.closeDialog();
+      this.isEditingItem = false;
+      this.openFormDialog();
     },
     /**
      * Erase all the info of the piece selected
@@ -1475,6 +1484,32 @@ export default {
       this.itemToDelete = null;
     },
     /**
+     * Opens the edit form
+     * @params item - The item to be modified
+     */
+    async openEditForm(item) {
+      this.setEditItem(item);
+      this.showMainOverlay();
+      this.setMainOverlayText('Abriendo pieza');
+      let res = await this.$store.dispatch('retrieveLocationById', item.idu);
+      this.setCountryItems([res.pais]);
+      this.setCountrySelected(res.pais);
+
+      // execute this when the DOM was updated
+      this.$nextTick(function () {
+        this.municipalityEditAllowed = true;
+        this.setStateItems([res.estado]);
+        this.setStateSelected(res.estado);
+      });
+
+      this.setPieceIdu(res.idu);
+      this.setMunicipalityItems([res]);
+      this.municipalityEditAllowed = false;
+      this.hideMainOverlay();
+      this.closeFormDialog();
+      this.piece = item;
+    },
+    /**
      * Opens the delete confirm dialog
      * @param item - The item to delete
      */
@@ -1487,6 +1522,18 @@ export default {
      */
     closeDeleteConfirmation() {
       this.deleteDialogActive = false;
+    },
+    /**
+     * Opens the form dialog
+     */
+    openFormDialog() {
+      this.formDialogActive = false;
+    },
+    /**
+     * Closes the form dialog
+     */
+    closeFormDialog() {
+      this.formDialogActive = true;
     },
     /**
      * Dispatch the action to delete an item in the database

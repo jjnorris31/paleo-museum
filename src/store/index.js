@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+
 const states = require('../misc/estados-municipios.json');
 
 Vue.use(Vuex)
@@ -151,9 +152,7 @@ export default new Vuex.Store({
       let res = await fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/ubicacion/${id}`, {
         method: 'GET'
       });
-
-      let location = await res.json();
-      return location;
+      return await res.json();
     },
     async searchPiece({commit}, searchText) {
       let res = await fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/pieza/?q={"ncatalogo":{"$like":"%${searchText}%"}}`,  {
