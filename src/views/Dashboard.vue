@@ -671,7 +671,7 @@
                 <!-- begins search input -->
                 <div style="width: 250px">
                   <v-text-field outlined
-                                @keyup="searchInDb()"
+                                @keyup.enter="searchInDb()"
                                 v-model="filterOptions.search.pattern"
                                 prepend-inner-icon="mdi-magnify"
                                 filled
@@ -1045,6 +1045,9 @@ export default {
     loadingLocal: false,
   }),
   computed: {
+    searchPattern() {
+      return this.filterOptions.search.pattern;
+    },
     storeLocations() {
       return this.$store.getters.locations;
     },
@@ -1057,6 +1060,14 @@ export default {
     ),
   },
   watch: {
+     async searchPattern(val) {
+      if (val === '') {
+        this.setMainOverlayText('Buscando algo increíble');
+        this.showMainOverlay();
+        await this.setPieces();
+        this.hideMainOverlay();
+      }
+    },
     options: {
       handler() {
         this.getPiecesFromDatabase();
@@ -1440,14 +1451,15 @@ export default {
       this.search = '';
     },
     async searchInDb() {
-      this.showMainOverlay();
       this.setMainOverlayText('Buscando algo increíble');
+      this.showMainOverlay();
       if (this.filterOptions.search.pattern !== '') {
+        console.log("SEARCH TEXT: ", this.filterOptions.search.pattern);
         clearTimeout(this.timeout);
         // timeout to delay the search after the user ends typing
         this.timeout = setTimeout(async () => {
           let query = addQueryParameters(this.filterOptions);
-          fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/pieza${query}`, {
+          await fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/pieza${query}`, {
             method: 'GET'
           }).then(res => res.json()).then(res => {
             this.pieces = res.items;
@@ -1455,10 +1467,6 @@ export default {
             console.log(err);
           }).finally(() => (this.hideMainOverlay()));
         }, 1000);
-        console.log(this.search);
-      } else {
-        this.pieces = await this.$store.dispatch('retrievePieces');
-        this.hideMainOverlay();
       }
     },
     /**
