@@ -455,7 +455,7 @@
                        dark
                        v-if="isEditingItem"
                        class="ml-2"
-                       @click="editDialog = true"
+                       @click="editDialogActive = true"
                        elevation="4"
                        height="40px">Guardar cambios
                 </v-btn>
@@ -498,7 +498,7 @@
       <!-- ends delete dialog -->
 
       <!-- begin delete dialog -->
-      <v-dialog v-model="editDialog"
+      <v-dialog v-model="editDialogActive"
                 width="600px"
                 class="full-height">
         <!-- begins photo dialog overlay -->
@@ -532,7 +532,7 @@
                        dark
                        class="mr-2"
                        outlined
-                       @click="editDialog = false"
+                       @click="editDialogActive = false"
                        style="border-width: 2px"
                        height="40px">Cancelar</v-btn>
                 <v-btn color="error"
@@ -1013,7 +1013,7 @@ export default {
     ],
     formDialogActive: false,
     deleteDialogActive: false,
-    editDialog: false,
+    editDialogActive: false,
     indivDialog: false,
     pieces: [],
     selectedPieces: [],
@@ -1404,14 +1404,13 @@ export default {
       }
     },
     async updatePiece() {
-      this.editDialog = false;
+      this.editDialogActive = false;
       this.showSaveOverlay();
-      let res = await this.$store.dispatch('updatePiece', this.piece);
-      console.log(res);
-      if (res) {
-        await this.$store.dispatch('retrievePieces');
-      } else {
-        console.log('something has happened!');
+      try {
+        await this.$store.dispatch('updatePiece', this.piece);
+        await this.setPieces();
+      } catch (err) {
+        console.log('No se actualizó correctamente...')
       }
       this.hideSaveOverlay();
       this.resetSearch();

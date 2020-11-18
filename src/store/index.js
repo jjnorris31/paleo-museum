@@ -124,7 +124,7 @@ export default new Vuex.Store({
       return res.ok;
     },
     async updatePiece(context, piece) {
-      let res = await fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/pieza/${piece.nregistroinah}`, {
+      let res = await fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/pieza/${piece.ncatalogo}`, {
         method: 'PUT',
         body: JSON.stringify(piece),
         headers: new Headers({
