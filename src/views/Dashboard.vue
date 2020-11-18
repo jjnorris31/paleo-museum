@@ -468,27 +468,9 @@
 
       <!-- begin delete dialog -->
       <v-dialog v-model="deleteDialogActive"
+
                 width="600px"
                 class="full-height">
-        <!-- begins photo dialog overlay -->
-        <v-overlay v-model="deleteOverlay"
-                   absolute>
-          <v-row no-gutters>
-            <v-col cols="12"
-                   class="d-flex justify-center">
-              <v-progress-circular width="4"
-                                   size="64"
-                                   indeterminate
-                                   color="white">
-              </v-progress-circular>
-            </v-col>
-            <v-col cols="12"
-                   class="text-h6 text-center mt-2">
-              <div>Eliminando pieza</div>
-            </v-col>
-          </v-row>
-        </v-overlay>
-        <!-- ends photo dialog overlay -->
         <v-row no-gutters
                style="background-color: white; height: 100%"
                class="pt-6 px-7">
@@ -500,7 +482,7 @@
                      dark
                      class="mr-2"
                      outlined
-                     @click="deleteDialogActive = false"
+                     @click="closeDeleteConfirmation()"
                      style="border-width: 2px"
                      height="40px">Cancelar</v-btn>
               <v-btn color="error"
@@ -789,12 +771,12 @@
                         </v-btn>
                       </template>
                       <v-list flat dense>
-                        <v-list-item-group color="primary">
-                          <v-list-item dense>
-                            <v-list-item-title @click="openEditItem(item)">Editar</v-list-item-title>
+                        <v-list-item-group>
+                          <v-list-item @click="openEditItem(item)">
+                            <v-list-item-title>Editar</v-list-item-title>
                           </v-list-item>
-                          <v-list-item>
-                            <v-list-item-title @click="openDeleteConfirmation(item)">Eliminar</v-list-item-title>
+                          <v-list-item @click="openDeleteConfirmation(item)">
+                            <v-list-item-title>Eliminar</v-list-item-title>
                           </v-list-item>
                         </v-list-item-group>
                       </v-list>
@@ -834,13 +816,6 @@
                        elevation="4"
                        @click="openNewItem()"
                        color="secondary">Añadir pieza
-                </v-btn>
-                <v-btn height="40px"
-                       depressed
-                       :disabled="selectedPieces.length === 0"
-                       @click="openDeleteConfirmation()"
-                       elevation="4"
-                       color="error">Borrar pieza
                 </v-btn>
               </v-col>
             </v-row>

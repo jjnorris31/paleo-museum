@@ -125,4 +125,6 @@ export default {
   input[type=number] {
     -moz-appearance: textfield;
   }
+
+
 </style>
