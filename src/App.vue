@@ -2,7 +2,6 @@
   <v-app>
     <v-navigation-drawer clipped
                          app
-                         style="background-color: #f3f4f5"
                          width="300">
       <v-row no-gutters>
         <v-col cols="12"
@@ -13,18 +12,19 @@
           </v-img>
         </v-col>
         <v-col cols="12">
-          <v-list flat>
-            <v-list-item-group v-model="listItemSelected" >
+          <v-list flat dense>
+            <v-list-item-group v-model="listItemSelected">
               <v-list-item @click="showMessage()"
+                           dense
+                           color="#000000"
                            class="list-item">
                 <v-list-item-icon>
                   <v-icon>mdi-home</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Inicio</v-list-item-title>
               </v-list-item>
-
-
               <v-list-group
+                color="#000000"
                 :value="true"
                 no-action
                 prepend-icon="mdi-table">
@@ -32,6 +32,7 @@
                   <v-list-item-title>Tablas</v-list-item-title>
                 </template>
                   <v-list-item @click="showMessage()"
+                               color="#000000"
                                v-for="item in tableItems"
                                :key="item.text">
                     <v-list-item-icon>

@@ -139,7 +139,7 @@ export default new Vuex.Store({
       })
       let pieces = await res.json();
       commit('SET_PIECES', pieces.items);
-      return pieces.items;
+      return {items: pieces.items, hasMore: pieces.hasMore};
     },
     async deletePiece(context, id) {
       let res = await fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/pieza/${id}`, {

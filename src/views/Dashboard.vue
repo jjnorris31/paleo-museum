@@ -3,6 +3,7 @@
     <v-row no-gutters
            justify="center"
            class="white">
+
       <!-- begin dialog -->
       <v-dialog v-model="formDialogActive"
                 fullscreen
@@ -468,7 +469,6 @@
 
       <!-- begin delete dialog -->
       <v-dialog v-model="deleteDialogActive"
-
                 width="600px"
                 class="full-height">
         <v-row no-gutters
@@ -549,8 +549,9 @@
       <!-- ends delete dialog -->
 
       <!-- begin main overlay -->
-      <v-overlay v-model="mainOverlay"
-                 absolute>
+      <v-overlay v-model="overlayActive"
+                 opacity=".70"
+                 z-index="205">
         <v-row no-gutters>
           <v-col cols="12"
                  class="d-flex justify-center">
@@ -639,57 +640,51 @@
         </v-card>
       </v-dialog>
 
-      <!-- begin header -->
-      <v-col cols="12"
-             class="mt-12 mb-4 px-12">
-        <v-row no-gutters>
-          <v-col cols="8">
-            <h2 class="text-h4 font-weight-medium">Vista general</h2>
-          </v-col>
-        </v-row>
-      </v-col>
-      <!-- ends header -->
 
       <!-- begin table -->
       <v-col cols="12"
-             class="main-container mb-9 rounded px-12">
+             class="main-container mb-9 rounded px-12 mt-12">
         <v-row no-gutters
                justify="center">
-
-          <!-- begin title -->
-          <v-col cols="12">
-            <h3 class="text-h6 museum-text--grey font-weight-medium">Piezas registradas</h3>
-          </v-col>
-          <!-- ends  title -->
 
           <v-col cols="12">
             <v-row no-gutters>
               <v-col cols="12"
-                     style="position: relative"
-                     class="d-flex align-end justify-start no-gutters">
+                     style="position: relative;"
+                     class="d-flex align-end justify-end no-gutters align-start">
+
+                <!-- begins title-->
+                <h2 class="text-h4 font-weight-medium"
+                    style="position: absolute; left: 0; margin-bottom: 26px">Piezas</h2>
+                <!-- ends title-->
+
 
                 <!-- begins search input -->
                 <div style="width: 250px">
+                  <div class="input-label">
+                    Búsqueda
+                  </div>
                   <v-text-field outlined
                                 @keyup.enter="searchInDb()"
                                 v-model="filterOptions.search.pattern"
-                                prepend-inner-icon="mdi-magnify"
-                                filled
+                                append-icon="mdi-magnify"
                                 class="mr-2"
-                                placeholder="Búsqueda"
                                 dense>
                   </v-text-field>
                 </div>
                 <!-- ends search input -->
 
                 <!-- begins search input -->
-                <div style="width: 300px">
+                <div style="width: 300px" class="mx-2">
+                  <div class="input-label">
+                    Buscar en
+                  </div>
                   <v-select
                     v-model="filterOptions.search.columns"
                     :items="headers"
                     multiple
+                    color="secondary"
                     item-value="value"
-                    class="ml-2"
                     outlined
                     dense>
                     <template v-slot:selection="{ item, index }">
@@ -711,10 +706,11 @@
                 <!-- begins add new item button -->
                 <v-btn height="40px"
                        depressed
-                       style="margin-bottom: 26px; position: absolute; right: 0"
-                       elevation="4"
+                       outlined
+                       class="ml-2"
+                       style="margin-bottom: 26px; border-width: 2px"
                        @click="openNewItem()"
-                       color="primary">Añadir pieza
+                       color="secondary">Añadir pieza
                 </v-btn>
                 <!-- ends add new item button -->
               </v-col>
@@ -723,11 +719,14 @@
               <!-- begins columns select -->
               <v-col cols="12">
                 <div>
+                  <div class="input-label">
+                    Columnas mostradas
+                  </div>
                   <v-combobox
                     v-model="tableColumnsSelected"
                     :items="headers"
-                    hint="7 columnas máximo"
-                    label="Selecciona las columnas"
+                    dense
+                    hint="Máximo 7 columnas"
                     persistent-hint
                     return-object
                     outlined
@@ -737,6 +736,7 @@
                     chips>
                     <template v-slot:selection="{ attrs, item, select, selected }">
                       <v-chip
+                        :color="!item.disabled ? 'primary' : ''"
                         v-bind="attrs"
                         class="my-1"
                         :input-value="selected"
@@ -757,18 +757,19 @@
                      class="mb-4">
                 <v-data-table
                     v-if="!formDialogActive"
+                    :server-items-length="totalPieces"
                     @click:row="openIndividualItem"
-                    height="550px"
+                    height="600px"
                     fixed-header
+                    :items-per-page="25"
                     v-model="selectedPieces"
+                    :options.sync="options"
                     :loading="loadingTable"
                     loader-height="4"
                     item-key="ncatalogo"
                     loading-text="Desenterrando los fósiles..."
                     :headers="tableColumnsToRender"
-                    :items="pieces"
-                    :options.sync="options"
-                    :server-items-length="25">
+                    :items="pieces">
                   <template v-slot:item.actions="{item}">
                     <v-menu
                         bottom
@@ -820,6 +821,8 @@
                     <NoDataTableField :field="item.nregistroinah"></NoDataTableField>
                   </template>
                 </v-data-table>
+                <v-col cols="12">
+                </v-col>
               </v-col>
             </v-row>
           </v-col>
@@ -842,6 +845,7 @@ export default {
     NoDataTableField
   },
   data: () => ({
+    totalPieces: 0,
     municipalityEditAllowed: false,
     itemToDelete: null,
     options: {},
@@ -934,17 +938,17 @@ export default {
         value: 'nombrecientifico'
       },
       {
-        text: 'Datación',
-        align: 'start',
-        sortable: true,
-        value: 'datacion',
-      },
-      {
         text: 'Forma ingreso',
         disabled: true,
         align: 'start',
         sortable: true,
         value: 'formaingreso',
+      },
+      {
+        text: 'Datación',
+        align: 'start',
+        sortable: true,
+        value: 'datacion',
       },
     ],
     tableColumnsToRender: [],
@@ -1021,7 +1025,7 @@ export default {
     pieces: [],
     selectedPieces: [],
     timeout: null,
-    mainOverlay: false, // page's flag overlay
+    overlayActive: false, // page's flag overlay
     mainOverlayText: '', // text page's overlay
     indItem: null,
     isEditingItem: false,
@@ -1062,16 +1066,17 @@ export default {
   watch: {
      async searchPattern(val) {
       if (val === '') {
-        this.setMainOverlayText('Buscando algo increíble');
+        this.setMainOverlayText('Regresando todo a su lugar...');
         this.showMainOverlay();
-        await this.setPieces();
+        await this.getPiecesFromDatabase();
         this.hideMainOverlay();
       }
     },
     options: {
       handler() {
         this.getPiecesFromDatabase();
-      }
+      },
+      deep: true
     },
     getPieces: {
       handler: function (val) {
@@ -1134,8 +1139,28 @@ export default {
   },
   methods: {
     async getPiecesFromDatabase() {
+      const {page} = this.options;
       this.loadingTable = true;
-      this.pieces = await this.$store.dispatch('retrievePieces');
+      let query = addQueryParameters({
+        offset: (25 * (page - 1)),
+        search: {
+          pattern: this.filterOptions.search.pattern,
+          columns: [],
+        }
+      })
+      await fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/pieza/${query}`, {
+        method: 'GET'
+      }).then(res => res.json()).then(res => {
+        if (res.hasMore) {
+          // calculating the
+          this.totalPieces = ((25 * (page + 1)));
+        } else {
+          this.totalPieces = (25 * page);
+        }
+        this.pieces = res.items;
+      }).catch(err => {
+        console.log(err);
+      }).finally(() => (this.hideMainOverlay()));
       this.loadingTable = false;
     },
     remove(item) {
@@ -1453,6 +1478,8 @@ export default {
     async searchInDb() {
       this.setMainOverlayText('Buscando algo increíble');
       this.showMainOverlay();
+      this.options.page = 1;
+      this.totalPieces = 25;
       if (this.filterOptions.search.pattern !== '') {
         console.log("SEARCH TEXT: ", this.filterOptions.search.pattern);
         clearTimeout(this.timeout);
@@ -1473,13 +1500,13 @@ export default {
      * Show the main overlay
      */
     showMainOverlay() {
-      this.mainOverlay = true;
+      this.overlayActive = true;
     },
     /**
      * Hide the main overlay
      */
     hideMainOverlay() {
-      this.mainOverlay = false;
+      this.overlayActive = false;
     },
     /**
      * Show the save's overlay
@@ -1579,15 +1606,15 @@ export default {
      * Dispatch the action to delete an item in the database
      */
     async deleteItem() {
-      this.showDeleteOverlay();
+      this.setMainOverlayText('Eliminando pieza');
+      this.showMainOverlay();
       try {
         await this.$store.dispatch('deletePiece', this.itemToDelete.ncatalogo);
       } catch (e) {
         console.log({e});
       }
-
       await this.setPieces()
-      this.hideDeleteOverlay();
+      this.hideMainOverlay();
       this.closeDeleteConfirmation();
       this.resetItemToDelete();
     },
@@ -1597,7 +1624,11 @@ export default {
      */
     async setPieces() {
       try {
-        this.pieces = await this.$store.dispatch('retrievePieces');
+        let res = await this.$store.dispatch('retrievePieces');
+        this.pieces = res.items;
+        if (res.hasMore) {
+          this.pages = 2;
+        }
       } catch (e) {
         console.log({e});
       }
@@ -1614,7 +1645,7 @@ export default {
     await this.$store.dispatch('retrieveLocl');
     await this.$store.dispatch('retrieveSpecies');
     */
-    await this.$store.dispatch('retrievePieces');
+    //await this.setPieces();
     // let p1 = this.$store.dispatch('retrieveLocations');
     // let p2 = this.$store.commit('SET_STATES');
     // let p3 = this.$store.dispatch('retrieveInst');
@@ -1649,6 +1680,10 @@ export default {
     margin-bottom: 15px;
     width: 265px;
     height: 265px;
+  }
+
+  .v-data-footer__select {
+    display: none;
   }
 
 </style>
