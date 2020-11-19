@@ -927,27 +927,27 @@ export default {
         text: 'Elemento anatómico',
         align: 'start',
         disabled: true,
-        sortable: true,
+        sortable: false,
         value: 'elematomico',
       },
       {
         text: 'Nombre científico',
         align: 'start',
         disabled: true,
-        sortable: true,
+        sortable: false,
         value: 'nombrecientifico'
       },
       {
         text: 'Forma ingreso',
         disabled: true,
         align: 'start',
-        sortable: true,
+        sortable: false,
         value: 'formaingreso',
       },
       {
         text: 'Datación',
         align: 'start',
-        sortable: true,
+        sortable: false,
         value: 'datacion',
       },
     ],
@@ -970,51 +970,51 @@ export default {
         text: 'Elemento anatómico',
         align: 'start',
         disabled: true,
-        sortable: true,
+        sortable: false,
         value: 'elematomico',
       },
       {
         text: 'Forma ingreso',
         disabled: true,
         align: 'start',
-        sortable: true,
+        sortable: false,
         value: 'formaingreso',
       },
       {
         text: 'Estatus',
         align: 'start',
-        sortable: true,
+        sortable: false,
         value: 'estatus',
       },
       {
         text: 'Estado taxonómico',
         align: 'start',
-        sortable: true,
+        sortable: false,
         value: 'estatustaxonomico',
       },
       {
         text: 'Datación',
         align: 'start',
-        sortable: true,
+        sortable: false,
         value: 'datacion',
       },
       {
         text: 'Longitud',
         align: 'start',
-        sortable: true,
+        sortable: false,
         value: 'longitud',
       },
       {
         text: 'Latitud',
         align: 'start',
-        sortable: true,
+        sortable: false,
         value: 'latitud',
       },
       {
         text: 'Nombre científico',
         align: 'start',
         disabled: true,
-        sortable: true,
+        sortable: false,
         value: 'nombrecientifico'
       },
     ],
@@ -1139,13 +1139,15 @@ export default {
   },
   methods: {
     async getPiecesFromDatabase() {
-      const {page} = this.options;
+      const {page, sortBy, sortDesc} = this.options;
+      console.log(sortBy);
+      console.log(sortDesc);
       this.loadingTable = true;
       let query = addQueryParameters({
         offset: (25 * (page - 1)),
-        search: {
-          pattern: this.filterOptions.search.pattern,
-          columns: [],
+        orderby: sortBy.length === 0 ? false : {
+          column: 'ncatalogo',
+          direction: sortDesc[0] ? 'DESC' : 'ASC'
         }
       })
       await fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/pieza/${query}`, {
@@ -1447,7 +1449,9 @@ export default {
       this.showSaveOverlay();
       try {
         await this.$store.dispatch('updatePiece', this.piece);
-        await this.setPieces();
+        this.options.page = 1;
+        this.totalPieces = 25;
+        await this.getPiecesFromDatabase();
       } catch (err) {
         console.log('No se actualizó correctamente...')
       }
@@ -1613,7 +1617,7 @@ export default {
       } catch (e) {
         console.log({e});
       }
-      await this.setPieces()
+      await this.getPiecesFromDatabase();
       this.hideMainOverlay();
       this.closeDeleteConfirmation();
       this.resetItemToDelete();
