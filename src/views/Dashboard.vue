@@ -164,11 +164,40 @@
                 <!-- ends fields -->
 
                 <!-- begins image -->
-                <div class="d-flex flex-wrap no-gutters image-container rounded align-center" style="border: 2px darkgray dashed">
-                  <v-img height="50%"
-                         contain
-                         width="50%"
-                         src="https://lh3.googleusercontent.com/proxy/R6FJITNpTCx70Ri1GDctyZu-AoYkSAOY5JG7UNXmzlWKXDIxvRG4xhM73IAdRGwUryVkGQvCePRDhgDnmTCwg7WZUDp3ns-04rzOku0xhegKPshUqIZeUiRhBBVW5kDktaLotb3wmGFNYqukwpiw8i4GSo0"></v-img>
+                <div class="d-flex flex-wrap no-gutters image-container rounded align-center"
+                     style="border: 2px darkgray dashed">
+                  <v-row no-gutters class="align-center justify-center body-1">
+                    <v-col cols="12">
+                      <div @drop="dropPhotoFile"
+                           @dragover="dragPhotoFile"
+                           @dragleave="leavePhotoFile"
+                           class="primary--text"
+                           style="height: 265px; position: relative">
+                        <input type="file"
+                               style="overflow: hidden; opacity: 0; width: 100%; height: 100%; position: absolute"
+                               id="assetsPhotoHandle"
+                               ref="photoInput"
+                               @change="onFileSelected"
+                               accept="image/*">
+                        <label for="assetsPhotoHandle"
+                               class="full-width fill-height d-flex align-content-center justify-center flex-wrap no-gutters">
+                          <div class="col-12 d-flex no-gutters justify-center align-center flex-wrap">
+                            <v-icon class="mb-2"
+                                    size="96">{{ photoFile !== null ? 'mdi-check' : 'mdi-image-outline' }}</v-icon>
+                            <div class="col-10 text-center input-label" v-if="photoFile === null">
+                              <span class="font-weight-bold">Elige un archivo</span> o arrástralo aquí
+                            </div>
+                            <div class="col-11 text-center caption"
+                                 style="color: #828282"
+                                 v-else>
+                              <span>Archivo</span>: {{photoFile.name}}<br>
+                              <span>Tamaño</span>: {{fileSizeInMb(photoFile).toFixed(2)}}Mb
+                            </div>
+                          </div>
+                        </label>
+                      </div>
+                    </v-col>
+                  </v-row>
                 </div>
                 <!-- ends image -->
               </div>
@@ -666,6 +695,7 @@
                   </div>
                   <v-text-field outlined
                                 @keyup.enter="searchInDb()"
+                                placeholder="MPG-123-ABC"
                                 v-model="filterOptions.search.pattern"
                                 append-icon="mdi-magnify"
                                 class="mr-2"
@@ -838,9 +868,11 @@ import {mapGetters} from 'vuex'
 import {stdRules, requiredRules, nameRules, decimalRules, columnsRules} from "@/misc/rules";
 import NoDataTableField from "@/components/NoDataTableField";
 import {addQueryParameters} from '@/misc/util';
+import dropImage from "@/misc/dropImage";
 
 export default {
   name: "Dashboard",
+  mixins: [dropImage],
   components: {
     NoDataTableField
   },
@@ -1140,16 +1172,19 @@ export default {
   methods: {
     async getPiecesFromDatabase() {
       const {page, sortBy, sortDesc} = this.options;
-      console.log(sortBy);
-      console.log(sortDesc);
       this.loadingTable = true;
       let query = addQueryParameters({
         offset: (25 * (page - 1)),
         orderby: sortBy.length === 0 ? false : {
           column: 'ncatalogo',
-          direction: sortDesc[0] ? 'DESC' : 'ASC'
+          direction: sortDesc[0] ? 'DESC' : 'ASC',
+        },
+        search: this.filterOptions.search.pattern === '' ? false : {
+          pattern: this.filterOptions.search.pattern,
+          columns: this.filterOptions.search.columns
         }
-      })
+      });
+      console.log({query})
       await fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/pieza/${query}`, {
         method: 'GET'
       }).then(res => res.json()).then(res => {
