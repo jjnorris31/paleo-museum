@@ -600,70 +600,119 @@
 
       <v-dialog v-model="indivDialog"
                 v-if="indItem !== null"
-                width="600px">
-        <v-card height="100%">
-          <v-img src="https://media-cdn.tripadvisor.com/media/photo-m/1280/1a/99/ec/5c/photo3jpg.jpg"
-                 height="200px"
-                 gradient="to top right, rgba(100,115,201,.33), rgba(25,32,72,.7)"
+                width="700px">
+        <v-card height="100%"
+                style="position: relative">
+          <v-img src="../assets/images/not_found.svg"
+                 height="225px"
+                 gradient="35deg, rgba(0,0,0,0.7035014689469538) 0%, rgba(234,242,23,0) 100%"
                  class="mb-4"
                  cover>
-            <v-card-title class="white--text text-h4">
-              {{indItem.nregistroinah}}
-            </v-card-title>
-            <v-card-subtitle class="white--text text-h6">
-              {{indItem.elematomico}}
-            </v-card-subtitle>
+            <div style="position: absolute; bottom: 0; left: 4px">
+              <v-card-title class="white--text text-h3">
+                {{indItem.ncatalogo}}
+              </v-card-title>
+              <v-card-subtitle class="white--text text-h6">
+                {{indItem.nombrecientifico}}
+              </v-card-subtitle>
+            </div>
           </v-img>
           <v-card-text>
-            <v-row no-gutters>
-              <v-col cols="6">
-                <h6 class="subtitle-1">Forma de ingreso</h6>
-                <p>{{indItem.formaingreso}}</p>
+            <v-row no-gutters class="mx-4">
+              <v-col cols="12"
+                     class="text-h6 mt-4 mb-2"
+                     style="color: rgba(0, 0, 0, 0.87)">Información general</v-col>
+
+              <!-- begins first row -->
+              <v-col cols="12"
+                     class="subtitle-1  d-flex flex-wrap no-gutters ml-2"
+                     style="color: rgba(0, 0, 0, 0.87)">
+                <div class="col-4">{{getFormattedData(indItem.elematomico)}}</div>
+                <div class="col-4">{{getFormattedData(indItem.nregistroinah)}}</div>
+                <div class="col-4">{{getFormattedData(indItem.datacion)}}</div>
               </v-col>
-              <v-col cols="6">
-                <h6 class="subtitle-1">Estado</h6>
-                <p>{{indItem.estatus}}</p>
+              <v-col cols="12"
+                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
+                <div class="col-4">Elemento anatómico</div>
+                <div class="col-4">No. de registro INAH</div>
+                <div class="col-4">Datación</div>
               </v-col>
-              <v-col cols="6">
-                <h6 class="subtitle-1">Datación</h6>
-                <p>{{indItem.estatus}}</p>
+              <!-- ends first row -->
+
+              <!-- begins second row -->
+              <v-col cols="12"
+                     class="subtitle-1 d-flex flex-wrap no-gutters ml-2"
+                     style="color: rgba(0, 0, 0, 0.87)">
+                <div class="col-4">{{getFormattedData(indItem.formaingreso)}}</div>
+                <div class="col-8">{{getFormattedData(indItem.descripcion)}}</div>
               </v-col>
-              <v-col cols="6">
-                <h6 class="subtitle-1">Estado taxonómico</h6>
-                <p>{{indItem.estatus}}</p>
+              <v-col cols="12"
+                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
+                <div class="col-4">Forma de ingreso</div>
+                <div class="col-8">Descripción</div>
               </v-col>
-              <v-col cols="6">
-                <h6 class="subtitle-1">Nombre científico</h6>
-                <p>{{indItem.nombrecientifico}}</p>
+              <!-- ends second row -->
+
+              <v-col cols="12" class="text-h6 mb-2" style="color: rgba(0, 0, 0, 0.87)">Clasificación</v-col>
+
+              <!-- begins first row -->
+              <v-col cols="12"
+                     class="subtitle-1  d-flex flex-wrap no-gutters ml-2"
+                     style="color: rgba(0, 0, 0, 0.87)">
+                <div class="col-4">{{getFormattedData(indItem.estatus)}}</div>
+                <div class="col-4">{{getFormattedData(indItem.estatustaxonomico)}}</div>
+                <div class="col-4">{{getFormattedData(indItem.coleccion)}}</div>
               </v-col>
-              <v-col cols="6">
-                <h6 class="subtitle-1">País</h6>
-                <p>{{indItem.country}}</p>
+              <v-col cols="12"
+                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
+                <div class="col-4">Estado</div>
+                <div class="col-4">Estado taxonómico</div>
+                <div class="col-4">Colección</div>
               </v-col>
-              <v-col cols="6">
-                <h6 class="subtitle-1">Estado</h6>
-                <p>{{indItem.state}}</p>
+              <!-- ends first row -->
+
+              <!-- begins second row -->
+              <v-col cols="12"
+                     class="subtitle-1 d-flex flex-wrap no-gutters ml-2"
+                     style="color: rgba(0, 0, 0, 0.87)">
+                <div class="col-12">{{getFormattedData(indItem.notasesttaxo)}}</div>
               </v-col>
-              <v-col cols="6">
-                <h6 class="subtitle-1">Municipio</h6>
-                <p>{{indItem.municipality}}</p>
+              <v-col cols="12"
+                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
+                <div class="col-12">Notas taxonómicas</div>
               </v-col>
-              <v-col cols="6">
-                <h6 class="subtitle-1">Latitud</h6>
-                <p>{{indItem.latitud}}</p>
+              <!-- ends second row -->
+
+              <v-col cols="12" class="text-h6 mb-2" style="color: rgba(0, 0, 0, 0.87)">Datos geográficos</v-col>
+
+              <!-- begins first row -->
+              <v-col cols="12"
+                     class="subtitle-1  d-flex flex-wrap no-gutters ml-2"
+                     style="color: rgba(0, 0, 0, 0.87)">
+                <div class="col-4">{{getFormattedData(indItem.pais)}}</div>
+                <div class="col-4">{{getFormattedData(indItem.estatus)}}</div>
+                <div class="col-4">{{getFormattedData(indItem.idl)}}</div>
               </v-col>
-              <v-col cols="6">
-                <h6 class="subtitle-1">Longitud</h6>
-                <p>{{indItem.longitud}}</p>
+              <v-col cols="12"
+                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
+                <div class="col-4">Colección</div>
+                <div class="col-4">Estado</div>
+                <div class="col-4">Estado taxonómico</div>
               </v-col>
-              <v-col cols="12">
-                <h6 class="subtitle-1">Descripción</h6>
-                <p>{{indItem.descripcion}}</p>
+              <!-- ends first row -->
+
+              <!-- begins second row -->
+              <v-col cols="12"
+                     class="subtitle-1 d-flex flex-wrap no-gutters ml-2"
+                     style="color: rgba(0, 0, 0, 0.87)">
+                <div class="col-4">{{getFormattedData(indItem.estatus)}}</div>
               </v-col>
-              <v-col cols="12">
-                <h6 class="subtitle-1">Notas estado taxonómico</h6>
-                <p>{{indItem.notasesttaxo}}</p>
+              <v-col cols="12"
+                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
+                <div class="col-4">Coordenadas</div>
               </v-col>
+              <!-- ends second row -->
+
             </v-row>
           </v-card-text>
         </v-card>
@@ -740,7 +789,7 @@
                        class="ml-2"
                        style="margin-bottom: 26px; border-width: 2px"
                        @click="openNewItem()"
-                       color="secondary">Añadir pieza
+                       color="primary">Añadir pieza
                 </v-btn>
                 <!-- ends add new item button -->
               </v-col>
@@ -869,10 +918,11 @@ import {stdRules, requiredRules, nameRules, decimalRules, columnsRules} from "@/
 import NoDataTableField from "@/components/NoDataTableField";
 import {addQueryParameters} from '@/misc/util';
 import dropImage from "@/misc/dropImage";
+import formatText from "@/misc/formatText";
 
 export default {
   name: "Dashboard",
-  mixins: [dropImage],
+  mixins: [dropImage, formatText],
   components: {
     NoDataTableField
   },
@@ -1096,6 +1146,9 @@ export default {
     ),
   },
   watch: {
+    formDialogActive(val) {
+      this.photoFile = val ? this.photoFile : null;
+    },
      async searchPattern(val) {
       if (val === '') {
         this.setMainOverlayText('Regresando todo a su lugar...');
