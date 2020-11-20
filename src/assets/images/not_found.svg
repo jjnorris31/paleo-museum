@@ -1,6 +1,6 @@
 <svg id="Capa_1" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 803 600">
   <g>
-    <rect x="0.5" y="0.5" width="802" height="599"/>
+    <rect x="0.5" y="0.5" width="802" height="599" style="fill: #222"/>
     <path d="M802,1V599H1V1H802m1-1H0V600H803V0Z"/>
   </g>
   <g>

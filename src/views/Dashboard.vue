@@ -181,6 +181,7 @@
                                accept="image/*">
                         <label for="assetsPhotoHandle"
                                class="full-width fill-height d-flex align-content-center justify-center flex-wrap no-gutters">
+                          <!--suppress HtmlUnknownTag -->
                           <div class="col-12 d-flex no-gutters justify-center align-center flex-wrap">
                             <v-icon class="mb-2"
                                     size="96">{{ photoFile !== null ? 'mdi-check' : 'mdi-image-outline' }}</v-icon>
@@ -1776,6 +1777,10 @@ export default {
 
   .v-data-footer__select {
     display: none;
+  }
+
+  .v-data-footer {
+    padding-top: 12px !important;
   }
 
 </style>

@@ -6,7 +6,7 @@
       <v-row no-gutters>
         <v-col cols="12"
                class="mt-8 mb-4 d-flex justify-center no-gutters">
-          <v-img src="@/assets/images/museum_full_logo_blue.png"
+          <v-img src="@/assets/images/logo_museum_darkblue.svg"
                  contain
                  max-width="250px">
           </v-img>
