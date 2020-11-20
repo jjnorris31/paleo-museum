@@ -2,6 +2,28 @@
   <div class="main-container white">
     <main class="flex-grow-1">
 
+      <museum-overlay :overlay-active="overlayActive"
+               :text="overlayText">
+      </museum-overlay>
+
+      <!-- begins error snackbar -->
+      <v-snackbar v-model="snackbarActive"
+                  color="error"
+                  timeout="3000">Correo o contraseña incorrectas
+        <template v-slot:action="{ attrs }">
+          <v-btn
+            color="white"
+            icon
+            v-bind="attrs"
+            @click="snackbarActive = false">
+            <v-icon>
+              mdi-close-circle
+            </v-icon>
+          </v-btn>
+        </template>
+      </v-snackbar>
+      <!-- ends error snackbar -->
+
       <!-- begin login dialog -->
       <v-dialog v-model="loginDialogActive"
                 width="600px"
@@ -12,46 +34,59 @@
           <v-col cols="12"
                  class="d-flex no-gutters flex-wrap my-6">
             <h1 class="mb-1 headline font-weight-medium col-12">Inicia sesión</h1>
-            <div class=" col-12 mb-8">¿Listo para administrar el museo?</div>
+            <div class=" col-12 mb-8">¡Hola! ¿Ya has terminado de excavar?</div>
 
-            <!-- begins text fields -->
-            <div class="col-12 justify-end mb-10 d-flex no-gutters flex-wrap">
-              <!-- begins username input -->
-              <div class="col-12 std-text-field">
-                <div class="input-label">
-                  Correo electrónico
+            <v-img height="150"
+                   width="100%"
+                   contain
+                   src="../assets/images/sand.svg"></v-img>
+
+            <v-form ref="loginForm">
+              <!-- begins text fields -->
+              <div class="col-12 justify-end mb-10 mt-4 d-flex no-gutters flex-wrap">
+                <!-- begins username input -->
+                <div class="col-12 std-text-field">
+                  <div class="input-label">
+                    Correo electrónico
+                  </div>
+                  <v-text-field outlined
+                                required
+                                type="text"
+                                :rules="emailRules"
+                                placeholder="test@mail.com"
+                                v-model="username"
+                                dense>
+                  </v-text-field>
                 </div>
-                <v-text-field outlined
-                              type="text"
-                              placeholder="test@mail.com"
-                              v-model="username"
-                              dense>
-                </v-text-field>
-              </div>
-              <!-- ends username input -->
+                <!-- ends username input -->
 
-              <!-- begins password input -->
-              <div class="col-12 std-text-field">
-                <div class="input-label">
-                  Contraseña
+                <!-- begins password input -->
+                <div class="col-12 std-text-field">
+                  <div class="input-label">
+                    Contraseña
+                  </div>
+                  <v-text-field outlined
+                                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                                :rules="passwordRules"
+                                :type="showPassword ? 'text' : 'password'"
+                                @click:append="showPassword = !showPassword"
+                                placeholder="test@mail.com"
+                                v-model="password"
+                                dense>
+                  </v-text-field>
                 </div>
-                <v-text-field outlined
-                              type="text"
-                              placeholder="test@mail.com"
-                              v-model="password"
-                              dense>
-                </v-text-field>
+                <!-- ends password input -->
+                <div class="col-12 text-end input-label grey--text text--darken-1">
+                  ¿Olvidaste tu contraseña?
+                </div>
               </div>
-              <!-- ends password input -->
-              <div class="col-12 text-end input-label grey--text text--darken-1">
-                ¿Olvidaste tu contraseña?
-              </div>
-            </div>
-            <!-- ends text fields -->
+              <!-- ends text fields -->
 
+            </v-form>
             <!-- begins login button -->
             <div class="col-12 d-flex justify-center">
-              <v-btn width="200px" color="secondary" @click="login()">Iniciar sesión</v-btn>
+              <v-btn width="200px" color="secondary"
+                     @click="login()">Iniciar sesión</v-btn>
             </div>
             <!-- ends login button-->
 
@@ -132,13 +167,25 @@
 </template>
 
 <script>
+import MuseumOverlay from '@/components/MuseumOverlay';
+import {passwordRules, emailRules} from "@/misc/rules";
+
 export default {
   name: "Landing",
+  components: {
+    MuseumOverlay,
+  },
   data: () => {
     return {
       username: '',
       password: '',
       loginDialogActive: false,
+      overlayText: '',
+      overlayActive: false,
+      snackbarActive: false,
+      emailRules,
+      passwordRules,
+      showPassword: false,
     }
   },
   methods: {
@@ -151,24 +198,46 @@ export default {
     closeLoginDialog() {
       this.loginDialogActive = false;
     },
+    showOverlay() {
+      this.overlayActive = true;
+    },
+    closeOverlay() {
+      this.overlayActive = false;
+    },
+    setOverlayText(text) {
+      this.overlayText = text;
+    },
+    showSnackbar() {
+      this.snackbarActive = true;
+    },
+    resetPassword() {
+      this.password = '';
+    },
     async login() {
-      try {
-        let res = await fetch('http://localhost:3000/login', {
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          method: 'POST',
-          mode: 'cors',
-          body: JSON.stringify({email: this.username, password: this.password})
-        });
-
-        let {accessToken} = await res.json();
-        localStorage.setItem('museum_token', accessToken);
-      } catch (e) {
-        console.log({e})
+      if (this.$refs.loginForm.validate()) {
+        console.log("validate!")
+        this.setOverlayText('Iniciando sesión');
+        this.showOverlay();
+        try {
+          let res = await fetch('http://localhost:3000/login', {
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            mode: 'cors',
+            body: JSON.stringify({email: this.username, password: this.password})
+          });
+          let {accessToken} = await res.json();
+          localStorage.setItem('museum_token', accessToken);
+        } catch (e) {
+          this.resetPassword();
+          this.showSnackbar();
+          console.log({e})
+        } finally {
+          this.closeOverlay();
+        }
       }
-
     }
   }
 }

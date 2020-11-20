@@ -2,6 +2,7 @@
   <v-app>
     <v-navigation-drawer clipped
                          app
+                         v-if="inDashboard"
                          width="300">
       <v-row no-gutters>
         <v-col cols="12"
@@ -73,8 +74,8 @@ export default {
   },
 
   computed: {
-    inLogin() {
-      return this.$route.name === 'Login';
+    inDashboard() {
+      return this.$route.name === 'dashboard';
     }
   },
 
