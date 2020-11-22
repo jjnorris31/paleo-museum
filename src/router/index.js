@@ -32,7 +32,7 @@ const routes = [
   },
   {
     path: '/tablas/piezas',
-    name: 'piezas',
+    name: 'pieces',
     meta: {
       authentication: true,
     },
@@ -40,11 +40,11 @@ const routes = [
   },
   {
     path: '/tablas/especies',
-    name: 'piezas',
+    name: 'species',
     meta: {
       authentication: true,
     },
-    component: () => import(/* webpackChunkName: "about" */ '../views/Pieces.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/Species.vue')
   },
 ]
 

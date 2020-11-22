@@ -32,7 +32,7 @@
                 <template v-slot:activator>
                   <v-list-item-title>Tablas</v-list-item-title>
                 </template>
-                  <v-list-item @click="showMessage()"
+                  <v-list-item @click="item.action()"
                                color="#000000"
                                v-for="item in tableItems"
                                :key="item.text">
@@ -66,6 +66,7 @@
 </template>
 
 <script>
+import router from "@/router";
 
 export default {
   name: 'App',
@@ -83,12 +84,26 @@ export default {
     item: 1,
     listItemSelected: 1,
     tableItems: [
-      { text: 'Personas', icon: 'mdi-account-supervisor-circle' },
-      { text: 'Almacenamiento', icon: 'mdi-office-building-outline' },
-      { text: 'Piezas', icon: 'mdi-bone' },
-      { text: 'Especies', icon: 'mdi-google-downasaur' },
-      { text: 'Preparadores', icon: 'mdi-account-star' },
-      { text: 'Determinadores', icon: 'mdi-account-question' },
+      { text: 'Personas',
+        icon: 'mdi-account-supervisor-circle',
+        action: async () => {await router.push({name: 'pieces'})}
+      },
+      { text: 'Almacenamiento',
+        icon: 'mdi-office-building-outline',
+        action: async () => {await router.push({name: 'pieces'})}
+      },
+      { text: 'Piezas', icon: 'mdi-bone',
+        action: async () => {await router.push({name: 'pieces'})}
+      },
+      { text: 'Especies', icon: 'mdi-google-downasaur',
+        action: async () => {await router.push({name: 'species'})}
+      },
+      { text: 'Preparadores', icon: 'mdi-account-star',
+        action: async () => {await router.push({name: 'pieces'})}
+      },
+      { text: 'Determinadores', icon: 'mdi-account-question',
+        action: async () => {await router.push({name: 'pieces'})}
+      },
     ],
   }),
 
