@@ -93,13 +93,13 @@ export default {
   }),
 
   methods: {
-    goToLogin(){
+    goToLogin() {
       this.$router.push({name: 'Login'})
     },
     showMessage() {
       console.log("clicked");
     }
-  }
+  },
 };
 </script>
 

@@ -14,10 +14,14 @@ export default new Vuex.Store({
     localities: [],
     species: [],
     pieces: [],
+    auth: false,
   },
   getters: {
     locations(state)  {
       return state.locations
+    },
+    auth(state){
+      return state.auth;
     },
     states(state) {
       return state.states
@@ -60,6 +64,9 @@ export default new Vuex.Store({
     },
     SET_PIECES(state, pieces) {
       state.pieces = pieces;
+    },
+    SET_AUTH(state, auth) {
+      state.auth = auth;
     }
   },
   actions: {

@@ -52,6 +52,7 @@
                   <v-text-field outlined
                                 required
                                 type="text"
+                                validate-on-blur
                                 :rules="emailRules"
                                 placeholder="test@mail.com"
                                 v-model="username"
@@ -68,6 +69,7 @@
                   <v-text-field outlined
                                 :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                                 :rules="passwordRules"
+                                validate-on-blur
                                 :type="showPassword ? 'text' : 'password'"
                                 @click:append="showPassword = !showPassword"
                                 placeholder="test@mail.com"
@@ -76,8 +78,15 @@
                   </v-text-field>
                 </div>
                 <!-- ends password input -->
-                <div class="col-12 text-end input-label grey--text text--darken-1">
-                  ¿Olvidaste tu contraseña?
+                <div class="col-12 input-label grey--text text--darken-1 d-flex no-gutters justify-end">
+                  <div>
+                    <v-tooltip left>
+                      <template v-slot:activator="{ on, attrs }">
+                        <div v-bind="attrs" v-on="on">¿Olvidaste tu contraseña?</div>
+                      </template>
+                      <span>¡Contacta al administrador!</span>
+                    </v-tooltip>
+                  </div>
                 </div>
               </div>
               <!-- ends text fields -->
@@ -230,6 +239,7 @@ export default {
           });
           let {accessToken} = await res.json();
           localStorage.setItem('museum_token', accessToken);
+          await this.$router.push({name: 'dashboard'});
         } catch (e) {
           this.resetPassword();
           this.showSnackbar();
@@ -237,6 +247,13 @@ export default {
         } finally {
           this.closeOverlay();
         }
+      }
+    }
+  },
+  watch: {
+    loginDialogActive(val) {
+      if (!val) {
+        this.$refs.loginForm.reset();
       }
     }
   }
@@ -257,22 +274,5 @@ export default {
     background-color: #FFFFFF;
   }
 
-  .item-collection {
-    height: 150px;
-    width: 150px;
-    border-radius: 4px ;
-    background-color: #757575;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .nav-item {
-    width: 250px;
-    display: flex;
-    align-content: center;
-    justify-content: center;
-  }
 
 </style>
