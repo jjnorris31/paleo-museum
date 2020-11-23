@@ -3,7 +3,7 @@
     <main class="flex-grow-1">
 
       <museum-overlay :overlay-active="overlayActive"
-               :text="overlayText">
+                      :text="overlayText">
       </museum-overlay>
 
       <!-- begins error snackbar -->
@@ -169,21 +169,19 @@
 import MuseumOverlay from '@/components/MuseumOverlay';
 import {passwordRules, emailRules} from "@/misc/rules";
 import snackbarNotification from "@/mixins/snackbarNotification";
-
+import overlayController from "@/mixins/overlayController";
 
 export default {
   name: "Landing",
   components: {
     MuseumOverlay
   },
-  mixins: [snackbarNotification],
+  mixins: [snackbarNotification, overlayController],
   data: () => {
     return {
       username: '',
       password: '',
       loginDialogActive: false,
-      overlayText: '',
-      overlayActive: false,
       snackbarActive: false,
       emailRules,
       passwordRules,
@@ -206,15 +204,6 @@ export default {
     },
     closeLoginDialog() {
       this.loginDialogActive = false;
-    },
-    showOverlay() {
-      this.overlayActive = true;
-    },
-    closeOverlay() {
-      this.overlayActive = false;
-    },
-    setOverlayText(text) {
-      this.overlayText = text;
     },
     showSnackbar() {
       this.snackbarActive = true;

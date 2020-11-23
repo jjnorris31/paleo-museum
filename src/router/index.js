@@ -10,14 +10,6 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/Landing.vue')
   },
   {
-    path: '/dashboard',
-    name: 'dashboard',
-    meta: {
-      authentication: true,
-    },
-    component: () => import(/* webpackChunkName: "about" */ '../views/Dashboard.vue')
-  },
-  {
     path: '/login',
     name: 'login',
     component: () => import(/* webpackChunkName: "about" */ '../views/Login.vue')
@@ -77,7 +69,7 @@ router.beforeEach(async (to, from, next) => {
       next();
     } else {
       if (from.path === '/') {
-        next('/dashboard');
+        next('/tablas/piezas');
       } else {
         next(false);
       }

@@ -15,7 +15,17 @@ const snackbarNotification = {
 		},
 		setNotificationType(type) {
 			this.colorSnackbar = type;
-		}
+		},
+		showErrorNotification(text) {
+			this.setNotificationText(text);
+			this.setNotificationType('error')
+			this.setNotificationActive();
+		},
+		showSuccessNotification(text) {
+			this.setNotificationText(text);
+			this.setNotificationType('success')
+			this.setNotificationActive();
+		},
 	}
 }
 

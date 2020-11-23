@@ -143,6 +143,29 @@ export default new Vuex.Store({
         return e;
       }
     },
+    async saveSpecie(context, specie) {
+      try {
+        return await fetch('http://localhost:3000/forward', {
+          headers: new Headers({
+            'Authorization': `Bearer ${context.state.token}`,
+            'Content-Type': 'application/json'
+          }),
+          method: 'POST',
+          body: JSON.stringify({
+            table: `especie/`,
+            options: {
+              method: 'POST',
+              body: JSON.stringify(specie),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+          })
+        });
+      } catch (e) {
+        return e;
+      }
+    },
     async updatePiece(context, piece) {
       try {
         return await fetch('http://localhost:3000/forward', {
@@ -153,6 +176,29 @@ export default new Vuex.Store({
           method: 'POST',
           body: JSON.stringify({
             table: `pieza/${piece.ncatalogo}`,
+            options: {
+              method: 'PUT',
+              body: JSON.stringify(piece),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+          })
+        });
+      } catch (e) {
+        return e;
+      }
+    },
+    async updateSpecie(context, piece) {
+      try {
+        return await fetch('http://localhost:3000/forward', {
+          headers: new Headers({
+            'Authorization': `Bearer ${context.state.token}`,
+            'Content-Type': 'application/json'
+          }),
+          method: 'POST',
+          body: JSON.stringify({
+            table: `especie/${piece.nombrecientifico}`,
             options: {
               method: 'PUT',
               body: JSON.stringify(piece),
@@ -180,6 +226,43 @@ export default new Vuex.Store({
               method: 'DELETE',
             }
           })
+        });
+      } catch (e) {
+        return e;
+      }
+    },
+    async deleteSpecie(context, id) {
+      try {
+        return await fetch('http://localhost:3000/forward', {
+          headers: new Headers({
+            'Authorization': `Bearer ${context.state.token}`,
+            'Content-Type': 'application/json'
+          }),
+          method: 'POST',
+          body: JSON.stringify({
+            table: `especie/${id}`,
+            options: {
+              method: 'DELETE',
+            }
+          })
+        });
+      } catch (e) {
+        return e;
+      }
+    },
+    /**
+     * Save a new picture to the piece item in the object storage
+     * @param context
+     * @param imageInfo
+     * @returns {Promise<Response|*>}
+     */
+    async uploadPicture(context, imageInfo) {
+      let formData = new FormData();
+      formData.append(`${imageInfo.id}`, imageInfo.file, `${imageInfo.id}`);
+      try {
+        return await fetch("http://localhost:3000/images", {
+          method: 'POST',
+          body: formData
         });
       } catch (e) {
         return e;

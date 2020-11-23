@@ -76,7 +76,7 @@ export default {
 
   computed: {
     inDashboard() {
-      return this.$route.name === 'dashboard';
+      return this.$route.name !== 'landing';
     }
   },
 
@@ -147,6 +147,13 @@ export default {
   /* Firefox */
   input[type=number] {
     -moz-appearance: textfield;
+  }
+
+  .row-form-container {
+    width: 100%;
+    display: grid;
+    grid-column-gap: 16px;
+    grid-template-columns: auto auto auto
   }
 
 
