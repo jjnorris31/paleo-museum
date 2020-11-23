@@ -10,25 +10,6 @@
                 transition="dialog-bottom-transition"
                 hide-overlay
                 class="full-height">
-        <!-- begins photo dialog overlay -->
-        <v-overlay v-model="saveOverlay"
-                   absolute>
-          <v-row no-gutters>
-            <v-col cols="12"
-                   class="d-flex justify-center">
-              <v-progress-circular width="4"
-                                   size="64"
-                                   indeterminate
-                                   color="white">
-              </v-progress-circular>
-            </v-col>
-            <v-col cols="12"
-                   class="text-h6 text-center mt-2">
-              <div>Guardando pieza</div>
-            </v-col>
-          </v-row>
-        </v-overlay>
-        <!-- ends photo dialog overlay -->
         <v-row no-gutters
                style="background-color: white; height: 100%; position: relative"
                class="pt-15 pl-15">
@@ -531,25 +512,6 @@
       <v-dialog v-model="editDialogActive"
                 width="600px"
                 class="full-height">
-        <!-- begins photo dialog overlay -->
-        <v-overlay v-model="deleteOverlay"
-                   absolute>
-          <v-row no-gutters>
-            <v-col cols="12"
-                   class="d-flex justify-center">
-              <v-progress-circular width="4"
-                                   size="64"
-                                   indeterminate
-                                   color="white">
-              </v-progress-circular>
-            </v-col>
-            <v-col cols="12"
-                   class="text-h6 text-center mt-2">
-              <div>Eliminando pieza</div>
-            </v-col>
-          </v-row>
-        </v-overlay>
-        <!-- ends photo dialog overlay -->
         <v-row no-gutters
                style="background-color: white; height: 100%"
                class="pt-7 px-7">
@@ -579,7 +541,7 @@
       <!-- ends delete dialog -->
 
       <!-- begin main overlay -->
-      <v-overlay v-model="overlayActive"
+      <v-overlay v-model="mainOverlayActive"
                  opacity=".70"
                  z-index="205">
         <v-row no-gutters>
@@ -597,7 +559,15 @@
           </v-col>
         </v-row>
       </v-overlay>
-      <!-- ends search overlay -->
+      <!-- ends main overlay -->
+
+      <!-- begins error snackbar -->
+      <v-snackbar v-model="errorActive"
+                  :color="colorSnackbar"
+                  timeout="3000">
+        {{errorText}}
+      </v-snackbar>
+      <!-- ends error snackbar -->
 
       <v-dialog v-model="indivDialog"
                 v-if="indItem !== null"
@@ -842,7 +812,6 @@
                     height="600px"
                     fixed-header
                     :items-per-page="25"
-                    v-model="selectedPieces"
                     :options.sync="options"
                     :loading="loadingTable"
                     loader-height="4"
@@ -920,10 +889,11 @@ import NoDataTableField from "@/components/NoDataTableField";
 import {addQueryParameters} from '@/misc/util';
 import dropImage from "@/misc/dropImage";
 import formatText from "@/misc/formatText";
+import snackbarNotification from "@/mixins/snackbarNotification";
 
 export default {
   name: "Dashboard",
-  mixins: [dropImage, formatText],
+  mixins: [dropImage, formatText, snackbarNotification],
   components: {
     NoDataTableField
   },
@@ -1108,7 +1078,7 @@ export default {
     pieces: [],
     selectedPieces: [],
     timeout: null,
-    overlayActive: false, // page's flag overlay
+    mainOverlayActive: false, // page's flag overlay
     mainOverlayText: '', // text page's overlay
     indItem: null,
     isEditingItem: false,
@@ -1143,6 +1113,7 @@ export default {
           'getInstitutions',
           'getSpecies',
           'getPieces',
+          'token',
           'getLocalities']
     ),
   },
@@ -1238,12 +1209,22 @@ export default {
           columns: this.filterOptions.search.columns
         }
       });
-      console.log({query})
-      await fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/pieza/${query}`, {
-        method: 'GET'
+
+      await fetch('http://localhost:3000/forward', {
+        headers: new Headers({
+          'Authorization': `Bearer ${this.token}`,
+          'Content-Type': 'application/json'
+        }),
+        method: 'POST',
+        body: JSON.stringify({
+          table: `pieza/${query}`,
+          options: {
+            method: 'GET'
+          }
+        })
       }).then(res => res.json()).then(res => {
         if (res.hasMore) {
-          // calculating the
+          // calculating the pagination
           this.totalPieces = ((25 * (page + 1)));
         } else {
           this.totalPieces = (25 * page);
@@ -1253,6 +1234,9 @@ export default {
         console.log(err);
       }).finally(() => (this.hideMainOverlay()));
       this.loadingTable = false;
+
+
+
     },
     remove(item) {
       this.tableColumnsSelected.splice(this.tableColumnsSelected.indexOf(item), 1)
@@ -1266,9 +1250,19 @@ export default {
     querySpecies(v) {
       // Lazily load input items
       this.loadingSpecies = true;
-      let query = encodeURIComponent(`{"nombrecientifico": {"$like":"%${v}%"}}`);
-      fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/especie?q=${query}`, {
-        method: 'GET'
+      let query = `{"nombrecientifico": {"$instr":"${v}"}}`;
+      fetch('http://localhost:3000/forward', {
+        headers: new Headers({
+          'Authorization': `Bearer ${this.token}`,
+          'Content-Type': 'application/json'
+        }),
+        method: 'POST',
+        body: JSON.stringify({
+          table: `especie?q=${query}`,
+          options: {
+            method: 'GET'
+          }
+        })
       }).then(res => res.json()).then(res => {
         this.specieItems = [];
         res.items.forEach(item => {
@@ -1286,9 +1280,26 @@ export default {
     queryCountries(v) {
       // Lazily load input items
       this.loadingCountries = true;
-      let query = encodeURIComponent(`{"pais":{"$like":"%${v}%"}}`);
-      fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/ubicacion?q=${query}`, {
-        method: 'GET'
+
+      let query = addQueryParameters({
+        search: {
+          pattern: v,
+          columns: []
+        }
+      });
+
+      fetch('http://localhost:3000/forward', {
+        headers: new Headers({
+          'Authorization': `Bearer ${this.token}`,
+          'Content-Type': 'application/json'
+        }),
+        method: 'POST',
+        body: JSON.stringify({
+          table: `ubicacion/${query}`,
+          options: {
+            method: 'GET'
+          }
+        })
       }).then(res => res.json()).then(res => {
         this.countryItems = [];
         res.items.forEach(item => {
@@ -1300,15 +1311,25 @@ export default {
     },
     /**
      * Gets the state items from the database to fill the autocomplete
-     * with the user start to typing
+     * with the user starts to typing
      * @param v: the text typed by the user
      */
     queryStates(v) {
       // Lazily load input items
       this.loadingState = true;
-      let query = encodeURIComponent(`{"pais":{"$like":"%${this.countrySelected}%"}, "estado":{"$like":"%${v}%"}}`);
-      fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/ubicacion?q=${query}`, {
-        method: 'GET'
+      let query = `{"pais":{"$instr":"${this.countrySelected}"}, "estado":{"$instr":"${v}"}}`;
+      fetch('http://localhost:3000/forward', {
+        headers: new Headers({
+          'Authorization': `Bearer ${this.token}`,
+          'Content-Type': 'application/json'
+        }),
+        method: 'POST',
+        body: JSON.stringify({
+          table: `ubicacion?q=${query}`,
+          options: {
+            method: 'GET'
+          }
+        })
       }).then(res => res.json()).then(res => {
         this.stateItems = [];
         res.items.forEach(item => {
@@ -1326,9 +1347,20 @@ export default {
     queryMunicipalities(v) {
       // Lazily load input items
       this.loadingMun = true;
-      let query = encodeURIComponent(`{"pais":{"$like":"%${this.countrySelected}%"}, "estado":{"$like":"%${this.stateSelected}%"},"municipio":{"$like":"%${v}%"}}`);
-      fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/ubicacion?q=${query}`, {
-        method: 'GET'
+      let query = `{"pais":{"$instr":"${this.countrySelected}"}, "estado":{"$instr":"${this.stateSelected}"},"municipio":{"$instr":"${v}"}}`;
+
+      fetch('http://localhost:3000/forward', {
+        headers: new Headers({
+          'Authorization': `Bearer ${this.token}`,
+          'Content-Type': 'application/json'
+        }),
+        method: 'POST',
+        body: JSON.stringify({
+          table: `ubicacion?q=${query}`,
+          options: {
+            method: 'GET'
+          }
+        })
       }).then(res => res.json()).then(res => {
         this.municipalityItems = [];
         res.items.forEach(item => {
@@ -1339,16 +1371,26 @@ export default {
       }).finally(() => (this.loadingMun = false));
     },
     /**
-     * Gets the municipality items from the database to fill the autocomplete
+     * Gets the location items from the database to fill the autocomplete
      * with the user start to typing
      * @param v: the text typed by the user
      */
     queryLocal(v) {
       // Lazily load input items
       this.loadingLocal = true;
-      let query = encodeURIComponent(`{"nombre":{"$like":"%${v}%"}}`);
-      fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/localidad?q=${query}`, {
-        method: 'GET'
+      let query = `{"idl":{"$instr":"${v}"}}`;
+      fetch('http://localhost:3000/forward', {
+        headers: new Headers({
+          'Authorization': `Bearer ${this.token}`,
+          'Content-Type': 'application/json'
+        }),
+        method: 'POST',
+        body: JSON.stringify({
+          table: `localidad?q=${query}`,
+          options: {
+            method: 'GET'
+          }
+        })
       }).then(res => res.json()).then(res => {
         this.locationItems = [];
         res.items.forEach(item => {
@@ -1381,9 +1423,6 @@ export default {
      */
     setSearchMunicipality(searchMunicipality) {
       this.searchMunicipality = searchMunicipality;
-    },
-    showMessage() {
-      console.log("mesageee!!")
     },
     async openIndividualItem(value) {
       this.indItem = value;
@@ -1517,17 +1556,17 @@ export default {
     },
     async savePiece() {
       if (this.$refs.pieceForm.validate()) {
-        this.showSaveOverlay();
+        this.setMainOverlayText('Guardando pieza');
+        this.showMainOverlay();
         this.processPiece();
-        let res = await this.$store.dispatch('postPiece', this.piece);
-        console.log(res);
-        if (res) {
-          await this.$store.dispatch('retrievePieces');
-          this.hideSaveOverlay();
+        let res = await this.$store.dispatch('savePiece', this.piece);
+        if (res.ok) {
+          this.hideMainOverlay();
+          this.showSuccessNotification('La pieza ha sido guardada');
           this.search = '';
         } else {
-          console.log('something has happened!');
-          this.hideSaveOverlay();
+          this.showErrorNotification(`¡La pieza no se ha guardado! ERR: ${res.statusText}`)
+          this.hideMainOverlay();
           this.search = '';
         }
         this.closeNewItem();
@@ -1535,22 +1574,44 @@ export default {
     },
     async updatePiece() {
       this.editDialogActive = false;
-      this.showSaveOverlay();
-      try {
-        await this.$store.dispatch('updatePiece', this.piece);
+      this.setMainOverlayText('Actualizando pieza');
+      this.showMainOverlay();
+      let res = await this.$store.dispatch('updatePiece', this.piece);
+      if (res.ok) {
         this.options.page = 1;
         this.totalPieces = 25;
         await this.getPiecesFromDatabase();
-      } catch (err) {
-        console.log('No se actualizó correctamente...')
+        this.showSuccessNotification('¡La pieza ha sido actualizada!');
+      } else {
+        this.showErrorNotification(`¡La pieza no se ha actualizado! ERR: ${res.statusText}`)
       }
-      this.hideSaveOverlay();
+      this.hideMainOverlay();
       this.resetSearch();
       this.closeEditItem();
+    },
+    /**
+     * Dispatch the action to delete an item in the database
+     */
+    async deleteItem() {
+      this.setMainOverlayText('Eliminando pieza');
+      this.showMainOverlay();
+      let res = await this.$store.dispatch('deletePiece', this.itemToDelete.ncatalogo);
+      if (res.ok) {
+        await this.getPiecesFromDatabase();
+        this.showSuccessNotification('La pieza ha sido eliminada correctamente');
+      } else {
+        this.showErrorNotification(`¡La pieza no se ha eliminado! ERR: ${res.statusText}`);
+      }
+      this.hideMainOverlay();
+      this.closeDeleteConfirmation();
+      this.resetItemToDelete();
     },
     getFmtEmptyField(property) {
       return property === '' || !property ? null : property;
     },
+    /**
+     * Process the piece to change the empty fields to null
+     */
     processPiece() {
       this.piece.imagen = this.getFmtEmptyField(this.piece.imagen);
       this.piece.nregistroinah = this.getFmtEmptyField(this.piece.nregistroinah);
@@ -1560,11 +1621,15 @@ export default {
       this.piece.descripcion = this.getFmtEmptyField(this.piece.descripcion);
       this.piece.datacion = this.getFmtEmptyField(this.piece.datacion);
       this.piece.notasesttaxo = this.getFmtEmptyField(this.piece.notasesttaxo);
+      this.piece.estatustaxonomico = this.getFmtEmptyField(this.piece.estatustaxonomico);
       this.piece.longitud = this.getFmtEmptyField(this.piece.longitud);
       this.piece.latitud = this.getFmtEmptyField(this.piece.latitud);
       this.piece.coleccion = this.getFmtEmptyField(this.piece.coleccion);
       this.piece.institucion = this.getFmtEmptyField(this.piece.institucion);
     },
+    /**
+     * Delete the text to search
+     */
     resetSearch() {
       this.search = '';
     },
@@ -1593,37 +1658,13 @@ export default {
      * Show the main overlay
      */
     showMainOverlay() {
-      this.overlayActive = true;
+      this.mainOverlayActive = true;
     },
     /**
      * Hide the main overlay
      */
     hideMainOverlay() {
-      this.overlayActive = false;
-    },
-    /**
-     * Show the save's overlay
-     * */
-    showSaveOverlay() {
-      this.saveOverlay = true;
-    },
-    /**
-     * Hide the save's overlay
-     */
-    hideSaveOverlay() {
-      this.saveOverlay = false;
-    },
-    /**
-     * Shows the delete overlay
-     */
-    showDeleteOverlay() {
-      this.deleteOverlay = true;
-    },
-    /**
-     * Hide the delete overlay
-     */
-    hideDeleteOverlay() {
-      this.deleteOverlay = false;
+      this.mainOverlayActive = false;
     },
     /**
      * Set the item to be deleted
@@ -1695,38 +1736,16 @@ export default {
     closeFormDialog() {
       this.formDialogActive = true;
     },
-    /**
-     * Dispatch the action to delete an item in the database
-     */
-    async deleteItem() {
-      this.setMainOverlayText('Eliminando pieza');
-      this.showMainOverlay();
-      try {
-        await this.$store.dispatch('deletePiece', this.itemToDelete.ncatalogo);
-      } catch (e) {
-        console.log({e});
-      }
-      await this.getPiecesFromDatabase();
-      this.hideMainOverlay();
-      this.closeDeleteConfirmation();
-      this.resetItemToDelete();
+    showErrorNotification(text) {
+      this.setNotificationText(text);
+      this.setNotificationType('error')
+      this.setNotificationActive();
     },
-    /**
-     * Set the pieces with the information of the database
-     * @returns {Promise<void>}
-     */
-    async setPieces() {
-      try {
-        let res = await this.$store.dispatch('retrievePieces');
-        this.pieces = res.items;
-        if (res.hasMore) {
-          this.pages = 2;
-        }
-      } catch (e) {
-        console.log({e});
-      }
-    }
-
+    showSuccessNotification(text) {
+      this.setNotificationText(text);
+      this.setNotificationType('success')
+      this.setNotificationActive();
+    },
   },
   async mounted() {
     this.showMainOverlay();

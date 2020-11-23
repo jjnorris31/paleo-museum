@@ -7,20 +7,10 @@
       </museum-overlay>
 
       <!-- begins error snackbar -->
-      <v-snackbar v-model="snackbarActive"
-                  color="error"
-                  timeout="3000">Correo o contraseña incorrectas
-        <template v-slot:action="{ attrs }">
-          <v-btn
-            color="white"
-            icon
-            v-bind="attrs"
-            @click="snackbarActive = false">
-            <v-icon>
-              mdi-close-circle
-            </v-icon>
-          </v-btn>
-        </template>
+      <v-snackbar v-model="errorActive"
+                  :color="colorSnackbar"
+                  timeout="3000">
+        {{errorText}}
       </v-snackbar>
       <!-- ends error snackbar -->
 
@@ -178,12 +168,15 @@
 <script>
 import MuseumOverlay from '@/components/MuseumOverlay';
 import {passwordRules, emailRules} from "@/misc/rules";
+import snackbarNotification from "@/mixins/snackbarNotification";
+
 
 export default {
   name: "Landing",
   components: {
-    MuseumOverlay,
+    MuseumOverlay
   },
+  mixins: [snackbarNotification],
   data: () => {
     return {
       username: '',
@@ -195,6 +188,13 @@ export default {
       emailRules,
       passwordRules,
       showPassword: false,
+    }
+  },
+  watch: {
+    loginDialogActive(val) {
+      if (!val) {
+        this.$refs.loginForm.reset();
+      }
     }
   },
   methods: {
@@ -242,7 +242,8 @@ export default {
           await this.$router.push({name: 'dashboard'});
         } catch (e) {
           this.resetPassword();
-          this.showSnackbar();
+          this.errorText('Las credenciales no son correctas');
+          this.errorActive();
           console.log({e})
         } finally {
           this.closeOverlay();
@@ -250,13 +251,6 @@ export default {
       }
     }
   },
-  watch: {
-    loginDialogActive(val) {
-      if (!val) {
-        this.$refs.loginForm.reset();
-      }
-    }
-  }
 }
 </script>
 

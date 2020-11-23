@@ -115,6 +115,12 @@ export default {
       console.log("clicked");
     }
   },
+  mounted() {
+    let token = localStorage.getItem('museum_token');
+    if (token) {
+      this.$store.commit('SET_TOKEN', token);
+    }
+  }
 };
 </script>
 

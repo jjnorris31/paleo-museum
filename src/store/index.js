@@ -14,14 +14,14 @@ export default new Vuex.Store({
     localities: [],
     species: [],
     pieces: [],
-    auth: false,
+    token: null,
   },
   getters: {
     locations(state)  {
       return state.locations
     },
-    auth(state){
-      return state.auth;
+    token(state){
+      return state.token;
     },
     states(state) {
       return state.states
@@ -65,8 +65,8 @@ export default new Vuex.Store({
     SET_PIECES(state, pieces) {
       state.pieces = pieces;
     },
-    SET_AUTH(state, auth) {
-      state.auth = auth;
+    SET_TOKEN(state, token) {
+      state.token = token;
     }
   },
   actions: {
@@ -120,40 +120,70 @@ export default new Vuex.Store({
       let species = await res.json();
       commit('SET_SPECIES', species.items);
     },
-    async postPiece(context, piece) {
-      let res = await fetch('https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/pieza/', {
-        method: 'POST',
-        body: JSON.stringify(piece),
-        headers: new Headers({
-          'Content-Type': 'application/json',
-        })
-      })
-      return res.ok;
+    async savePiece(context, piece) {
+      try {
+        return await fetch('http://localhost:3000/forward', {
+          headers: new Headers({
+            'Authorization': `Bearer ${context.state.token}`,
+            'Content-Type': 'application/json'
+          }),
+          method: 'POST',
+          body: JSON.stringify({
+            table: `pieza/`,
+            options: {
+              method: 'POST',
+              body: JSON.stringify(piece),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+          })
+        });
+      } catch (e) {
+        return e;
+      }
     },
     async updatePiece(context, piece) {
-      let res = await fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/pieza/${piece.ncatalogo}`, {
-        method: 'PUT',
-        body: JSON.stringify(piece),
-        headers: new Headers({
-          'Content-Type': 'application/json',
-        })
-      })
-      return res.ok;
-    },
-    async retrievePieces({commit}) {
-      let res = await fetch('https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/pieza/', {
-        method: 'GET'
-      })
-      let pieces = await res.json();
-      commit('SET_PIECES', pieces.items);
-      return {items: pieces.items, hasMore: pieces.hasMore};
+      try {
+        return await fetch('http://localhost:3000/forward', {
+          headers: new Headers({
+            'Authorization': `Bearer ${context.state.token}`,
+            'Content-Type': 'application/json'
+          }),
+          method: 'POST',
+          body: JSON.stringify({
+            table: `pieza/${piece.ncatalogo}`,
+            options: {
+              method: 'PUT',
+              body: JSON.stringify(piece),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+          })
+        });
+      } catch (e) {
+        return e;
+      }
     },
     async deletePiece(context, id) {
-      let res = await fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/pieza/${id}`, {
-        method: 'DELETE'
-      })
-
-      return res.status;
+      try {
+        return await fetch('http://localhost:3000/forward', {
+          headers: new Headers({
+            'Authorization': `Bearer ${context.state.token}`,
+            'Content-Type': 'application/json'
+          }),
+          method: 'POST',
+          body: JSON.stringify({
+            table: `pieza/${id}`,
+            options: {
+              method: 'DELETE',
+            }
+          })
+        });
+      } catch (e) {
+        return e;
+      }
     },
     async getUbietyById(context, id) {
       let res = await fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/ubicacion/${id}`, {
