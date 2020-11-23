@@ -43,7 +43,7 @@
                   </v-list-item>
               </v-list-group>
 
-              <v-list-item @click="showMessage()"
+              <v-list-item @click="goToUsers()"
                            class="list-item">
                 <v-list-item-icon>
                   <v-icon>mdi-pencil</v-icon>
@@ -108,8 +108,8 @@ export default {
   }),
 
   methods: {
-    goToLogin() {
-      this.$router.push({name: 'Login'})
+    goToUsers() {
+      this.$router.push({name: 'users'})
     },
     showMessage() {
       console.log("clicked");

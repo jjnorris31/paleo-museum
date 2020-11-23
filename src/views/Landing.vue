@@ -213,7 +213,6 @@ export default {
     },
     async login() {
       if (this.$refs.loginForm.validate()) {
-        console.log("validate!")
         this.setOverlayText('Iniciando sesión');
         this.showOverlay();
         try {
@@ -228,11 +227,10 @@ export default {
           });
           let {accessToken} = await res.json();
           localStorage.setItem('museum_token', accessToken);
-          await this.$router.push({name: 'dashboard'});
+          await this.$router.go({name: 'tablas/piezas'});
         } catch (e) {
           this.resetPassword();
-          this.errorText('Las credenciales no son correctas');
-          this.errorActive();
+          this.showErrorNotification('Las credenciales no son correctas')
           console.log({e})
         } finally {
           this.closeOverlay();

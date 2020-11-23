@@ -46,6 +46,14 @@ const routes = [
     },
     component: () => import(/* webpackChunkName: "about" */ '../views/Persons.vue')
   },
+  {
+    path: '/usuarios',
+    name: 'users',
+    meta: {
+      authentication: true,
+    },
+    component: () => import(/* webpackChunkName: "about" */ '../views/Users.vue')
+  },
 ]
 
 const router = new VueRouter({

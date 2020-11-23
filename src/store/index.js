@@ -189,6 +189,20 @@ export default new Vuex.Store({
         return e;
       }
     },
+    async saveUser(context, user) {
+      try {
+        return await fetch('http://localhost:3000/register', {
+          headers: new Headers({
+            'Authorization': `Bearer ${context.state.token}`,
+            'Content-Type': 'application/json'
+          }),
+          method: 'POST',
+          body: JSON.stringify(user)
+        });
+      } catch (e) {
+        return e;
+      }
+    },
     async updatePiece(context, piece) {
       try {
         return await fetch('http://localhost:3000/forward', {
@@ -268,6 +282,25 @@ export default new Vuex.Store({
           method: 'POST',
           body: JSON.stringify({
             table: `pieza/${id}`,
+            options: {
+              method: 'DELETE',
+            }
+          })
+        });
+      } catch (e) {
+        return e;
+      }
+    },
+    async deleteUser(context, id) {
+      try {
+        return await fetch('http://localhost:3000/forward', {
+          headers: new Headers({
+            'Authorization': `Bearer ${context.state.token}`,
+            'Content-Type': 'application/json'
+          }),
+          method: 'POST',
+          body: JSON.stringify({
+            table: `usuario/${id}`,
             options: {
               method: 'DELETE',
             }
