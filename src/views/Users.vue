@@ -237,7 +237,7 @@
       <!-- ends error snackbar -->
 
       <v-dialog v-model="individualDialog"
-                v-if="specieSelected !== null"
+                v-if="userSelected !== null"
                 width="700px">
         <v-card height="100%"
                 style="position: relative">
@@ -248,10 +248,10 @@
                  cover>
             <div style="position: absolute; bottom: 0; left: 4px">
               <v-card-title class="white--text text-h3">
-                {{specieSelected.nombrecientifico}}
+                {{ userSelected.nombre }}
               </v-card-title>
               <v-card-subtitle class="white--text text-h6">
-                {{specieSelected.genero}}
+                {{ userSelected.email }}
               </v-card-subtitle>
             </div>
           </v-img>
@@ -259,54 +259,19 @@
             <v-row no-gutters class="mx-4">
               <v-col cols="12"
                      class="text-h6 mt-4 mb-2"
-                     style="color: rgba(0, 0, 0, 0.87)">Clasificación</v-col>
+                     style="color: rgba(0, 0, 0, 0.87)">Credenciales</v-col>
 
               <!-- begins first row -->
               <v-col cols="12"
                      class="subtitle-1  d-flex flex-wrap no-gutters ml-2"
                      style="color: rgba(0, 0, 0, 0.87)">
-                <div class="col-4">{{getFormattedData(specieSelected.clase)}}</div>
-                <div class="col-4">{{getFormattedData(specieSelected.reino)}}</div>
-                <div class="col-4">{{getFormattedData(specieSelected.orden)}}</div>
+                <div class="col-4">{{ getFormattedData(userSelected.tipo) }}</div>
               </v-col>
               <v-col cols="12"
                      class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
-                <div class="col-4">Clase</div>
-                <div class="col-4">Reino</div>
-                <div class="col-4">Orden</div>
+                <div class="col-4">Tipo de usuario</div>
               </v-col>
               <!-- ends first row -->
-
-              <!-- begins second row -->
-              <v-col cols="12"
-                     class="subtitle-1 d-flex flex-wrap no-gutters ml-2"
-                     style="color: rgba(0, 0, 0, 0.87)">
-                <div class="col-4">{{getFormattedData(specieSelected.filum)}}</div>
-                <div class="col-8">{{getFormattedData(specieSelected.descripcion)}}</div>
-              </v-col>
-              <v-col cols="12"
-                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
-                <div class="col-4">Filum</div>
-                <div class="col-8">Descripción</div>
-              </v-col>
-              <!-- ends second row -->
-
-              <!-- begins third row -->
-              <v-col cols="12"
-                     class="subtitle-1  d-flex flex-wrap no-gutters ml-2"
-                     style="color: rgba(0, 0, 0, 0.87)">
-                <div class="col-4">{{getFormattedData(specieSelected.temporalidad)}}</div>
-                <div class="col-4">{{getFormattedData(specieSelected.clado)}}</div>
-                <div class="col-4">{{getFormattedData(specieSelected.subclado)}}</div>
-              </v-col>
-              <v-col cols="12"
-                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
-                <div class="col-4">Temporalidad</div>
-                <div class="col-4">Clado</div>
-                <div class="col-4">Subclado</div>
-              </v-col>
-              <!-- ends third row -->
-
             </v-row>
           </v-card-text>
         </v-card>
@@ -436,6 +401,11 @@
                   <template v-slot:item.nombre="{item}" >
                     <NoDataTableField :field="item.nombre"></NoDataTableField>
                   </template>
+                  <template v-slot:item.tipo="{item}">
+                    <v-chip :color="item.tipo === 'ADMIN' ? 'error' : 'primary'" small>
+                      {{item.tipo}}
+                    </v-chip>
+                  </template>
                 </v-data-table>
               </v-col>
             </v-row>
@@ -498,6 +468,12 @@ export default {
           sortable: true,
           value: 'email',
         },
+        {
+          text: 'Tipo de usuario',
+          align: 'center',
+          sortable: true,
+          value: 'tipo',
+        },
       ],
       tableColumnsSelected: [
         {
@@ -512,6 +488,12 @@ export default {
           align: 'start',
           sortable: true,
           value: 'email',
+        },
+        {
+          text: 'Tipo de usuario',
+          align: 'center',
+          sortable: true,
+          value: 'tipo',
         },
       ],
       tableColumnsToRender: [
@@ -528,6 +510,12 @@ export default {
           sortable: true,
           value: 'email',
         },
+        {
+          text: 'Tipo de usuario',
+          align: 'center',
+          sortable: true,
+          value: 'tipo',
+        },
       ],
       userTypes: [
         {text: 'Usuario', value: 'USUARIO'},
@@ -537,7 +525,7 @@ export default {
       userOptions: {},
       users: [],
       totalSpecies: 0,
-      specieSelected: null,
+      userSelected: null,
       individualDialog: false,
       deleteDialogActive: false,
       itemToDelete: null,
@@ -727,7 +715,7 @@ export default {
      * Opens individual item dialog
      */
     async openIndividualItem(value) {
-      this.specieSelected = value;
+      this.userSelected = value;
       this.setOverlayText('Abriendo pieza');
       this.showOverlay();
       this.closeOverlay();
