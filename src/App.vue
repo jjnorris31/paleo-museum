@@ -86,7 +86,7 @@ export default {
     tableItems: [
       { text: 'Personas',
         icon: 'mdi-account-supervisor-circle',
-        action: async () => {await router.push({name: 'pieces'})}
+        action: async () => {await router.push({name: 'persons'})}
       },
       { text: 'Almacenamiento',
         icon: 'mdi-office-building-outline',
@@ -155,6 +155,20 @@ export default {
     grid-column-gap: 16px;
     grid-template-columns: auto auto auto
   }
+
+
+  .basic-container {
+    width: 692px;
+  }
+
+  .image-container {
+    margin-top: 23px;
+    margin-left: 16px;
+    margin-bottom: 15px;
+    width: 265px;
+    height: 265px;
+  }
+
 
 
 </style>

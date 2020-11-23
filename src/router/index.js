@@ -38,6 +38,14 @@ const routes = [
     },
     component: () => import(/* webpackChunkName: "about" */ '../views/Species.vue')
   },
+  {
+    path: '/tablas/personas',
+    name: 'persons',
+    meta: {
+      authentication: true,
+    },
+    component: () => import(/* webpackChunkName: "about" */ '../views/Persons.vue')
+  },
 ]
 
 const router = new VueRouter({

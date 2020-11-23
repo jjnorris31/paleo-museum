@@ -867,7 +867,7 @@ export default {
       }
       this.closeOverlay();
       this.closeEditItem();
-      await this.getPiecesFromDatabase();
+      await this.getSpeciesFromDatabase();
     },
     /**
      * Process the specie to change the empty fields to null
