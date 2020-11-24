@@ -1,9 +1,14 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from '../store/index'
 
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: '*',
+    redirect: '/',
+  },
   {
     path: '/',
     name: 'landing',
@@ -83,6 +88,7 @@ const routes = [
     name: 'users',
     meta: {
       authentication: true,
+      admin: true,
     },
     component: () => import(/* webpackChunkName: "about" */ '../views/Users.vue')
   },
@@ -112,17 +118,32 @@ const router = new VueRouter({
 router.beforeEach(async (to, from, next) => {
 
   let token = localStorage.getItem('museum_token');
-  let res = await fetch('http://localhost:3000/auth', {
-    method: 'GET',
-    headers: new Headers({
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    })
-  });
+  let auth = false;
+  let res = null;
+  let admin = false;
 
-  let auth = res.ok;
+  if (token) {
+    res = await fetch('http://localhost:3000/auth', {
+      method: 'GET',
+      headers: new Headers({
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      })
+    });
+    auth = res.status === 200;
+    let tmp = await res.json();
+    admin = tmp.tipo === 'ADMIN';
+  }
+  store.commit('SET_USER', admin);
 
-  if (to.matched.some(record => record.meta.authentication)) {
+  if (to.matched.some(record => record.meta.authentication) && to.matched.some(record => record.meta.admin)) {
+    if (!auth) { // not admin!
+      next('/');
+    } else if (auth && !admin){ // user logged
+    } else {
+      next();
+    }
+  } else if (to.matched.some(record => record.meta.authentication)) {
     if (!auth) { // not logged
       next('/');
     } else { // user logged

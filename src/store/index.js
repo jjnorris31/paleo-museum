@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-const states = require('../misc/estados-municipios.json');
+const states = require('../misc/estados-municipios.js');
 
 Vue.use(Vuex)
 
@@ -15,6 +15,7 @@ export default new Vuex.Store({
     species: [],
     pieces: [],
     token: null,
+    user: null,
   },
   getters: {
     locations(state)  {
@@ -40,6 +41,9 @@ export default new Vuex.Store({
     },
     getPieces: state => {
       return state.pieces;
+    },
+    user: state => {
+      return state.user;
     }
   }
   ,
@@ -67,6 +71,9 @@ export default new Vuex.Store({
     },
     SET_TOKEN(state, token) {
       state.token = token;
+    },
+    SET_USER(state, user) {
+      state.user = user;
     }
   },
   actions: {

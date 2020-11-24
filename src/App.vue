@@ -4,7 +4,7 @@
                          app
                          v-if="inDashboard"
                          width="300">
-      <v-row no-gutters>
+      <v-row no-gutters class="fill-height">
         <v-col cols="12"
                class="mt-8 mb-4 d-flex justify-center no-gutters">
           <v-img src="@/assets/images/logo_museum_darkblue.svg"
@@ -16,6 +16,7 @@
           <v-list flat dense>
             <v-list-item-group v-model="listItemSelected">
               <v-list-item @click="showMessage()"
+                           v-if="false"
                            dense
                            color="#000000"
                            class="list-item">
@@ -44,6 +45,7 @@
               </v-list-group>
 
               <v-list-item @click="goToUsers()"
+                           v-if="user"
                            class="list-item">
                 <v-list-item-icon>
                   <v-icon>mdi-pencil</v-icon>
@@ -52,12 +54,24 @@
                 </v-list-item-title>
               </v-list-item>
 
-
             </v-list-item-group>
           </v-list>
         </v-col>
+        <v-col cols="12"
+               style="height: 80px"
+               class="align-self-end d-flex justify-center">
+          <v-btn flat
+                 outlined
+                 @click="logout()"
+                 depressed
+                 class="caption font-weight-medium"
+                 style="border-width: 2px"
+                 color="lightgray">
+            <v-icon class="mr-1">mdi-logout</v-icon>
+            Cerrar sesión
+          </v-btn>
+        </v-col>
       </v-row>
-
     </v-navigation-drawer>
     <v-main class="full-height">
       <RouterView></RouterView>
@@ -67,6 +81,7 @@
 
 <script>
 import router from "@/router";
+import {mapGetters} from 'vuex'
 
 export default {
   name: 'App',
@@ -77,7 +92,10 @@ export default {
   computed: {
     inDashboard() {
       return this.$route.name !== 'landing';
-    }
+    },
+    ...mapGetters([
+      "user"
+    ])
   },
 
   data: () => ({
@@ -122,6 +140,10 @@ export default {
     },
     showMessage() {
       console.log("clicked");
+    },
+    logout() {
+      localStorage.removeItem('museum_token');
+      this.$router.push({path: '/'});
     }
   },
   mounted() {
