@@ -27,9 +27,9 @@
             </v-btn>
           </div>
           <v-col cols="6">
-            <h1 class="mb-6 text-h4 font-weight-medium" v-if="isAddingItem">Nuevo colector</h1>
-            <h1 class="mb-6 text-h4 font-weight-medium" v-if="isEditingItem">Editar colector</h1>
-            <v-form ref="collectorForm"
+            <h1 class="mb-6 text-h4 font-weight-medium" v-if="isAddingItem">Nuevo determinador</h1>
+            <h1 class="mb-6 text-h4 font-weight-medium" v-if="isEditingItem">Editar determinador</h1>
+            <v-form ref="determinatorForm"
                     lazy-validation
                     class="d-flex no-gutters flex-wrap">
 
@@ -59,7 +59,7 @@
                                         :search-input.sync="searchPerson"
                                         hide-no-data
                                         placeholder="Juan Pérez"
-                                        v-model="collector.idp"
+                                        v-model="determinator.idp"
                                         item-text="nombrespila"
                                         item-value="idp"
                                         dense>
@@ -82,7 +82,7 @@
                                         :search-input.sync="searchPiece"
                                         hide-no-data
                                         placeholder="MPG-15"
-                                        v-model="collector.ncatalogo"
+                                        v-model="determinator.ncatalogo"
                                         dense>
                         </v-autocomplete>
                       </div>
@@ -98,13 +98,29 @@
                                     type="text"
                                     :rules="[requiredRules]"
                                     placeholder="10-10-1990"
-                                    v-model="collector.fecha"
+                                    v-model="determinator.fecha_mov"
                                     dense>
                       </v-text-field>
                     </div>
                     <!-- ends fecha -->
 
                     </div>
+                    <!-- begin description -->
+                  <div style="width: 100%">
+                    <div class="input-label">
+                      Descripción
+                    </div>
+                    <v-textarea outlined
+                                counter
+                                maxlength="200"
+                                height="80px"
+                                type="text"
+                                placeholder="Aquí va algo importante..."
+                                v-model="determinator.descripcion"
+                                dense>
+                    </v-textarea>
+                  </div>
+                  <!-- ends description -->
 
                   </div>
                 <!-- ends fields -->
@@ -128,8 +144,8 @@
                        v-if="isAddingItem"
                        class="ml-2"
                        elevation="4"
-                       @click="saveCollector()"
-                       height="40px">Guardar colector
+                       @click="saveDeterminator()"
+                       height="40px">Guardar determinador
                 </v-btn>
                 <v-btn color="secondary"
                        dark
@@ -154,8 +170,8 @@
                style="background-color: white; height: 100%"
                class="pt-6 px-7">
           <v-col cols="12" class="d-flex no-gutters flex-wrap">
-            <h1 class="mb-1 headline font-weight-medium col-12">Borrado de colector</h1>
-            <div class="grey--text col-12 mb-4">¿Estás seguro de borrar este colector?</div>
+            <h1 class="mb-1 headline font-weight-medium col-12">Borrado de determinador</h1>
+            <div class="grey--text col-12 mb-4">¿Estás seguro de borrar este determinador?</div>
             <div class="col-12 justify-end mb-6 d-flex no-gutters flex-wrap">
               <v-btn color="secondary"
                      dark
@@ -199,7 +215,7 @@
                 <v-btn color="error"
                        dark
                        class="ml-2"
-                       @click="updateCollector()"
+                       @click="updateDeterminator()"
                        elevation="4"
                        height="40px">Editar</v-btn>
               </div>
@@ -218,7 +234,7 @@
       <!-- ends error snackbar -->
 
       <v-dialog v-model="individualDialog"
-                v-if="collectorSelected !== null"
+                v-if="determinatorSelected !== null"
                 width="700px">
         <v-card height="100%"
                 style="position: relative">
@@ -229,10 +245,10 @@
                  cover>
             <div style="position: absolute; bottom: 0; left: 4px">
               <v-card-title class="white--text text-h3">
-                {{collectorSelected.nombrecientifico}}
+                {{determinatorSelected.nombrecientifico}}
               </v-card-title>
               <v-card-subtitle class="white--text text-h6">
-                {{collectorSelected.genero}}
+                {{determinatorSelected.genero}}
               </v-card-subtitle>
             </div>
           </v-img>
@@ -246,9 +262,9 @@
               <v-col cols="12"
                      class="subtitle-1  d-flex flex-wrap no-gutters ml-2"
                      style="color: rgba(0, 0, 0, 0.87)">
-                <div class="col-4">{{getFormattedData(collectorSelected.clase)}}</div>
-                <div class="col-4">{{getFormattedData(collectorSelected.reino)}}</div>
-                <div class="col-4">{{getFormattedData(collectorSelected.orden)}}</div>
+                <div class="col-4">{{getFormattedData(determinatorSelected.clase)}}</div>
+                <div class="col-4">{{getFormattedData(determinatorSelected.reino)}}</div>
+                <div class="col-4">{{getFormattedData(determinatorSelected.orden)}}</div>
               </v-col>
               <v-col cols="12"
                      class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
@@ -262,8 +278,8 @@
               <v-col cols="12"
                      class="subtitle-1 d-flex flex-wrap no-gutters ml-2"
                      style="color: rgba(0, 0, 0, 0.87)">
-                <div class="col-4">{{getFormattedData(collectorSelected.filum)}}</div>
-                <div class="col-8">{{getFormattedData(collectorSelected.descripcion)}}</div>
+                <div class="col-4">{{getFormattedData(determinatorSelected.filum)}}</div>
+                <div class="col-8">{{getFormattedData(determinatorSelected.descripcion)}}</div>
               </v-col>
               <v-col cols="12"
                      class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
@@ -276,9 +292,9 @@
               <v-col cols="12"
                      class="subtitle-1  d-flex flex-wrap no-gutters ml-2"
                      style="color: rgba(0, 0, 0, 0.87)">
-                <div class="col-4">{{getFormattedData(collectorSelected.temporalidad)}}</div>
-                <div class="col-4">{{getFormattedData(collectorSelected.clado)}}</div>
-                <div class="col-4">{{getFormattedData(collectorSelected.subclado)}}</div>
+                <div class="col-4">{{getFormattedData(determinatorSelected.temporalidad)}}</div>
+                <div class="col-4">{{getFormattedData(determinatorSelected.clado)}}</div>
+                <div class="col-4">{{getFormattedData(determinatorSelected.subclado)}}</div>
               </v-col>
               <v-col cols="12"
                      class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
@@ -308,7 +324,7 @@
 
                 <!-- begins title-->
                 <h2 class="text-h4 font-weight-medium"
-                    style="position: absolute; left: 0; margin-bottom: 26px">Colectores</h2>
+                    style="position: absolute; left: 0; margin-bottom: 26px">Determinadores</h2>
                 <!-- ends title-->
 
 
@@ -318,8 +334,8 @@
                     Búsqueda
                   </div>
                   <v-text-field outlined
-                                @keyup.enter="searchCollector()"
-                                placeholder="Colector 1"
+                                @keyup.enter="searchDeterminator()"
+                                placeholder="Determinador 1"
                                 v-model="filterOptions.search.pattern"
                                 append-icon="mdi-magnify"
                                 class="mr-2"
@@ -365,7 +381,7 @@
                        class="ml-2"
                        style="margin-bottom: 26px; border-width: 2px"
                        @click="openNewItem()"
-                       color="primary">Añadir colector
+                       color="primary">Añadir determinador
                 </v-btn>
                 <!-- ends add new item button -->
               </v-col>
@@ -411,18 +427,18 @@
               <v-col cols="12"
                      class="mb-4">
                 <v-data-table
-                  :server-items-length="totalCollectors"
+                  :server-items-length="totalDeterminators"
                   @click:row="openIndividualItem"
                   height="600px"
                   fixed-header
                   :items-per-page="25"
-                  :options.sync="collectorOptions"
+                  :options.sync="determinatorOptions"
                   :loading="loadingTable"
                   loader-height="4"
                   item-key="idp"
-                  loading-text="Reuniendo los colectores"
+                  loading-text="Reuniendo los determinadores"
                   :headers="tableColumnsToRender"
-                  :items="collectors">
+                  :items="determinators">
                   <template v-slot:item.actions="{item}">
                     <v-menu
                       bottom
@@ -493,7 +509,7 @@ import {stdRules, requiredRules} from "@/misc/rules";
 
 
 export default {
-  name: "Collectors",
+  name: "Determinators",
   mixins: [overlayController,
     deleteDialogController,
     formatText,
@@ -541,7 +557,7 @@ export default {
           align: 'start',
           disabled: true,
           sortable: true,
-          value: 'fecha',
+          value: 'fecha_mov',
         },
       ],
       tableColumnsSelected: [
@@ -563,19 +579,19 @@ export default {
           text: 'Fecha',
           align: 'start',
           sortable: true,
-          value: 'fecha',
+          value: 'fecha_mov',
         },
       ],
       tableColumnsToRender: [],
       loadingTable: false,
-      collectorOptions: {},
-      collectors: [],
-      totalCollectors: 0,
-      collectorSelected: null,
+      determinatorOptions: {},
+      determinators: [],
+      totalDeterminators: 0,
+      determinatorSelected: null,
       individualDialog: false,
       deleteDialogActive: false,
       itemToDelete: null,
-      collector: {
+      determinator: {
         idp: '',
         ncatalogo: '',
         fecha: ''
@@ -618,9 +634,9 @@ export default {
       },
       immediate: true,
     },
-    collectorOptions: {
+    determinatorOptions: {
       handler() {
-        this.getCollectorsFromDatabase();
+        this.getDeterminatorsFromDatabase();
       },
       deep: true
     },
@@ -632,15 +648,15 @@ export default {
       if (val === '') {
         this.setOverlayText('Regresando todo a su lugar');
         this.showOverlay();
-        await this.getCollectorsFromDatabase();
+        await this.getDeterminatorsFromDatabase();
         this.closeOverlay();
       }
     },
     searchPerson(newVal) {
-      newVal && newVal !== this.collector.idp && this.queryPersons(newVal)
+      newVal && newVal !== this.determinator.idp && this.queryPersons(newVal)
     },
     searchPiece(newVal) {
-      newVal && newVal !== this.collector.ncatalogo && this.queryPieces(newVal)
+      newVal && newVal !== this.determinator.ncatalogo && this.queryPieces(newVal)
     },
   },
   methods: {
@@ -650,29 +666,29 @@ export default {
      */
     async openEditForm(item) {
       this.setEditItem(item);
-      this.setOverlayText('Abriendo colector');
+      this.setOverlayText('Abriendo determinador');
       this.showOverlay();
       this.closeOverlay();
       this.closeFormDialog();
-      this.collector = item;
+      this.determinator = item;
     },
     /**
      * Open the new item dialog and reset the piece variable
      */
     openNewItem() {
       this.isAddingItem = true;
-      this.resetCollector();
+      this.resetDeterminator();
       this.closeFormDialog()
-      if (this.$refs.collectorForm !== undefined) {
-        this.$refs.collectorForm.reset();
+      if (this.$refs.determinatorForm !== undefined) {
+        this.$refs.determinatorForm.reset();
       }
     },
-    async saveCollector() {
-      if (this.$refs.collectorForm.validate()) {
-        this.setOverlayText('Guardando colector');
+    async saveDeterminator() {
+      if (this.$refs.determinatorForm.validate()) {
+        this.setOverlayText('Guardando determinador');
         this.showOverlay();
-        this.processCollector();
-        let res = await this.$store.dispatch('saveCollector', this.collector);
+        this.processDeterminator();
+        let res = await this.$store.dispatch('saveDeterminator', this.determinator);
         if (res.ok) {
           this.showSuccessNotification('La pieza ha sido guardada');
         } else {
@@ -680,41 +696,43 @@ export default {
         }
         this.closeOverlay();
         this.closeNewItem();
-        await this.getCollectorsFromDatabase();
+        await this.getDeterminatorsFromDatabase();
       }
     },
-    async updateCollector() {
+    async updateDeterminator() {
       this.editDialogActive = false;
-      this.setOverlayText('Actualizando colector');
+      this.setOverlayText('Actualizando determinador');
       this.showOverlay();
-      let res = await this.$store.dispatch('updateCollector', this.collector);
+      let res = await this.$store.dispatch('updateDeterminator', this.determinator);
       if (res.ok) {
-        this.collectorOptions.page = 1;
-        this.totalCollectors = 25;
-        this.showSuccessNotification('¡El colector ha sido actualizada!');
+        this.determinatorOptions.page = 1;
+        this.totalDeterminators = 25;
+        this.showSuccessNotification('¡El determinador ha sido actualizada!');
       } else {
-        this.showErrorNotification(`¡El colector no se ha actualizado! ERR: ${res.statusText}`)
+        this.showErrorNotification(`¡El determinador no se ha actualizado! ERR: ${res.statusText}`)
       }
       this.closeOverlay();
       this.closeEditItem();
-      await this.getCollectorsFromDatabase();
+      await this.getDeterminatorsFromDatabase();
     },
     /**
-     * Process the collector to change the empty fields to null
+     * Process the determinator to change the empty fields to null
      */
-    processCollector() {
-      this.collector.idp = this.getFmtEmptyField(this.collector.idp);
-      this.collector.ncatalogo = this.getFmtEmptyField(this.collector.ncatalogo);
-      this.collector.fecha = this.getFmtEmptyField(this.collector.fecha);
+    processDeterminator() {
+      this.determinator.idp = this.getFmtEmptyField(this.determinator.idp);
+      this.determinator.ncatalogo = this.getFmtEmptyField(this.determinator.ncatalogo);
+      this.determinator.fecha_mov = this.getFmtEmptyField(this.determinator.fecha_mov);
+      this.determinator.descripcion = this.getFmtEmptyField(this.determinator.descripcion);
     },
     /**
-     * Erase all the info of the collector selected
+     * Erase all the info of the piece selected
      */
-    resetCollector() {
-      this.collector = {
+    resetDeterminator() {
+      this.determinator = {
         idp: '',
         ncatalogo: '',
-        fecha: ''
+        fecha_mov: '',
+        descripcion: ''
       }
     },
     /**
@@ -735,14 +753,14 @@ export default {
      * Dispatch the action to delete an item in the database
      */
     async deleteItem() {
-      this.setOverlayText('Eliminando colector');
+      this.setOverlayText('Eliminando determinador');
       this.showOverlay();
-      let res = await this.$store.dispatch('deleteCollector', this.itemToDelete.idp + ',' + this.itemToDelete.ncatalogo);
+      let res = await this.$store.dispatch('deleteDeterminator', this.itemToDelete.idp + ',' + this.itemToDelete.ncatalogo);
       if (res.ok) {
-        await this.getCollectorsFromDatabase();
-        this.showSuccessNotification('El colector ha sido eliminada correctamente');
+        await this.getDeterminatorsFromDatabase();
+        this.showSuccessNotification('El determinador ha sido eliminada correctamente');
       } else {
-        this.showErrorNotification(`¡El colector no se ha eliminado! ERR: ${res.statusText}`);
+        this.showErrorNotification(`¡El determinador no se ha eliminado! ERR: ${res.statusText}`);
       }
       this.closeOverlay();
       this.closeDeleteConfirmation();
@@ -767,18 +785,18 @@ export default {
      * Opens individual item dialog
      */
     async openIndividualItem(value) {
-      this.collectorSelected = value;
+      this.determinatorSelected = value;
       this.setOverlayText('Abriendo pieza');
       this.showOverlay();
       this.closeOverlay();
       this.individualDialog = true;
     },
     /**
-     * Get the collectors from the database
+     * Get the determinators from the database
      * @returns {Promise<void>}
      */
-    async getCollectorsFromDatabase() {
-      const {page, sortBy, sortDesc} = this.collectorOptions;
+    async getDeterminatorsFromDatabase() {
+      const {page, sortBy, sortDesc} = this.determinatorOptions;
       this.loadingTable = true;
       let query = addQueryParameters({
         offset: (25 * (page - 1)),
@@ -799,7 +817,7 @@ export default {
         }),
         method: 'POST',
         body: JSON.stringify({
-          table: `colector/${query}`,
+          table: `determinador/${query}`,
           options: {
             method: 'GET',
             headers: {
@@ -810,11 +828,11 @@ export default {
       }).then(res => res.json()).then(res => {
         if (res.hasMore) {
           // calculating the pagination
-          this.totalCollectors = ((25 * (page + 1)));
+          this.totalDeterminators = ((25 * (page + 1)));
         } else {
-          this.totalCollectors = (25 * page);
+          this.totalDeterminators = (25 * page);
         }
-        this.collectors = res.items;
+        this.determinators = res.items;
       }).catch(err => {
         console.log(err);
       });
@@ -824,11 +842,11 @@ export default {
      * Search the given text in the database
      * @returns {Promise<void>}
      */
-    async searchCollector() {
+    async searchDeterminator() {
       this.setOverlayText('Buscando algo increíble');
       this.showOverlay();
-      this.collectorOptions.page = 1;
-      this.totalCollectors = 25;
+      this.determinatorOptions.page = 1;
+      this.totalDeterminators = 25;
       if (this.filterOptions.search.pattern !== '') {
         clearTimeout(this.timeout);
         // timeout to delay the search after the user ends typing
@@ -841,7 +859,7 @@ export default {
             }),
             method: 'POST',
             body: JSON.stringify({
-              table: `colector/${query}`,
+              table: `determinador/${query}`,
               options: {
                 method: 'GET',
                 headers: {
@@ -850,7 +868,7 @@ export default {
               }
             })
           }).then(res => res.json()).then(res => {
-            this.collectors = res.items;
+            this.determinators = res.items;
           }).catch(err => {
             console.log(err);
           }).finally(() => (this.closeOverlay()));

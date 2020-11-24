@@ -63,6 +63,14 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/Collectors.vue')
   },
   {
+    path: '/tablas/determinadores',
+    name: 'determinators',
+    meta: {
+      authentication: true,
+    },
+    component: () => import(/* webpackChunkName: "about" */ '../views/Determinators.vue')
+  },
+  {
     path: '/usuarios',
     name: 'users',
     meta: {

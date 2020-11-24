@@ -249,6 +249,29 @@ export default new Vuex.Store({
         return e;
       }
     },
+    async saveDeterminator(context, determinator) {
+      try {
+        return await fetch('http://localhost:3000/forward', {
+          headers: new Headers({
+            'Authorization': `Bearer ${context.state.token}`,
+            'Content-Type': 'application/json'
+          }),
+          method: 'POST',
+          body: JSON.stringify({
+            table: `determinador/`,
+            options: {
+              method: 'POST',
+              body: JSON.stringify(determinator),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+          })
+        });
+      } catch (e) {
+        return e;
+      }
+    },
     async updatePiece(context, piece) {
       try {
         return await fetch('http://localhost:3000/forward', {
@@ -364,6 +387,29 @@ export default new Vuex.Store({
         return e;
       }
     },
+    async updateDeterminator(context, determinator) {
+      try {
+        return await fetch('http://localhost:3000/forward', {
+          headers: new Headers({
+            'Authorization': `Bearer ${context.state.token}`,
+            'Content-Type': 'application/json'
+          }),
+          method: 'POST',
+          body: JSON.stringify({
+            table: `determinador/${determinator.idp},${determinator.ncatalogo}`,
+            options: {
+              method: 'PUT',
+              body: JSON.stringify(determinator),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+          })
+        });
+      } catch (e) {
+        return e;
+      }
+    },
     async deletePiece(context, id) {
       try {
         return await fetch('http://localhost:3000/forward', {
@@ -469,6 +515,25 @@ export default new Vuex.Store({
           method: 'POST',
           body: JSON.stringify({
             table: `colector/${id}`,
+            options: {
+              method: 'DELETE',
+            }
+          })
+        });
+      } catch (e) {
+        return e;
+      }
+    },
+    async deleteDeterminator(context, id) {
+      try {
+        return await fetch('http://localhost:3000/forward', {
+          headers: new Headers({
+            'Authorization': `Bearer ${context.state.token}`,
+            'Content-Type': 'application/json'
+          }),
+          method: 'POST',
+          body: JSON.stringify({
+            table: `determinador/${id}`,
             options: {
               method: 'DELETE',
             }
