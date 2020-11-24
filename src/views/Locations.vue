@@ -939,7 +939,7 @@ export default {
         this.processLocation();
         let res = await this.$store.dispatch('saveLocation', this.location);
         if (res.ok) {
-          this.showSuccessNotification('La localdiad ha sido guardada');
+          this.showSuccessNotification('La localidad ha sido guardada');
         } else {
           this.showErrorNotification(`¡La localidad no se ha guardado! ERR: ${res.statusText}`)
         }
