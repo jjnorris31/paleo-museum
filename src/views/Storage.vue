@@ -27,19 +27,17 @@
             </v-btn>
           </div>
           <v-col cols="6">
-            <h1 class="mb-6 text-h4 font-weight-medium" v-if="isAddingItem">Nuevo usuario</h1>
-            <h1 class="mb-6 text-h4 font-weight-medium" v-if="isEditingItem">Editar usuario</h1>
-            <v-form ref="personForm"
+            <h1 class="mb-6 text-h4 font-weight-medium" v-if="isAddingItem">Nuevo almacenamiento</h1>
+            <h1 class="mb-6 text-h4 font-weight-medium" v-if="isEditingItem">Editar almacenamiento</h1>
+            <v-form ref="specieForm"
                     lazy-validation
                     class="d-flex no-gutters flex-wrap">
 
               <!-- begin basic information -->
               <div class="col-12 text-h6">
-                Credenciales
+                Información básica
               </div>
-
-              <div class="d-flex no-gutters justify-space-between"
-                   style="min-width: 973px">
+              <div class="d-flex no-gutters">
 
                 <!-- begins fields -->
                 <div class="d-flex flex-wrap no-gutters"
@@ -47,83 +45,82 @@
 
                   <div class="row-form-container">
 
-                    <!-- begins email -->
+                    <!-- begins nombre cientifico -->
                     <div>
                       <div class="input-label">
-                        Correo electrónico
+                        Identificador
                       </div>
                       <v-text-field outlined
                                     type="text"
                                     counter
                                     maxlength="30"
-                                    placeholder="test@example.com"
-                                    v-model="user.email"
+                                    :rules="[requiredRules]"
+                                    placeholder="100"
+                                    v-model="storage.ida"
                                     dense>
                       </v-text-field>
                     </div>
-                    <!-- ends email -->
+                    <!-- ends nombre cientifico -->
 
-                    <!-- begins nombre -->
+                    <!-- begins genero -->
                     <div>
                       <div class="input-label">
-                        Nombre
+                        Edificio
                       </div>
                       <v-text-field outlined
                                     counter
-                                    maxlength="30"
-                                    type="text"
-                                    :rules="[stdRules]"
-                                    placeholder="Rafael777"
-                                    v-model="user.nombre"
-                                    dense>
-                      </v-text-field>
-                    </div>
-                    <!-- ends nombre -->
-
-                    <!-- begins contraseña -->
-                    <div>
-                      <div class="input-label">
-                        Contraseña
-                      </div>
-                      <v-text-field outlined
-                                    counter
-                                    maxlength="30"
+                                    maxlength="20"
                                     type="text"
                                     :rules="[stdRules]"
-                                    placeholder="*********"
-                                    v-model="user.password"
+                                    placeholder="Edificio 1"
+                                    v-model="storage.edificio"
                                     dense>
                       </v-text-field>
                     </div>
-                    <!-- ends contraseña -->
+                    <!-- ends genero -->
 
-
+                    <!-- begins clase -->
+                    <div>
+                      <div class="input-label">
+                        Estante
+                      </div>
+                      <v-text-field outlined
+                                    counter
+                                    maxlength="3"
+                                    type="number"
+                                    :rules="[stdRules]"
+                                    placeholder="1"
+                                    v-model="storage.estante"
+                                    dense>
+                      </v-text-field>
+                    </div>
+                    <!-- ends clase -->
 
                   </div>
+
                   <div class="row-form-container">
 
-                    <!-- begins contraseña -->
-                    <div style="max-width: 317px">
+                    <!-- begins reino -->
+                    <div>
                       <div class="input-label">
-                        Tipo de usuario
+                        Número de anaquel
                       </div>
-                      <v-select
-                        v-model="user.tipo"
-                        :items="userTypes"
-                        item-text="text"
-                        value="value"
-                        color="secondary"
-                        item-value="value"
-                        outlined
-                        dense>
-                      </v-select>
+                      <v-text-field outlined
+                                    type="text"
+                                    placeholder="1"
+                                    v-model="storage.numanaquel"
+                                    dense>
+                      </v-text-field>
                     </div>
-                    <!-- ends contraseña -->
+                    <!-- begins reino -->
                   </div>
+
+
                 </div>
                 <!-- ends fields -->
-                <!-- ends basic information -->
+
               </div>
+              <!-- ends basic information -->
 
             </v-form>
             <div class="d-flex justify-center my-5 no-gutters"
@@ -141,8 +138,8 @@
                        v-if="isAddingItem"
                        class="ml-2"
                        elevation="4"
-                       @click="saveUser()"
-                       height="40px">Guardar usuario
+                       @click="saveSpecie()"
+                       height="40px">Guardar almacenamiento
                 </v-btn>
                 <v-btn color="secondary"
                        dark
@@ -167,8 +164,8 @@
                style="background-color: white; height: 100%"
                class="pt-6 px-7">
           <v-col cols="12" class="d-flex no-gutters flex-wrap">
-            <h1 class="mb-1 headline font-weight-medium col-12">Borrado de usuario</h1>
-            <div class="grey--text col-12 mb-4">¿Estás seguro de borrar a este usuario?</div>
+            <h1 class="mb-1 headline font-weight-medium col-12">Borrado de almacenamiento</h1>
+            <div class="grey--text col-12 mb-4">¿Estás seguro de borrar este almacenamiento?</div>
             <div class="col-12 justify-end mb-6 d-flex no-gutters flex-wrap">
               <v-btn color="secondary"
                      dark
@@ -187,7 +184,6 @@
           </v-col>
         </v-row>
       </v-dialog>
-
       <!-- ends delete dialog -->
 
       <!-- begin edit dialog -->
@@ -198,7 +194,7 @@
                style="background-color: white; height: 100%"
                class="pt-7 px-7">
           <v-col cols="12">
-            <h1 class="mb-1 headline font-weight-medium">Edición de persona</h1>
+            <h1 class="mb-1 headline font-weight-medium">Edición de pieza</h1>
             <p class="grey--text">¿Estás seguro de guardar los cambios?</p>
             <div class="col-12 d-flex justify-end mb-2 no-gutters">
               <div class="col-5 d-flex no-gutters">
@@ -212,7 +208,7 @@
                 <v-btn color="error"
                        dark
                        class="ml-2"
-                       @click="updatePerson()"
+                       @click="updateSpecie()"
                        elevation="4"
                        height="40px">Editar</v-btn>
               </div>
@@ -231,7 +227,7 @@
       <!-- ends error snackbar -->
 
       <v-dialog v-model="individualDialog"
-                v-if="userSelected !== null"
+                v-if="storageSelected !== null"
                 width="700px">
         <v-card height="100%"
                 style="position: relative">
@@ -242,10 +238,10 @@
                  cover>
             <div style="position: absolute; bottom: 0; left: 4px">
               <v-card-title class="white--text text-h3">
-                {{ userSelected.nombre }}
+                {{ storageSelected.ida }}
               </v-card-title>
               <v-card-subtitle class="white--text text-h6">
-                {{ userSelected.email }}
+                {{ storageSelected.edificio }}
               </v-card-subtitle>
             </div>
           </v-img>
@@ -253,17 +249,19 @@
             <v-row no-gutters class="mx-4">
               <v-col cols="12"
                      class="text-h6 mt-4 mb-2"
-                     style="color: rgba(0, 0, 0, 0.87)">Credenciales</v-col>
+                     style="color: rgba(0, 0, 0, 0.87)">Almacenamiento</v-col>
 
               <!-- begins first row -->
               <v-col cols="12"
                      class="subtitle-1  d-flex flex-wrap no-gutters ml-2"
                      style="color: rgba(0, 0, 0, 0.87)">
-                <div class="col-4">{{ getFormattedData(userSelected.tipo) }}</div>
+                <div class="col-4">{{ getFormattedData(storageSelected.estante) }}</div>
+                <div class="col-4">{{ getFormattedData(storageSelected.numanaquel) }}</div>
               </v-col>
               <v-col cols="12"
                      class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
-                <div class="col-4">Tipo de usuario</div>
+                <div class="col-4">Estante</div>
+                <div class="col-4">Número de anaquel</div>
               </v-col>
               <!-- ends first row -->
             </v-row>
@@ -271,13 +269,11 @@
         </v-card>
       </v-dialog>
 
-
       <!-- begin table -->
       <v-col cols="12"
              class="main-container mb-9 rounded px-12 mt-12">
         <v-row no-gutters
                justify="center">
-
           <v-col cols="12">
             <v-row no-gutters>
               <v-col cols="12"
@@ -286,7 +282,7 @@
 
                 <!-- begins title-->
                 <h2 class="text-h4 font-weight-medium"
-                    style="position: absolute; left: 0; margin-bottom: 26px">Usuarios</h2>
+                    style="position: absolute; left: 0; margin-bottom: 26px">Almacenamiento</h2>
                 <!-- ends title-->
 
 
@@ -296,8 +292,8 @@
                     Búsqueda
                   </div>
                   <v-text-field outlined
-                                @keyup.enter="searchUser()"
-                                placeholder="usuario@test.com"
+                                @keyup.enter="searchSpecie()"
+                                placeholder="Canis dirus"
                                 v-model="filterOptions.search.pattern"
                                 append-icon="mdi-magnify"
                                 class="mr-2"
@@ -343,11 +339,10 @@
                        class="ml-2"
                        style="margin-bottom: 26px; border-width: 2px"
                        @click="openNewItem()"
-                       color="primary">Añadir usuario
+                       color="primary">Añadir almacenamiento
                 </v-btn>
                 <!-- ends add new item button -->
               </v-col>
-
 
               <v-col cols="12"
                      class="mb-4">
@@ -357,13 +352,13 @@
                   height="600px"
                   fixed-header
                   :items-per-page="25"
-                  :options.sync="userOptions"
+                  :options.sync="storageOptions"
                   :loading="loadingTable"
                   loader-height="4"
-                  item-key="idp"
-                  loading-text="Reuniendo al personal"
+                  item-key="ida"
+                  loading-text="Abriendo los almacenes"
                   :headers="tableColumnsToRender"
-                  :items="users">
+                  :items="storages">
                   <template v-slot:item.actions="{item}">
                     <v-menu
                       bottom
@@ -379,9 +374,9 @@
                       </template>
                       <v-list flat dense>
                         <v-list-item-group>
-                         <!-- <v-list-item @click="openEditForm(item)">
+                          <v-list-item @click="openEditForm(item)">
                             <v-list-item-title>Editar</v-list-item-title>
-                          </v-list-item>-->
+                          </v-list-item>
                           <v-list-item @click="openDeleteConfirmation(item)">
                             <v-list-item-title>Eliminar</v-list-item-title>
                           </v-list-item>
@@ -389,16 +384,17 @@
                       </v-list>
                     </v-menu>
                   </template>
-                  <template v-slot:item.email="{item}" >
-                    <NoDataTableField :field="item.email"></NoDataTableField>
+                  <template v-slot:item.ida="{item}" >
+                    <NoDataTableField :field="item.ida"></NoDataTableField>
                   </template>
-                  <template v-slot:item.nombre="{item}" >
-                    <NoDataTableField :field="item.nombre"></NoDataTableField>
+                  <template v-slot:item.edificio="{item}" >
+                    <NoDataTableField :field="item.edificio"></NoDataTableField>
                   </template>
-                  <template v-slot:item.tipo="{item}">
-                    <v-chip :color="item.tipo === 'ADMIN' ? 'error' : 'primary'" small>
-                      {{item.tipo}}
-                    </v-chip>
+                  <template v-slot:item.estante="{item}" >
+                    <NoDataTableField :field="item.estante"></NoDataTableField>
+                  </template>
+                  <template v-slot:item.numanaquel="{item}">
+                    <NoDataTableField :field="item.numanaquel"></NoDataTableField>
                   </template>
                 </v-data-table>
               </v-col>
@@ -421,14 +417,12 @@ import formatText from "@/misc/formatText";
 import snackbarNotification from "@/mixins/snackbarNotification";
 import deleteDialogController from "@/mixins/deleteDialogController";
 import {stdRules, requiredRules} from "@/misc/rules";
-import dropImage from "@/misc/dropImage";
 
 
 export default {
-  name: "Users",
+  name: "Storage",
   mixins: [overlayController,
     deleteDialogController,
-    dropImage,
     formatText,
     snackbarNotification],
   components: {
@@ -443,91 +437,85 @@ export default {
         search: {
           pattern: '',
           columns: [
-            'nombre',
-            'email',
+            'ida',
+            'edificio',
+            'estante',
+            'numanaquel',
           ],
         }
       },
       headers: [
         {
-          text: 'Nombre',
+          text: 'Identificador',
           disabled: true,
           align: 'start',
           sortable: true,
-          value: 'nombre',
+          value: 'ida',
         },
         {
-          text: 'Correo electrónico',
+          text: 'Edificio',
+          disabled: true,
           align: 'start',
           sortable: true,
-          value: 'email',
+          value: 'edificio',
         },
         {
-          text: 'Tipo de usuario',
-          align: 'center',
+          text: 'Estante',
+          align: 'start',
           sortable: true,
-          value: 'tipo',
+          value: 'estante',
+        },
+        {
+          text: 'Número de anaquel',
+          align: 'start',
+          disabled: true,
+          sortable: false,
+          value: 'numanaquel',
         },
       ],
       tableColumnsSelected: [
         {
-          text: 'Nombre',
+          text: 'Identificador',
           disabled: true,
           align: 'start',
           sortable: true,
-          value: 'nombre',
+          value: 'ida',
         },
         {
-          text: 'Correo electrónico',
-          align: 'start',
-          sortable: true,
-          value: 'email',
-        },
-        {
-          text: 'Tipo de usuario',
-          align: 'center',
-          sortable: true,
-          value: 'tipo',
-        },
-      ],
-      tableColumnsToRender: [
-        {
-          text: 'Nombre',
+          text: 'Edificio',
           disabled: true,
           align: 'start',
           sortable: true,
-          value: 'nombre',
+          value: 'edificio',
         },
         {
-          text: 'Correo electrónico',
+          text: 'Estante',
           align: 'start',
           sortable: true,
-          value: 'email',
+          value: 'estante',
         },
         {
-          text: 'Tipo de usuario',
-          align: 'center',
-          sortable: true,
-          value: 'tipo',
+          text: 'Número de anaquel',
+          align: 'start',
+          disabled: true,
+          sortable: false,
+          value: 'numanaquel',
         },
       ],
-      userTypes: [
-        {text: 'Usuario', value: 'USUARIO'},
-        {text: 'Administrador', value: 'ADMIN'}
-      ],
+      tableColumnsToRender: [],
       loadingTable: false,
-      userOptions: {},
-      users: [],
+      storageOptions: {},
+      storages: [],
       totalSpecies: 0,
-      userSelected: null,
+      storageSelected: null,
       individualDialog: false,
       deleteDialogActive: false,
       itemToDelete: null,
-      user: {
-        email: '',
-        nombre: '',
-        tipo: 'USUARIO',
-        password: '',
+      storage: {
+        ida: '',
+        edificio: '',
+        estante: '',
+        numanaquel: '',
       },
     }
   },
@@ -567,9 +555,9 @@ export default {
       },
       immediate: true,
     },
-    userOptions: {
+    storageOptions: {
       handler() {
-        this.getUsersFromDatabase();
+        this.getStorageFromDatabase();
       },
       deep: true
     },
@@ -581,7 +569,7 @@ export default {
       if (val === '') {
         this.setOverlayText('Regresando todo a su lugar');
         this.showOverlay();
-        await this.getUsersFromDatabase();
+        await this.getStorageFromDatabase();
         this.closeOverlay();
       }
     },
@@ -597,66 +585,69 @@ export default {
       this.showOverlay();
       this.closeOverlay();
       this.closeFormDialog();
-      this.user = item;
+      this.storage = item;
     },
     /**
      * Open the new item dialog and reset the piece variable
      */
     openNewItem() {
       this.isAddingItem = true;
-      this.resetUser();
+      this.resetSpecie();
       this.closeFormDialog()
-      if (this.$refs.personForm !== undefined) {
-        this.$refs.personForm.reset();
+      if (this.$refs.specieForm !== undefined) {
+        this.$refs.specieForm.reset();
       }
     },
-    async saveUser() {
-      if (this.$refs.personForm.validate()) {
-        this.setOverlayText('Guardando usuario');
+    async saveSpecie() {
+      if (this.$refs.specieForm.validate()) {
+        this.setOverlayText('Guardando almacenamiento');
         this.showOverlay();
-        this.processUser();
-        let res = await this.$store.dispatch('saveUser', this.user);
+        this.processStorage();
+        let res = await this.$store.dispatch('saveStorage', this.storage);
         if (res.ok) {
-          this.showSuccessNotification('El usuario ha sido guardado');
+          this.showSuccessNotification('El almacenamiento ha sido guardado');
         } else {
-          this.showErrorNotification(`¡El usuario no se ha guardado! ERR: ${res.statusText}`)
+          this.showErrorNotification(`¡El almacenamiento no se ha guardado! ERR: ${res.statusText}`)
         }
         this.closeOverlay();
         this.closeNewItem();
-        await this.getUsersFromDatabase();
+        await this.getStorageFromDatabase();
       }
     },
-    async updatePerson() {
+    async updateSpecie() {
       this.editDialogActive = false;
-      this.setOverlayText('Actualizando persona');
+      this.setOverlayText('Actualizando especie');
       this.showOverlay();
-      let res = await this.$store.dispatch('updatePerson', this.user);
+      let res = await this.$store.dispatch('updatePiece', this.storage);
       if (res.ok) {
-        this.userOptions.page = 1;
+        this.storageOptions.page = 1;
         this.totalSpecies = 25;
-        this.showSuccessNotification('¡La persona ha sido actualizada!');
+        this.showSuccessNotification('¡La especie ha sido actualizada!');
       } else {
-        this.showErrorNotification(`¡La persona no se ha actualizado! ERR: ${res.statusText}`)
+        this.showErrorNotification(`¡La especie no se ha actualizado! ERR: ${res.statusText}`)
       }
       this.closeOverlay();
       this.closeEditItem();
-      await this.getUsersFromDatabase();
+      await this.getStorageFromDatabase();
     },
     /**
-     * Process the person to change the empty fields to null
+     * Process the specie to change the empty fields to null
      */
-    processUser() {
-      this.user.nombre = this.getFmtEmptyField(this.user.nombre);
+    processStorage() {
+      this.storage.ida = this.getFmtEmptyField(this.storage.nombrecientifico);
+      this.storage.edificio = this.getFmtEmptyField(this.storage.edificio);
+      this.storage.estante = this.getFmtEmptyField(this.storage.estante);
+      this.storage.numanaquel = this.getFmtEmptyField(this.storage.numanaquel);
     },
     /**
-     * Erase all the info of the person selected
+     * Erase all the info of the piece selected
      */
-    resetUser() {
-      this.user = {
-        email: '',
-        nombre: '',
-        tipo: 'USUARIO',
-        password: '',
+    resetSpecie() {
+      this.storage = {
+        ida: '',
+        edificio: '',
+        estante: '',
+        numanaquel: '',
       }
     },
     /**
@@ -677,14 +668,14 @@ export default {
      * Dispatch the action to delete an item in the database
      */
     async deleteItem() {
-      this.setOverlayText('Eliminando persona');
+      this.setOverlayText('Eliminando almacenamiento');
       this.showOverlay();
-      let res = await this.$store.dispatch('deleteUser', this.itemToDelete.email);
+      let res = await this.$store.dispatch('deleteStorage', this.itemToDelete.ida);
       if (res.ok) {
-        await this.getUsersFromDatabase();
-        this.showSuccessNotification('El usuario ha sido eliminado correctamente');
+        await this.getStorageFromDatabase();
+        this.showSuccessNotification('El almacenamiento ha sido eliminado correctamente');
       } else {
-        this.showErrorNotification(`¡El usuario no se ha eliminado! ERR: ${res.statusText}`);
+        this.showErrorNotification(`¡El almacenamiento no ha sido eliminado! ERR: ${res.statusText}`);
       }
       this.closeOverlay();
       this.closeDeleteConfirmation();
@@ -709,7 +700,7 @@ export default {
      * Opens individual item dialog
      */
     async openIndividualItem(value) {
-      this.userSelected = value;
+      this.storageSelected = value;
       this.setOverlayText('Abriendo pieza');
       this.showOverlay();
       this.closeOverlay();
@@ -719,13 +710,13 @@ export default {
      * Get the species from the database
      * @returns {Promise<void>}
      */
-    async getUsersFromDatabase() {
-      const {page, sortBy, sortDesc} = this.userOptions;
+    async getStorageFromDatabase() {
+      const {page, sortBy, sortDesc} = this.storageOptions;
       this.loadingTable = true;
       let query = addQueryParameters({
         offset: (25 * (page - 1)),
         orderby: sortBy.length === 0 ? false : {
-          column: 'email',
+          column: 'ida',
           direction: sortDesc[0] ? 'DESC' : 'ASC',
         },
         search: this.filterOptions.search.pattern === '' ? false : {
@@ -741,7 +732,7 @@ export default {
         }),
         method: 'POST',
         body: JSON.stringify({
-          table: `usuario/${query}`,
+          table: `almacenamiento/${query}`,
           options: {
             method: 'GET',
             headers: {
@@ -751,12 +742,13 @@ export default {
         })
       }).then(res => res.json()).then(res => {
         if (res.hasMore) {
+          console.log("RES: ", res);
           // calculating the pagination
           this.totalSpecies = ((25 * (page + 1)));
         } else {
           this.totalSpecies = (25 * page);
         }
-        this.users = res.items;
+        this.storages = res.items;
       }).catch(err => {
         console.log(err);
       });
@@ -766,10 +758,10 @@ export default {
      * Search the given text in the database
      * @returns {Promise<void>}
      */
-    async searchUser() {
+    async searchSpecie() {
       this.setOverlayText('Buscando algo increíble');
       this.showOverlay();
-      this.userOptions.page = 1;
+      this.storageOptions.page = 1;
       this.totalSpecies = 25;
       if (this.filterOptions.search.pattern !== '') {
         clearTimeout(this.timeout);
@@ -783,7 +775,7 @@ export default {
             }),
             method: 'POST',
             body: JSON.stringify({
-              table: `usuario/${query}`,
+              table: `especie/${query}`,
               options: {
                 method: 'GET',
                 headers: {
@@ -792,7 +784,7 @@ export default {
               }
             })
           }).then(res => res.json()).then(res => {
-            this.users = res.items;
+            this.storages = res.items;
           }).catch(err => {
             console.log(err);
           }).finally(() => (this.closeOverlay()));

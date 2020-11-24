@@ -166,6 +166,52 @@ export default new Vuex.Store({
         return e;
       }
     },
+    async saveLocation(context, location) {
+      try {
+        return await fetch('http://localhost:3000/forward', {
+          headers: new Headers({
+            'Authorization': `Bearer ${context.state.token}`,
+            'Content-Type': 'application/json'
+          }),
+          method: 'POST',
+          body: JSON.stringify({
+            table: `localidad/`,
+            options: {
+              method: 'POST',
+              body: JSON.stringify(location),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+          })
+        });
+      } catch (e) {
+        return e;
+      }
+    },
+    async saveStorage(context, storage) {
+      try {
+        return await fetch('http://localhost:3000/forward', {
+          headers: new Headers({
+            'Authorization': `Bearer ${context.state.token}`,
+            'Content-Type': 'application/json'
+          }),
+          method: 'POST',
+          body: JSON.stringify({
+            table: `almacenamiento/`,
+            options: {
+              method: 'POST',
+              body: JSON.stringify(storage),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+          })
+        });
+      } catch (e) {
+        return e;
+      }
+    },
     async savePerson(context, person) {
       try {
         return await fetch('http://localhost:3000/forward', {
@@ -339,6 +385,25 @@ export default new Vuex.Store({
           method: 'POST',
           body: JSON.stringify({
             table: `especie/${id}`,
+            options: {
+              method: 'DELETE',
+            }
+          })
+        });
+      } catch (e) {
+        return e;
+      }
+    },
+    async deleteStorage(context, id) {
+      try {
+        return await fetch('http://localhost:3000/forward', {
+          headers: new Headers({
+            'Authorization': `Bearer ${context.state.token}`,
+            'Content-Type': 'application/json'
+          }),
+          method: 'POST',
+          body: JSON.stringify({
+            table: `almacenamiento/${id}`,
             options: {
               method: 'DELETE',
             }

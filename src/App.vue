@@ -90,10 +90,13 @@ export default {
       },
       { text: 'Almacenamiento',
         icon: 'mdi-office-building-outline',
-        action: async () => {await router.push({name: 'pieces'})}
+        action: async () => {await router.push({name: 'storage'})}
       },
       { text: 'Piezas', icon: 'mdi-bone',
         action: async () => {await router.push({name: 'pieces'})}
+      },
+      { text: 'Localidades', icon: 'mdi-archive',
+        action: async () => {await router.push({name: 'locations'})}
       },
       { text: 'Especies', icon: 'mdi-google-downasaur',
         action: async () => {await router.push({name: 'species'})}

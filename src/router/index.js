@@ -54,6 +54,22 @@ const routes = [
     },
     component: () => import(/* webpackChunkName: "about" */ '../views/Users.vue')
   },
+  {
+    path: '/tablas/almacenamiento',
+    name: 'storage',
+    meta: {
+      authentication: true,
+    },
+    component: () => import(/* webpackChunkName: "about" */ '../views/Storage.vue')
+  },
+  {
+    path: '/tablas/localidades',
+    name: 'locations',
+    meta: {
+      authentication: true,
+    },
+    component: () => import(/* webpackChunkName: "about" */ '../views/Locations.vue')
+  },
 ]
 
 const router = new VueRouter({
