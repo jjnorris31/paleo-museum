@@ -27,9 +27,9 @@
             </v-btn>
           </div>
           <v-col cols="6">
-            <h1 class="mb-6 text-h4 font-weight-medium" v-if="isAddingItem">Nueva publicación</h1>
-            <h1 class="mb-6 text-h4 font-weight-medium" v-if="isEditingItem">Editar publicación</h1>
-            <v-form ref="publicationForm"
+            <h1 class="mb-6 text-h4 font-weight-medium" v-if="isAddingItem">Nuevo colector</h1>
+            <h1 class="mb-6 text-h4 font-weight-medium" v-if="isEditingItem">Editar colector</h1>
+            <v-form ref="collectorForm"
                     lazy-validation
                     class="d-flex no-gutters flex-wrap">
 
@@ -45,77 +45,8 @@
 
                   <div class="row-form-container">
 
-                    <!-- begins nombre -->
-                    <div>
-                      <div class="input-label">
-                        Nombre
-                      </div>
-                      <v-text-field outlined
-                                    counter
-                                    maxlength="30"
-                                    type="text"
-                                    :rules="[requiredRules]"
-                                    placeholder="Publicación 1"
-                                    v-model="publication.nombre"
-                                    dense>
-                      </v-text-field>
-                    </div>
-                    <!-- ends nombre -->
-
-                    <!-- begins anopublicacion -->
-                    <div>
-                      <div class="input-label">
-                        Año de Publicación
-                      </div>
-                      <v-text-field outlined
-                                    type="text"
-                                    :rules="[requiredRules]"
-                                    placeholder="1990"
-                                    v-model="publication.anopublicacion"
-                                    dense>
-                      </v-text-field>
-                    </div>
-                    <!-- ends anopublicacion -->
-
-                    <!-- begins editorial -->
-                    <div>
-                      <div class="input-label">
-                        Editorial
-                      </div>
-                      <v-text-field outlined
-                                    type="text"
-                                    counter
-                                    maxlength="30"
-                                    placeholder="Editorial 1"
-                                    v-model="publication.editorial"
-                                    dense>
-                      </v-text-field>
-                    </div>
-                    <!-- begins editorial -->
-
-                  </div>
-
-                  <div class="row-form-container">
-
-                    <!-- begins url -->
-                    <div>
-                      <div class="input-label">
-                        URL
-                      </div>
-                      <v-text-field outlined
-                                    counter
-                                    maxlength="150"
-                                    type="text"
-                                    :rules="[emailRules]"
-                                    placeholder="https://ejemplo.com"
-                                    v-model="publication.url"
-                                    dense>
-                      </v-text-field>
-                    </div>
-                    <!-- ends url -->
-
-                    <!-- begin persona -->
-                    <div>
+                    <!-- begins persona -->
+                    <div v-if="isAddingItem">
                       <div class="input-label">
                         Persona
                       </div>
@@ -128,7 +59,7 @@
                                         :search-input.sync="searchPerson"
                                         hide-no-data
                                         placeholder="Juan Pérez"
-                                        v-model="publication.idp"
+                                        v-model="collector.idp"
                                         item-text="nombrespila"
                                         item-value="idp"
                                         dense>
@@ -137,9 +68,45 @@
                     </div>
                     <!-- ends persona -->
 
-                  </div>
+                    <!-- begins persona -->
+                    <div v-if="isAddingItem">
+                      <div class="input-label">
+                        Pieza
+                      </div>
+                      <div class="d-flex align-start">
+                        <v-autocomplete outlined
+                                        :rules="[requiredRules]"
+                                        cache-items
+                                        :loading="loadingPieces"
+                                        :items="pieceItems"
+                                        :search-input.sync="searchPiece"
+                                        hide-no-data
+                                        placeholder="MPG-15"
+                                        v-model="collector.ncatalogo"
+                                        dense>
+                        </v-autocomplete>
+                      </div>
+                    </div>
+                    <!-- ends persona -->
 
-                </div>
+                    <!-- begins clase -->
+                    <div>
+                      <div class="input-label">
+                        Fecha
+                      </div>
+                      <v-text-field outlined
+                                    type="text"
+                                    :rules="[requiredRules]"
+                                    placeholder="10-10-1990"
+                                    v-model="collector.fecha"
+                                    dense>
+                      </v-text-field>
+                    </div>
+                    <!-- ends clase -->
+
+                    </div>
+
+                  </div>
                 <!-- ends fields -->
 
               </div>
@@ -161,8 +128,8 @@
                        v-if="isAddingItem"
                        class="ml-2"
                        elevation="4"
-                       @click="savePublication()"
-                       height="40px">Guardar publicación
+                       @click="saveCollector()"
+                       height="40px">Guardar colector
                 </v-btn>
                 <v-btn color="secondary"
                        dark
@@ -187,8 +154,8 @@
                style="background-color: white; height: 100%"
                class="pt-6 px-7">
           <v-col cols="12" class="d-flex no-gutters flex-wrap">
-            <h1 class="mb-1 headline font-weight-medium col-12">Borrado de publicación</h1>
-            <div class="grey--text col-12 mb-4">¿Estás seguro de borrar esta publicación?</div>
+            <h1 class="mb-1 headline font-weight-medium col-12">Borrado de colector</h1>
+            <div class="grey--text col-12 mb-4">¿Estás seguro de borrar este colector?</div>
             <div class="col-12 justify-end mb-6 d-flex no-gutters flex-wrap">
               <v-btn color="secondary"
                      dark
@@ -232,7 +199,7 @@
                 <v-btn color="error"
                        dark
                        class="ml-2"
-                       @click="updatePublication()"
+                       @click="updateCollector()"
                        elevation="4"
                        height="40px">Editar</v-btn>
               </div>
@@ -251,7 +218,7 @@
       <!-- ends error snackbar -->
 
       <v-dialog v-model="individualDialog"
-                v-if="publicationSelected !== null"
+                v-if="collectorSelected !== null"
                 width="700px">
         <v-card height="100%"
                 style="position: relative">
@@ -262,10 +229,10 @@
                  cover>
             <div style="position: absolute; bottom: 0; left: 4px">
               <v-card-title class="white--text text-h3">
-                {{publicationSelected.idpub}}
+                {{collectorSelected.nombrecientifico}}
               </v-card-title>
               <v-card-subtitle class="white--text text-h6">
-                {{publicationSelected.nombre}}
+                {{collectorSelected.genero}}
               </v-card-subtitle>
             </div>
           </v-img>
@@ -273,15 +240,15 @@
             <v-row no-gutters class="mx-4">
               <v-col cols="12"
                      class="text-h6 mt-4 mb-2"
-                     style="color: rgba(0, 0, 0, 0.87)">Publicación</v-col>
+                     style="color: rgba(0, 0, 0, 0.87)">Clasificación</v-col>
 
               <!-- begins first row -->
               <v-col cols="12"
                      class="subtitle-1  d-flex flex-wrap no-gutters ml-2"
                      style="color: rgba(0, 0, 0, 0.87)">
-                <div class="col-4">{{getFormattedData(publicationSelected.anopublicacion)}}</div>
-                <div class="col-4">{{getFormattedData(publicationSelected.reino)}}</div>
-                <div class="col-4">{{getFormattedData(publicationSelected.orden)}}</div>
+                <div class="col-4">{{getFormattedData(collectorSelected.clase)}}</div>
+                <div class="col-4">{{getFormattedData(collectorSelected.reino)}}</div>
+                <div class="col-4">{{getFormattedData(collectorSelected.orden)}}</div>
               </v-col>
               <v-col cols="12"
                      class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
@@ -295,8 +262,8 @@
               <v-col cols="12"
                      class="subtitle-1 d-flex flex-wrap no-gutters ml-2"
                      style="color: rgba(0, 0, 0, 0.87)">
-                <div class="col-4">{{getFormattedData(publicationSelected.filum)}}</div>
-                <div class="col-8">{{getFormattedData(publicationSelected.descripcion)}}</div>
+                <div class="col-4">{{getFormattedData(collectorSelected.filum)}}</div>
+                <div class="col-8">{{getFormattedData(collectorSelected.descripcion)}}</div>
               </v-col>
               <v-col cols="12"
                      class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
@@ -309,9 +276,9 @@
               <v-col cols="12"
                      class="subtitle-1  d-flex flex-wrap no-gutters ml-2"
                      style="color: rgba(0, 0, 0, 0.87)">
-                <div class="col-4">{{getFormattedData(publicationSelected.temporalidad)}}</div>
-                <div class="col-4">{{getFormattedData(publicationSelected.clado)}}</div>
-                <div class="col-4">{{getFormattedData(publicationSelected.subclado)}}</div>
+                <div class="col-4">{{getFormattedData(collectorSelected.temporalidad)}}</div>
+                <div class="col-4">{{getFormattedData(collectorSelected.clado)}}</div>
+                <div class="col-4">{{getFormattedData(collectorSelected.subclado)}}</div>
               </v-col>
               <v-col cols="12"
                      class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
@@ -341,7 +308,7 @@
 
                 <!-- begins title-->
                 <h2 class="text-h4 font-weight-medium"
-                    style="position: absolute; left: 0; margin-bottom: 26px">Publicaciones</h2>
+                    style="position: absolute; left: 0; margin-bottom: 26px">Colectores</h2>
                 <!-- ends title-->
 
 
@@ -351,8 +318,8 @@
                     Búsqueda
                   </div>
                   <v-text-field outlined
-                                @keyup.enter="searchPublication()"
-                                placeholder="Publicación 1"
+                                @keyup.enter="searchCollector()"
+                                placeholder="Colector 1"
                                 v-model="filterOptions.search.pattern"
                                 append-icon="mdi-magnify"
                                 class="mr-2"
@@ -398,7 +365,7 @@
                        class="ml-2"
                        style="margin-bottom: 26px; border-width: 2px"
                        @click="openNewItem()"
-                       color="primary">Añadir publicación
+                       color="primary">Añadir colector
                 </v-btn>
                 <!-- ends add new item button -->
               </v-col>
@@ -444,18 +411,18 @@
               <v-col cols="12"
                      class="mb-4">
                 <v-data-table
-                  :server-items-length="totalPublications"
+                  :server-items-length="totalCollectors"
                   @click:row="openIndividualItem"
                   height="600px"
                   fixed-header
                   :items-per-page="25"
-                  :options.sync="publicationOptions"
+                  :options.sync="collectorOptions"
                   :loading="loadingTable"
                   loader-height="4"
-                  item-key="nombrecientifico"
-                  loading-text="Reuniendo las publicaciones"
+                  item-key="idp"
+                  loading-text="Reuniendo los colectores"
                   :headers="tableColumnsToRender"
-                  :items="publications">
+                  :items="collectors">
                   <template v-slot:item.actions="{item}">
                     <v-menu
                       bottom
@@ -481,23 +448,26 @@
                       </v-list>
                     </v-menu>
                   </template>
-                  <template v-slot:item.idpub="{item}" >
-                    <NoDataTableField :field="item.idpub"></NoDataTableField>
+                  <template v-slot:item.nombrecientifico="{item}" >
+                    <NoDataTableField :field="item.nombrecientifico"></NoDataTableField>
                   </template>
-                  <template v-slot:item.nombre="{item}" >
-                    <NoDataTableField :field="item.nombre"></NoDataTableField>
+                  <template v-slot:item.genero="{item}" >
+                    <NoDataTableField :field="item.genero"></NoDataTableField>
                   </template>
-                  <template v-slot:item.anopublicacion="{item}">
-                    <NoDataTableField :field="item.anopublicacion"></NoDataTableField>
+                  <template v-slot:item.clase="{item}">
+                    <NoDataTableField :field="item.clase"></NoDataTableField>
                   </template>
-                  <template v-slot:item.editorial="{item}">
-                    <NoDataTableField :field="item.editorial"></NoDataTableField>
+                  <template v-slot:item.reino="{item}">
+                    <NoDataTableField :field="item.reino"></NoDataTableField>
                   </template>
-                  <template v-slot:item.url="{item}">
-                    <NoDataTableField :field="item.url"></NoDataTableField>
+                  <template v-slot:item.orden="{item}">
+                    <NoDataTableField :field="item.orden"></NoDataTableField>
                   </template>
-                  <template v-slot:item.idp="{item}">
-                    <NoDataTableField :field="item.idp"></NoDataTableField>
+                  <template v-slot:item.filum="{item}">
+                    <NoDataTableField :field="item.filum"></NoDataTableField>
+                  </template>
+                  <template v-slot:item.temporalidad="{item}">
+                    <NoDataTableField :field="item.temporalidad"></NoDataTableField>
                   </template>
                 </v-data-table>
               </v-col>
@@ -523,7 +493,7 @@ import {stdRules, requiredRules} from "@/misc/rules";
 
 
 export default {
-  name: "Publications",
+  name: "Collectors",
   mixins: [overlayController,
     deleteDialogController,
     formatText,
@@ -537,99 +507,78 @@ export default {
       loadingPersons: false,
       personItems: [],
       searchPerson: null,
+      loadingPieces: false,
+      pieceItems: [],
+      searchPiece: null,
       stdRules,
       requiredRules,
       filterOptions: {
         search: {
           pattern: '',
           columns: [
-            'idpub',
-            'nombre',
-            'anopublicacion',
-            'editorial',
-            'url',
             'idp',
+            'ncatalogo',
+            'fecha'
           ],
         }
       },
       headers: [
         {
-          text: 'Nombre',
+          text: 'IDP',
+          disabled: true,
           align: 'start',
           sortable: true,
-          value: 'nombre',
-        },
-        {
-          text: 'Año de publicación',
-          align: 'start',
-          disabled: true,
-          sortable: false,
-          value: 'anopublicacion',
-        },
-        {
-          text: 'Editorial',
-          disabled: true,
-          align: 'start',
-          sortable: false,
-          value: 'editorial',
-        },
-        {
-          text: 'URL',
-          align: 'start',
-          sortable: false,
-          value: 'url',
-        },
-        {
-          text: 'IDP',
-          align: 'start',
-          sortable: false,
           value: 'idp',
+        },
+        {
+          text: 'Número de catálogo',
+          align: 'start',
+          sortable: true,
+          value: 'ncatalogo',
+        },
+        {
+          text: 'Fecha',
+          align: 'start',
+          disabled: true,
+          sortable: true,
+          value: 'fecha',
         },
       ],
       tableColumnsSelected: [
         {
-          text: 'Nombre',
-          align: 'start',
+          text: 'IDP',
           disabled: true,
+          align: 'start',
           sortable: true,
-          value: 'nombre',
+          value: 'idp',
         },
         {
-          text: 'Año de publicación',
-          align: 'start',
+          text: 'Número de catálogo',
           disabled: true,
+          align: 'start',
           sortable: true,
-          value: 'anopublicacion',
+          value: 'ncatalogo',
         },
         {
-          text: 'Editorial',
-          disabled: true,
+          text: 'Fecha',
           align: 'start',
           sortable: true,
-          value: 'editorial',
+          value: 'fecha',
         },
       ],
       tableColumnsToRender: [],
       loadingTable: false,
-      publicationOptions: {},
-      publications: [],
-      totalPublications: 0,
-      publicationSelected: null,
+      collectorOptions: {},
+      collectors: [],
+      totalCollectors: 0,
+      collectorSelected: null,
       individualDialog: false,
       deleteDialogActive: false,
       itemToDelete: null,
-      publication: {
-        nombrecientifico: '',
-        genero: '',
-        clase: '',
-        reino: '',
-        orden: '',
-        filum: '',
-        descripcion: '',
-        temporalidad: '',
-        clado: '',
-        subclado: '',
-        latitud: ''
+      collector: {
+        idp: '',
+        ncatalogo: '',
+        fecha: ''
       },
     }
   },
@@ -669,9 +618,9 @@ export default {
       },
       immediate: true,
     },
-    publicationOptions: {
+    collectorOptions: {
       handler() {
-        this.getPublicationsFromDatabase();
+        this.getCollectorsFromDatabase();
       },
       deep: true
     },
@@ -683,12 +632,15 @@ export default {
       if (val === '') {
         this.setOverlayText('Regresando todo a su lugar');
         this.showOverlay();
-        await this.getPublicationsFromDatabase();
+        await this.getCollectorsFromDatabase();
         this.closeOverlay();
       }
     },
     searchPerson(newVal) {
-      newVal && newVal !== this.publication.idp && this.queryPersons(newVal)
+      newVal && newVal !== this.collector.idp && this.queryPersons(newVal)
+    },
+    searchPiece(newVal) {
+      newVal && newVal !== this.collector.ncatalogo && this.queryPieces(newVal)
     },
   },
   methods: {
@@ -698,77 +650,79 @@ export default {
      */
     async openEditForm(item) {
       this.setEditItem(item);
-      this.setOverlayText('Abriendo publication');
+      this.setOverlayText('Abriendo colector');
       this.showOverlay();
       this.closeOverlay();
       this.closeFormDialog();
-      this.publication = item;
+      this.collector = item;
     },
     /**
      * Open the new item dialog and reset the piece variable
      */
     openNewItem() {
       this.isAddingItem = true;
-      this.resetPublication();
+      this.resetCollector();
       this.closeFormDialog()
-      if (this.$refs.publicationForm !== undefined) {
-        this.$refs.publicationForm.reset();
+      if (this.$refs.collectorForm !== undefined) {
+        this.$refs.collectorForm.reset();
       }
     },
-    async savePublication() {
-      if (this.$refs.publicationForm.validate()) {
-        this.setOverlayText('Guardando publicación');
+    async saveCollector() {
+      if (this.$refs.collectorForm.validate()) {
+        this.setOverlayText('Guardando colector');
         this.showOverlay();
-        this.processPublication();
-        let res = await this.$store.dispatch('savePublication', this.publication);
+        this.processCollector();
+        let res = await this.$store.dispatch('saveCollector', this.collector);
         if (res.ok) {
-          this.showSuccessNotification('La publicación ha sido guardada');
+          this.showSuccessNotification('La pieza ha sido guardada');
         } else {
-          this.showErrorNotification(`¡La publicación no se ha guardado! ERR: ${res.statusText}`)
+          this.showErrorNotification(`¡La pieza no se ha guardado! ERR: ${res.statusText}`)
         }
         this.closeOverlay();
         this.closeNewItem();
-        await this.getPublicationsFromDatabase();
+        await this.getCollectorsFromDatabase();
       }
     },
-    async updatePublication() {
+    async updateCollector() {
       this.editDialogActive = false;
-      this.setOverlayText('Actualizando publication');
+      this.setOverlayText('Actualizando colector');
       this.showOverlay();
-      let res = await this.$store.dispatch('updatePublication', this.publication);
+      let res = await this.$store.dispatch('updateCollector', this.collector);
       if (res.ok) {
-        this.publicationOptions.page = 1;
-        this.totalPublications = 25;
-        this.showSuccessNotification('¡La publication ha sido actualizada!');
+        this.collectorOptions.page = 1;
+        this.totalCollectors = 25;
+        this.showSuccessNotification('¡El colector ha sido actualizada!');
       } else {
-        this.showErrorNotification(`¡La publication no se ha actualizado! ERR: ${res.statusText}`)
+        this.showErrorNotification(`¡El colector no se ha actualizado! ERR: ${res.statusText}`)
       }
       this.closeOverlay();
       this.closeEditItem();
-      await this.getPublicationsFromDatabase();
+      await this.getCollectorsFromDatabase();
     },
     /**
-     * Process the publication to change the empty fields to null
+     * Process the collector to change the empty fields to null
      */
-    processPublication() {
-      this.publication.idpub = Math.round(Math.random() * 1000000);
-      this.publication.nombre = this.getFmtEmptyField(this.publication.nombre);
-      this.publication.anopublicacion = this.getFmtEmptyField(this.publication.anopublicacion);
-      this.publication.editorial = this.getFmtEmptyField(this.publication.editorial);
-      this.publication.url = this.getFmtEmptyField(this.publication.url);
-      this.publication.idp = this.getFmtEmptyField(this.publication.idp);
+    processCollector() {
+      this.collector.idp = this.getFmtEmptyField(this.collector.idp);
+      this.collector.ncatalogo = this.getFmtEmptyField(this.collector.ncatalogo);
+      this.collector.fecha = this.getFmtEmptyField(this.collector.fecha);
     },
     /**
      * Erase all the info of the piece selected
      */
-    resetPublication() {
-      this.publication = {
-        idpub: '',
-        nombre: '',
-        anopublicacion: '',
-        editorial: '',
-        url: '',
-        idp: ''
+    resetCollector() {
+      this.collector = {
+        nombrecientifico: '',
+        genero: '',
+        clase: '',
+        reino: '',
+        orden: '',
+        filum: '',
+        descripcion: '',
+        temporalidad: '',
+        clado: '',
+        subclado: '',
+        latitud: ''
       }
     },
     /**
@@ -789,14 +743,14 @@ export default {
      * Dispatch the action to delete an item in the database
      */
     async deleteItem() {
-      this.setOverlayText('Eliminando publicación');
+      this.setOverlayText('Eliminando colector');
       this.showOverlay();
-      let res = await this.$store.dispatch('deletePublication', this.itemToDelete.idpub);
+      let res = await this.$store.dispatch('deleteCollector', this.itemToDelete.idp + ',' + this.itemToDelete.ncatalogo);
       if (res.ok) {
-        await this.getPublicationsFromDatabase();
-        this.showSuccessNotification('La publicación ha sido eliminada correctamente');
+        await this.getCollectorsFromDatabase();
+        this.showSuccessNotification('El colector ha sido eliminada correctamente');
       } else {
-        this.showErrorNotification(`¡La publicación no se ha eliminado! ERR: ${res.statusText}`);
+        this.showErrorNotification(`¡El colector no se ha eliminado! ERR: ${res.statusText}`);
       }
       this.closeOverlay();
       this.closeDeleteConfirmation();
@@ -821,23 +775,23 @@ export default {
      * Opens individual item dialog
      */
     async openIndividualItem(value) {
-      this.publicationSelected = value;
+      this.collectorSelected = value;
       this.setOverlayText('Abriendo pieza');
       this.showOverlay();
       this.closeOverlay();
       this.individualDialog = true;
     },
     /**
-     * Get the publications from the database
+     * Get the collectors from the database
      * @returns {Promise<void>}
      */
-    async getPublicationsFromDatabase() {
-      const {page, sortBy, sortDesc} = this.publicationOptions;
+    async getCollectorsFromDatabase() {
+      const {page, sortBy, sortDesc} = this.collectorOptions;
       this.loadingTable = true;
       let query = addQueryParameters({
         offset: (25 * (page - 1)),
         orderby: sortBy.length === 0 ? false : {
-          column: 'idpub',
+          column: 'idp',
           direction: sortDesc[0] ? 'DESC' : 'ASC',
         },
         search: this.filterOptions.search.pattern === '' ? false : {
@@ -853,7 +807,7 @@ export default {
         }),
         method: 'POST',
         body: JSON.stringify({
-          table: `publicacion/${query}`,
+          table: `colector/${query}`,
           options: {
             method: 'GET',
             headers: {
@@ -864,11 +818,11 @@ export default {
       }).then(res => res.json()).then(res => {
         if (res.hasMore) {
           // calculating the pagination
-          this.totalPublications = ((25 * (page + 1)));
+          this.totalCollectors = ((25 * (page + 1)));
         } else {
-          this.totalPublications = (25 * page);
+          this.totalCollectors = (25 * page);
         }
-        this.publications = res.items;
+        this.collectors = res.items;
       }).catch(err => {
         console.log(err);
       });
@@ -878,11 +832,11 @@ export default {
      * Search the given text in the database
      * @returns {Promise<void>}
      */
-    async searchPublication() {
+    async searchCollector() {
       this.setOverlayText('Buscando algo increíble');
       this.showOverlay();
-      this.publicationOptions.page = 1;
-      this.totalPublications = 25;
+      this.collectorOptions.page = 1;
+      this.totalCollectors = 25;
       if (this.filterOptions.search.pattern !== '') {
         clearTimeout(this.timeout);
         // timeout to delay the search after the user ends typing
@@ -895,7 +849,7 @@ export default {
             }),
             method: 'POST',
             body: JSON.stringify({
-              table: `publication/${query}`,
+              table: `colector/${query}`,
               options: {
                 method: 'GET',
                 headers: {
@@ -904,7 +858,7 @@ export default {
               }
             })
           }).then(res => res.json()).then(res => {
-            this.publications = res.items;
+            this.collectors = res.items;
           }).catch(err => {
             console.log(err);
           }).finally(() => (this.closeOverlay()));
@@ -940,6 +894,36 @@ export default {
       }).catch(err => {
         console.log(err);
       }).finally(() => (this.loadingPersons = false));
+    },
+    /**
+     * Gets the piece items from the database to fill the autocomplete
+     * with the user start to typing
+     * @param v: the text typed by the user
+     */
+    queryPieces(v) {
+      // Lazily load input items
+      this.loadingPieces = true;
+      let query = `{"ncatalogo": {"$instr":"${v}"}}`;
+      fetch('http://localhost:3000/forward', {
+        headers: new Headers({
+          'Authorization': `Bearer ${this.token}`,
+          'Content-Type': 'application/json'
+        }),
+        method: 'POST',
+        body: JSON.stringify({
+          table: `pieza?q=${query}`,
+          options: {
+            method: 'GET'
+          }
+        })
+      }).then(res => res.json()).then(res => {
+        this.pieceItems = [];
+        res.items.forEach(item => {
+          this.pieceItems.push(item.ncatalogo);
+        });
+      }).catch(err => {
+        console.log(err);
+      }).finally(() => (this.loadingPieces = false));
     },
   }
 }

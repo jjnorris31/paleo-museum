@@ -226,6 +226,29 @@ export default new Vuex.Store({
         return e;
       }
     },
+    async saveCollector(context, collector) {
+      try {
+        return await fetch('http://localhost:3000/forward', {
+          headers: new Headers({
+            'Authorization': `Bearer ${context.state.token}`,
+            'Content-Type': 'application/json'
+          }),
+          method: 'POST',
+          body: JSON.stringify({
+            table: `colector/`,
+            options: {
+              method: 'POST',
+              body: JSON.stringify(collector),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+          })
+        });
+      } catch (e) {
+        return e;
+      }
+    },
     async updatePiece(context, piece) {
       try {
         return await fetch('http://localhost:3000/forward', {
@@ -308,6 +331,29 @@ export default new Vuex.Store({
             options: {
               method: 'PUT',
               body: JSON.stringify(publication),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+          })
+        });
+      } catch (e) {
+        return e;
+      }
+    },
+    async updateCollector(context, collector) {
+      try {
+        return await fetch('http://localhost:3000/forward', {
+          headers: new Headers({
+            'Authorization': `Bearer ${context.state.token}`,
+            'Content-Type': 'application/json'
+          }),
+          method: 'POST',
+          body: JSON.stringify({
+            table: `colector/${collector.idp},${collector.ncatalogo}`,
+            options: {
+              method: 'PUT',
+              body: JSON.stringify(collector),
               headers: {
                 'Content-Type': 'application/json'
               }
@@ -404,6 +450,25 @@ export default new Vuex.Store({
           method: 'POST',
           body: JSON.stringify({
             table: `publicacion/${id}`,
+            options: {
+              method: 'DELETE',
+            }
+          })
+        });
+      } catch (e) {
+        return e;
+      }
+    },
+    async deleteCollector(context, id) {
+      try {
+        return await fetch('http://localhost:3000/forward', {
+          headers: new Headers({
+            'Authorization': `Bearer ${context.state.token}`,
+            'Content-Type': 'application/json'
+          }),
+          method: 'POST',
+          body: JSON.stringify({
+            table: `colector/${id}`,
             options: {
               method: 'DELETE',
             }
