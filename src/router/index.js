@@ -47,6 +47,38 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/Persons.vue')
   },
   {
+    path: '/tablas/publicaciones',
+    name: 'publications',
+    meta: {
+      authentication: true,
+    },
+    component: () => import(/* webpackChunkName: "about" */ '../views/Publications.vue')
+  },
+  {
+    path: '/tablas/colectores',
+    name: 'collectors',
+    meta: {
+      authentication: true,
+    },
+    component: () => import(/* webpackChunkName: "about" */ '../views/Collectors.vue')
+  },
+  {
+    path: '/tablas/determinadores',
+    name: 'determinators',
+    meta: {
+      authentication: true,
+    },
+    component: () => import(/* webpackChunkName: "about" */ '../views/Determinators.vue')
+  },
+  {
+    path: '/tablas/preparadores',
+    name: 'preparators',
+    meta: {
+      authentication: true,
+    },
+    component: () => import(/* webpackChunkName: "about" */ '../views/Preparators.vue')
+  },
+  {
     path: '/usuarios',
     name: 'users',
     meta: {
