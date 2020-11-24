@@ -272,6 +272,29 @@ export default new Vuex.Store({
         return e;
       }
     },
+    async savePreparator(context, preparator) {
+      try {
+        return await fetch('http://localhost:3000/forward', {
+          headers: new Headers({
+            'Authorization': `Bearer ${context.state.token}`,
+            'Content-Type': 'application/json'
+          }),
+          method: 'POST',
+          body: JSON.stringify({
+            table: `preparador/`,
+            options: {
+              method: 'POST',
+              body: JSON.stringify(preparator),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+          })
+        });
+      } catch (e) {
+        return e;
+      }
+    },
     async updatePiece(context, piece) {
       try {
         return await fetch('http://localhost:3000/forward', {
@@ -410,6 +433,29 @@ export default new Vuex.Store({
         return e;
       }
     },
+    async updatePreparator(context, preparator) {
+      try {
+        return await fetch('http://localhost:3000/forward', {
+          headers: new Headers({
+            'Authorization': `Bearer ${context.state.token}`,
+            'Content-Type': 'application/json'
+          }),
+          method: 'POST',
+          body: JSON.stringify({
+            table: `determinador/${preparator.idp},${preparator.ncatalogo}`,
+            options: {
+              method: 'PUT',
+              body: JSON.stringify(preparator),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+          })
+        });
+      } catch (e) {
+        return e;
+      }
+    },
     async deletePiece(context, id) {
       try {
         return await fetch('http://localhost:3000/forward', {
@@ -534,6 +580,25 @@ export default new Vuex.Store({
           method: 'POST',
           body: JSON.stringify({
             table: `determinador/${id}`,
+            options: {
+              method: 'DELETE',
+            }
+          })
+        });
+      } catch (e) {
+        return e;
+      }
+    },
+    async deletePreparator(context, id) {
+      try {
+        return await fetch('http://localhost:3000/forward', {
+          headers: new Headers({
+            'Authorization': `Bearer ${context.state.token}`,
+            'Content-Type': 'application/json'
+          }),
+          method: 'POST',
+          body: JSON.stringify({
+            table: `preparador/${id}`,
             options: {
               method: 'DELETE',
             }

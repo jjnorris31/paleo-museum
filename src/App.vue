@@ -99,7 +99,7 @@ export default {
         action: async () => {await router.push({name: 'species'})}
       },
       { text: 'Preparadores', icon: 'mdi-account-star',
-        action: async () => {await router.push({name: 'pieces'})}
+        action: async () => {await router.push({name: 'preparators'})}
       },
       { text: 'Determinadores', icon: 'mdi-account-question',
         action: async () => {await router.push({name: 'determinators'})}
