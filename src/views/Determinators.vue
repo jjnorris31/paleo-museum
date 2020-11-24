@@ -94,15 +94,33 @@
                       <div class="input-label">
                         Fecha
                       </div>
-                      <v-text-field outlined
-                                    type="text"
-                                    :rules="[requiredRules]"
-                                    placeholder="10-10-1990"
-                                    v-model="determinator.fecha_mov"
-                                    dense>
-                      </v-text-field>
+                      <v-menu
+                        v-model="birthdayPicker"
+                        :close-on-content-click="false"
+                        transition="scale-transition"
+                        offset-y
+                        min-width="290px"
+                      >
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-text-field
+                            outlined
+                            :value="formattedDate"
+                            dense
+                            placeholder="01-01-1999"
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
+                          ></v-text-field>
+                        </template>
+                        <v-date-picker
+                          locale="es-419"
+                          @input="birthdayPicker = false"
+                          v-model="determinator.fecha_mov"
+                          :allowed-dates="allowedDates"
+                        ></v-date-picker>
+                      </v-menu>
                     </div>
-                    <!-- ends fecha -->
+                    <!-- begins fecha -->
 
                     </div>
                     <!-- begin description -->
@@ -464,26 +482,14 @@
                       </v-list>
                     </v-menu>
                   </template>
-                  <template v-slot:item.nombrecientifico="{item}" >
-                    <NoDataTableField :field="item.nombrecientifico"></NoDataTableField>
+                  <template v-slot:item.idp="{item}" >
+                    <NoDataTableField :field="item.idp"></NoDataTableField>
                   </template>
-                  <template v-slot:item.genero="{item}" >
-                    <NoDataTableField :field="item.genero"></NoDataTableField>
+                  <template v-slot:item.ncatalogo="{item}" >
+                    <NoDataTableField :field="item.ncatalogo"></NoDataTableField>
                   </template>
-                  <template v-slot:item.clase="{item}">
-                    <NoDataTableField :field="item.clase"></NoDataTableField>
-                  </template>
-                  <template v-slot:item.reino="{item}">
-                    <NoDataTableField :field="item.reino"></NoDataTableField>
-                  </template>
-                  <template v-slot:item.orden="{item}">
-                    <NoDataTableField :field="item.orden"></NoDataTableField>
-                  </template>
-                  <template v-slot:item.filum="{item}">
-                    <NoDataTableField :field="item.filum"></NoDataTableField>
-                  </template>
-                  <template v-slot:item.temporalidad="{item}">
-                    <NoDataTableField :field="item.temporalidad"></NoDataTableField>
+                  <template v-slot:item.fecha_mov="{item}">
+                    <NoDataTableField :field="dateToDisplay(item.fecha_mov)"></NoDataTableField>
                   </template>
                 </v-data-table>
               </v-col>
@@ -506,6 +512,7 @@ import formatText from "@/misc/formatText";
 import snackbarNotification from "@/mixins/snackbarNotification";
 import deleteDialogController from "@/mixins/deleteDialogController";
 import {stdRules, requiredRules} from "@/misc/rules";
+import moment from "moment";
 
 
 export default {
@@ -520,6 +527,7 @@ export default {
   },
   data: () => {
     return {
+      birthdayPicker: false,
       loadingPersons: false,
       personItems: [],
       searchPerson: null,
@@ -599,6 +607,9 @@ export default {
     }
   },
   computed: {
+    formattedDate() {
+      return moment(this.determinator.fecha_mov).format('DD-MM-YYYY');
+    },
     headersNoDisabled() {
       return this.headers.map(x => {
         x.disabled = false
@@ -660,6 +671,12 @@ export default {
     },
   },
   methods: {
+    allowedDates(val) {
+      return moment(val).isBefore(moment());
+    },
+    dateToDisplay(date) {
+      return moment(date).format('DD-MM-YYYY')
+    },
     /**
      * Opens the edit form
      * @params item - The item to be modified
@@ -703,6 +720,7 @@ export default {
       this.editDialogActive = false;
       this.setOverlayText('Actualizando determinador');
       this.showOverlay();
+      this.processDeterminator();
       let res = await this.$store.dispatch('updateDeterminator', this.determinator);
       if (res.ok) {
         this.determinatorOptions.page = 1;
@@ -721,7 +739,7 @@ export default {
     processDeterminator() {
       this.determinator.idp = this.getFmtEmptyField(this.determinator.idp);
       this.determinator.ncatalogo = this.getFmtEmptyField(this.determinator.ncatalogo);
-      this.determinator.fecha_mov = this.getFmtEmptyField(this.determinator.fecha_mov);
+      this.determinator.fecha_mov = moment.utc(this.determinator.fecha_mov);
       this.determinator.descripcion = this.getFmtEmptyField(this.determinator.descripcion);
     },
     /**
