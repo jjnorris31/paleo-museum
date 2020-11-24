@@ -104,6 +104,9 @@ export default {
       { text: 'Determinadores', icon: 'mdi-account-question',
         action: async () => {await router.push({name: 'pieces'})}
       },
+      { text: 'Publicaciones', icon: 'mdi-newspaper-variant-multiple-outline',
+        action: async () => {await router.push({name: 'publications'})}
+      },
     ],
   }),
 

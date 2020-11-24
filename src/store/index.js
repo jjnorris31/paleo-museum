@@ -203,6 +203,29 @@ export default new Vuex.Store({
         return e;
       }
     },
+    async savePublication(context, publication) {
+      try {
+        return await fetch('http://localhost:3000/forward', {
+          headers: new Headers({
+            'Authorization': `Bearer ${context.state.token}`,
+            'Content-Type': 'application/json'
+          }),
+          method: 'POST',
+          body: JSON.stringify({
+            table: `publicacion/`,
+            options: {
+              method: 'POST',
+              body: JSON.stringify(publication),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+          })
+        });
+      } catch (e) {
+        return e;
+      }
+    },
     async updatePiece(context, piece) {
       try {
         return await fetch('http://localhost:3000/forward', {
@@ -262,6 +285,29 @@ export default new Vuex.Store({
             options: {
               method: 'PUT',
               body: JSON.stringify(piece),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+          })
+        });
+      } catch (e) {
+        return e;
+      }
+    },
+    async updatePublication(context, publication) {
+      try {
+        return await fetch('http://localhost:3000/forward', {
+          headers: new Headers({
+            'Authorization': `Bearer ${context.state.token}`,
+            'Content-Type': 'application/json'
+          }),
+          method: 'POST',
+          body: JSON.stringify({
+            table: `publicacion/${publication.idp}`,
+            options: {
+              method: 'PUT',
+              body: JSON.stringify(publication),
               headers: {
                 'Content-Type': 'application/json'
               }
@@ -339,6 +385,25 @@ export default new Vuex.Store({
           method: 'POST',
           body: JSON.stringify({
             table: `especie/${id}`,
+            options: {
+              method: 'DELETE',
+            }
+          })
+        });
+      } catch (e) {
+        return e;
+      }
+    },
+    async deletePublication(context, id) {
+      try {
+        return await fetch('http://localhost:3000/forward', {
+          headers: new Headers({
+            'Authorization': `Bearer ${context.state.token}`,
+            'Content-Type': 'application/json'
+          }),
+          method: 'POST',
+          body: JSON.stringify({
+            table: `publicacion/${id}`,
             options: {
               method: 'DELETE',
             }
