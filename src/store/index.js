@@ -364,6 +364,29 @@ export default new Vuex.Store({
         return e;
       }
     },
+    async updateStorage(context, storage) {
+      try {
+        return await fetch('http://localhost:3000/forward', {
+          headers: new Headers({
+            'Authorization': `Bearer ${context.state.token}`,
+            'Content-Type': 'application/json'
+          }),
+          method: 'POST',
+          body: JSON.stringify({
+            table: `almacenamiento/${storage.ida}`,
+            options: {
+              method: 'PUT',
+              body: JSON.stringify(storage),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+          })
+        });
+      } catch (e) {
+        return e;
+      }
+    },
     async updatePerson(context, person) {
       try {
         return await fetch('http://localhost:3000/forward', {

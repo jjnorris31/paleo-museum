@@ -138,7 +138,7 @@
                        v-if="isAddingItem"
                        class="ml-2"
                        elevation="4"
-                       @click="saveSpecie()"
+                       @click="saveStorage()"
                        height="40px">Guardar almacenamiento
                 </v-btn>
                 <v-btn color="secondary"
@@ -194,7 +194,7 @@
                style="background-color: white; height: 100%"
                class="pt-7 px-7">
           <v-col cols="12">
-            <h1 class="mb-1 headline font-weight-medium">Edición de pieza</h1>
+            <h1 class="mb-1 headline font-weight-medium">Edición de almacenamiento</h1>
             <p class="grey--text">¿Estás seguro de guardar los cambios?</p>
             <div class="col-12 d-flex justify-end mb-2 no-gutters">
               <div class="col-5 d-flex no-gutters">
@@ -208,7 +208,7 @@
                 <v-btn color="error"
                        dark
                        class="ml-2"
-                       @click="updateSpecie()"
+                       @click="updateStorage()"
                        elevation="4"
                        height="40px">Editar</v-btn>
               </div>
@@ -292,8 +292,8 @@
                     Búsqueda
                   </div>
                   <v-text-field outlined
-                                @keyup.enter="searchSpecie()"
-                                placeholder="Canis dirus"
+                                @keyup.enter="searchStorage()"
+                                placeholder="Edificio sur"
                                 v-model="filterOptions.search.pattern"
                                 append-icon="mdi-magnify"
                                 class="mr-2"
@@ -598,7 +598,7 @@ export default {
         this.$refs.specieForm.reset();
       }
     },
-    async saveSpecie() {
+    async saveStorage() {
       if (this.$refs.specieForm.validate()) {
         this.setOverlayText('Guardando almacenamiento');
         this.showOverlay();
@@ -614,17 +614,17 @@ export default {
         await this.getStorageFromDatabase();
       }
     },
-    async updateSpecie() {
+    async updateStorage() {
       this.editDialogActive = false;
-      this.setOverlayText('Actualizando especie');
+      this.setOverlayText('Actualizando almacenamiento');
       this.showOverlay();
-      let res = await this.$store.dispatch('updatePiece', this.storage);
+      let res = await this.$store.dispatch('updateStorage', this.storage);
       if (res.ok) {
         this.storageOptions.page = 1;
         this.totalSpecies = 25;
-        this.showSuccessNotification('¡La especie ha sido actualizada!');
+        this.showSuccessNotification('¡El almacenamiento ha sido actualizado!');
       } else {
-        this.showErrorNotification(`¡La especie no se ha actualizado! ERR: ${res.statusText}`)
+        this.showErrorNotification(`¡El almacenamiento no se ha actualizado! ERR: ${res.statusText}`)
       }
       this.closeOverlay();
       this.closeEditItem();
@@ -634,7 +634,7 @@ export default {
      * Process the specie to change the empty fields to null
      */
     processStorage() {
-      this.storage.ida = this.getFmtEmptyField(this.storage.nombrecientifico);
+      this.storage.ida = this.getFmtEmptyField(this.storage.ida);
       this.storage.edificio = this.getFmtEmptyField(this.storage.edificio);
       this.storage.estante = this.getFmtEmptyField(this.storage.estante);
       this.storage.numanaquel = this.getFmtEmptyField(this.storage.numanaquel);
@@ -701,7 +701,7 @@ export default {
      */
     async openIndividualItem(value) {
       this.storageSelected = value;
-      this.setOverlayText('Abriendo pieza');
+      this.setOverlayText('Abriendo almacenamiento');
       this.showOverlay();
       this.closeOverlay();
       this.individualDialog = true;
@@ -758,7 +758,7 @@ export default {
      * Search the given text in the database
      * @returns {Promise<void>}
      */
-    async searchSpecie() {
+    async searchStorage() {
       this.setOverlayText('Buscando algo increíble');
       this.showOverlay();
       this.storageOptions.page = 1;
@@ -775,7 +775,7 @@ export default {
             }),
             method: 'POST',
             body: JSON.stringify({
-              table: `especie/${query}`,
+              table: `almacenamiento/${query}`,
               options: {
                 method: 'GET',
                 headers: {
