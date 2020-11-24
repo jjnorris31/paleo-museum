@@ -94,15 +94,33 @@
                       <div class="input-label">
                         Fecha
                       </div>
-                      <v-text-field outlined
-                                    type="text"
-                                    :rules="[requiredRules]"
-                                    placeholder="10-10-1990"
-                                    v-model="collector.fecha"
-                                    dense>
-                      </v-text-field>
+                      <v-menu
+                        v-model="birthdayPicker"
+                        :close-on-content-click="false"
+                        transition="scale-transition"
+                        offset-y
+                        min-width="290px"
+                      >
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-text-field
+                            outlined
+                            :value="formattedDate"
+                            dense
+                            placeholder="01-01-1999"
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
+                          ></v-text-field>
+                        </template>
+                        <v-date-picker
+                          locale="es-419"
+                          @input="birthdayPicker = false"
+                          v-model="collector.fecha"
+                          :allowed-dates="allowedDates"
+                        ></v-date-picker>
+                      </v-menu>
                     </div>
-                    <!-- ends fecha -->
+                    <!-- begins fecha -->
 
                     </div>
 
@@ -448,26 +466,14 @@
                       </v-list>
                     </v-menu>
                   </template>
-                  <template v-slot:item.nombrecientifico="{item}" >
-                    <NoDataTableField :field="item.nombrecientifico"></NoDataTableField>
+                  <template v-slot:item.idp="{item}" >
+                    <NoDataTableField :field="item.idp"></NoDataTableField>
                   </template>
-                  <template v-slot:item.genero="{item}" >
-                    <NoDataTableField :field="item.genero"></NoDataTableField>
+                  <template v-slot:item.ncatalogo="{item}" >
+                    <NoDataTableField :field="item.ncatalogo"></NoDataTableField>
                   </template>
-                  <template v-slot:item.clase="{item}">
-                    <NoDataTableField :field="item.clase"></NoDataTableField>
-                  </template>
-                  <template v-slot:item.reino="{item}">
-                    <NoDataTableField :field="item.reino"></NoDataTableField>
-                  </template>
-                  <template v-slot:item.orden="{item}">
-                    <NoDataTableField :field="item.orden"></NoDataTableField>
-                  </template>
-                  <template v-slot:item.filum="{item}">
-                    <NoDataTableField :field="item.filum"></NoDataTableField>
-                  </template>
-                  <template v-slot:item.temporalidad="{item}">
-                    <NoDataTableField :field="item.temporalidad"></NoDataTableField>
+                  <template v-slot:item.fecha="{item}">
+                    <NoDataTableField :field="dateToDisplay(item.fecha)"></NoDataTableField>
                   </template>
                 </v-data-table>
               </v-col>
@@ -490,6 +496,7 @@ import formatText from "@/misc/formatText";
 import snackbarNotification from "@/mixins/snackbarNotification";
 import deleteDialogController from "@/mixins/deleteDialogController";
 import {stdRules, requiredRules} from "@/misc/rules";
+import moment from "moment";
 
 
 export default {
@@ -504,6 +511,7 @@ export default {
   },
   data: () => {
     return {
+      birthdayPicker: false,
       loadingPersons: false,
       personItems: [],
       searchPerson: null,
@@ -583,6 +591,9 @@ export default {
     }
   },
   computed: {
+    formattedDate() {
+      return moment(this.collector.fecha).format('DD-MM-YYYY');
+    },
     headersNoDisabled() {
       return this.headers.map(x => {
         x.disabled = false
@@ -644,6 +655,12 @@ export default {
     },
   },
   methods: {
+    allowedDates(val) {
+      return moment(val).isBefore(moment());
+    },
+    dateToDisplay(date) {
+      return moment(date).format('DD-MM-YYYY');
+    },
     /**
      * Opens the edit form
      * @params item - The item to be modified
@@ -687,6 +704,7 @@ export default {
       this.editDialogActive = false;
       this.setOverlayText('Actualizando colector');
       this.showOverlay();
+      this.processCollector();
       let res = await this.$store.dispatch('updateCollector', this.collector);
       if (res.ok) {
         this.collectorOptions.page = 1;
@@ -705,7 +723,7 @@ export default {
     processCollector() {
       this.collector.idp = this.getFmtEmptyField(this.collector.idp);
       this.collector.ncatalogo = this.getFmtEmptyField(this.collector.ncatalogo);
-      this.collector.fecha = this.getFmtEmptyField(this.collector.fecha);
+      this.collector.fecha = moment.utc(this.collector.fecha);
     },
     /**
      * Erase all the info of the collector selected
