@@ -18,7 +18,7 @@
                 class="full-height">
         <v-row no-gutters
                style="background-color: white; height: 100%; position: relative"
-               class="pt-15 pl-15">
+               class="pt-15 pl-15 justify-space-between">
           <div style="height: 40px; position: absolute; left: 0"
                class="d-flex align-center ml-4">
             <v-btn icon
@@ -52,8 +52,9 @@
                       </div>
                       <v-text-field outlined
                                     type="text"
-                                    counter
+                                    :disabled="isEditingItem"
                                     maxlength="30"
+                                    :rules="[requiredRules]"
                                     placeholder="Canis dirus"
                                     v-model="specie.nombrecientifico"
                                     dense>
@@ -67,7 +68,6 @@
                         Género
                       </div>
                       <v-text-field outlined
-                                    counter
                                     maxlength="30"
                                     type="text"
                                     :rules="[stdRules]"
@@ -84,7 +84,6 @@
                         Clase
                       </div>
                       <v-text-field outlined
-                                    counter
                                     maxlength="30"
                                     type="text"
                                     :rules="[stdRules]"
@@ -106,7 +105,6 @@
                       </div>
                       <v-text-field outlined
                                     type="text"
-                                    counter
                                     maxlength="30"
                                     placeholder="Animalia"
                                     v-model="specie.reino"
@@ -121,7 +119,6 @@
                         Orden
                       </div>
                       <v-text-field outlined
-                                    counter
                                     maxlength="30"
                                     type="text"
                                     :rules="[stdRules]"
@@ -138,7 +135,6 @@
                         Filum
                       </div>
                       <v-text-field outlined
-                                    counter
                                     maxlength="30"
                                     type="text"
                                     :rules="[stdRules]"
@@ -178,7 +174,6 @@
                       </div>
                       <v-text-field outlined
                                     type="text"
-                                    counter
                                     maxlength="30"
                                     placeholder="Rancholabreano"
                                     v-model="specie.temporalidad"
@@ -193,7 +188,6 @@
                         Clado
                       </div>
                       <v-text-field outlined
-                                    counter
                                     maxlength="30"
                                     type="text"
                                     :rules="[stdRules]"
@@ -210,7 +204,6 @@
                         Subclado
                       </div>
                       <v-text-field outlined
-                                    counter
                                     maxlength="30"
                                     type="text"
                                     :rules="[stdRules]"
@@ -233,23 +226,21 @@
             <div class="d-flex justify-center my-5 no-gutters"
                  style="width: 973px">
               <div class="col-5 d-flex justify-center">
-                <v-btn color="secondary"
+                <v-btn color="#C9875E"
                        dark
                        class="mr-2"
                        outlined
                        @click="isEditingItem ? closeEditItem() : closeNewItem()"
                        style="border-width: 2px"
                        height="40px">Cancelar</v-btn>
-                <v-btn color="secondary"
-                       dark
+                <v-btn color="primary"
                        v-if="isAddingItem"
                        class="ml-2"
                        elevation="4"
                        @click="saveSpecie()"
                        height="40px">Guardar especie
                 </v-btn>
-                <v-btn color="secondary"
-                       dark
+                <v-btn color="primary"
                        v-if="isEditingItem"
                        class="ml-2"
                        @click="editDialogActive = true"
@@ -259,6 +250,15 @@
               </div>
             </div>
           </v-col>
+
+          <!-- begins right image -->
+          <v-col cols="5"
+                 class="fill-height d-flex justify-center">
+            <v-img height="500px" src="../assets/images/arq.svg">
+            </v-img>
+          </v-col>
+          <!-- ends right image -->
+
         </v-row>
       </v-dialog>
       <!-- ends dialog -->
@@ -274,14 +274,14 @@
             <h1 class="mb-1 headline font-weight-medium col-12">Borrado de especie</h1>
             <div class="grey--text col-12 mb-4">¿Estás seguro de borrar esta especie?</div>
             <div class="col-12 justify-end mb-6 d-flex no-gutters flex-wrap">
-              <v-btn color="secondary"
+              <v-btn color="#C9875E"
                      dark
                      class="mr-2"
                      outlined
                      @click="closeDeleteConfirmation()"
                      style="border-width: 2px"
                      height="40px">Cancelar</v-btn>
-              <v-btn color="error"
+              <v-btn color="primary"
                      dark
                      class="ml-2"
                      @click="deleteItem()"
@@ -302,19 +302,17 @@
                style="background-color: white; height: 100%"
                class="pt-7 px-7">
           <v-col cols="12">
-            <h1 class="mb-1 headline font-weight-medium">Edición de pieza</h1>
+            <h1 class="mb-1 headline font-weight-medium">Edición de especie</h1>
             <p class="grey--text">¿Estás seguro de guardar los cambios?</p>
             <div class="col-12 d-flex justify-end mb-2 no-gutters">
               <div class="col-5 d-flex no-gutters">
-                <v-btn color="secondary"
-                       dark
+                <v-btn color="#C9875E"
                        class="mr-2"
                        outlined
                        @click="editDialogActive = false"
                        style="border-width: 2px"
                        height="40px">Cancelar</v-btn>
-                <v-btn color="error"
-                       dark
+                <v-btn color="primary"
                        class="ml-2"
                        @click="updateSpecie()"
                        elevation="4"
@@ -339,9 +337,9 @@
                 width="700px">
         <v-card height="100%"
                 style="position: relative">
-          <v-img src="../assets/images/not_found.svg"
+          <v-img src="../assets/images/not_found.png"
                  height="225px"
-                 gradient="35deg, rgba(0,0,0,0.7035014689469538) 0%, rgba(234,242,23,0) 100%"
+                 position="bottom center"
                  class="mb-4"
                  cover>
             <div style="position: absolute; bottom: 0; left: 4px">
@@ -368,7 +366,7 @@
                 <div class="col-4">{{getFormattedData(specieSelected.orden)}}</div>
               </v-col>
               <v-col cols="12"
-                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
+                     class="caption d-flex flex-wrap no-gutters mb-4 ml-2">
                 <div class="col-4">Clase</div>
                 <div class="col-4">Reino</div>
                 <div class="col-4">Orden</div>
@@ -383,7 +381,7 @@
                 <div class="col-8">{{getFormattedData(specieSelected.descripcion)}}</div>
               </v-col>
               <v-col cols="12"
-                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
+                     class="caption d-flex flex-wrap no-gutters mb-4 ml-2">
                 <div class="col-4">Filum</div>
                 <div class="col-8">Descripción</div>
               </v-col>
@@ -398,7 +396,7 @@
                 <div class="col-4">{{getFormattedData(specieSelected.subclado)}}</div>
               </v-col>
               <v-col cols="12"
-                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
+                     class="caption d-flex flex-wrap no-gutters mb-4 ml-2">
                 <div class="col-4">Temporalidad</div>
                 <div class="col-4">Clado</div>
                 <div class="col-4">Subclado</div>
@@ -462,6 +460,10 @@
                     v-model="filterOptions.search.columns"
                     :items="headersNoDisabled"
                     multiple
+                    :menu-props="{offsetY: true,
+                              origin: 'center center',
+                              transition: 'slide-y-transition',
+                              contentClass: 'text--secondary'}"
                     color="secondary"
                     item-value="value"
                     outlined
@@ -471,7 +473,7 @@
                         <span v-if="index === 0">Todas las columnas</span>
                       </div>
                       <div v-else>
-                        <v-chip v-if="index === 0" small>
+                        <v-chip v-if="index === 0" small color="primary">
                           <span>{{ item.text }}</span>
                         </v-chip>
                         <span v-if="index === 1"
@@ -505,6 +507,10 @@
                     v-model="tableColumnsSelected"
                     :items="headers"
                     dense
+                    :menu-props="{offsetY: true,
+                              origin: 'center center',
+                              transition: 'slide-y-transition',
+                              contentClass: 'text--secondary'}"
                     hint="Máximo 7 columnas"
                     persistent-hint
                     return-object
@@ -851,9 +857,9 @@ export default {
         this.processSpecie();
         let res = await this.$store.dispatch('saveSpecie', this.specie);
         if (res.ok) {
-          this.showSuccessNotification('La pieza ha sido guardada');
+          this.showSuccessNotification('La especie ha sido guardada');
         } else {
-          this.showErrorNotification(`¡La pieza no se ha guardado! ERR: ${res.statusText}`)
+          this.showErrorNotification(`¡La especie no se ha guardado! ERR: ${res.statusText}`)
         }
         this.closeOverlay();
         this.closeNewItem();
@@ -864,7 +870,7 @@ export default {
       this.editDialogActive = false;
       this.setOverlayText('Actualizando especie');
       this.showOverlay();
-      let res = await this.$store.dispatch('updatePiece', this.specie);
+      let res = await this.$store.dispatch('updateSpecie', this.specie);
       if (res.ok) {
         this.specieOptions.page = 1;
         this.totalSpecies = 25;

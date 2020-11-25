@@ -541,7 +541,6 @@
                 <!-- begins add new item button -->
                 <v-btn height="40px"
                        depressed
-                       outlined
                        class="ml-2"
                        style="margin-bottom: 26px; border-width: 2px"
                        @click="openNewItem()"
