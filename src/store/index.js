@@ -45,8 +45,7 @@ export default new Vuex.Store({
     user: state => {
       return state.user;
     }
-  }
-  ,
+  },
   mutations: {
     SET_LOCATIONS(state, locations) {
       state.locations = locations;
@@ -361,6 +360,29 @@ export default new Vuex.Store({
             options: {
               method: 'PUT',
               body: JSON.stringify(piece),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+          })
+        });
+      } catch (e) {
+        return e;
+      }
+    },
+    async updateLocation(context, location) {
+      try {
+        return await fetch('http://localhost:3000/forward', {
+          headers: new Headers({
+            'Authorization': `Bearer ${context.state.token}`,
+            'Content-Type': 'application/json'
+          }),
+          method: 'POST',
+          body: JSON.stringify({
+            table: `localidad/${location.idl}`,
+            options: {
+              method: 'PUT',
+              body: JSON.stringify(location),
               headers: {
                 'Content-Type': 'application/json'
               }
@@ -722,10 +744,23 @@ export default new Vuex.Store({
       }
     },
     async getUbietyById(context, id) {
-      let res = await fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/ubicacion/${id}`, {
-        method: 'GET'
-      });
-      return await res.json();
+      try {
+        return await fetch('http://localhost:3000/forward', {
+          headers: new Headers({
+            'Authorization': `Bearer ${context.state.token}`,
+            'Content-Type': 'application/json'
+          }),
+          method: 'POST',
+          body: JSON.stringify({
+            table: `ubicacion/${id}`,
+            options: {
+              method: 'GET',
+            }
+          })
+        });
+      } catch (e) {
+        return e;
+      }
     },
     async getLocationById(context, id) {
       let res = await fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/localidad/${id}`, {

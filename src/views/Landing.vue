@@ -128,14 +128,9 @@
             <v-col cols="8" offset="1">
               <v-btn height="40px"
                      color="secondary"
+                     @click="toPieces()"
                      depressed
                      class="mr-3">Explorar colección</v-btn>
-              <!--<v-btn height="40px"
-                     outlined
-                     style="border-width: 2px"
-                     class="ml-3"
-                     @click="toDashboard()"
-                     color="#5F5F5F">Iniciar sesión</v-btn>-->
             </v-col>
           </v-row>
         </v-col>
@@ -196,8 +191,8 @@ export default {
     }
   },
   methods: {
-    toDashboard() {
-      this.$router.push({name: 'dashboard'});
+    toPieces() {
+      this.$router.push({name: 'pieces'});
     },
     showLoginDialog() {
       this.loginDialogActive = true;

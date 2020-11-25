@@ -91,10 +91,11 @@ export default {
 
   computed: {
     inDashboard() {
-      return this.$route.name !== 'landing';
+      return this.$route.name !== 'landing' && this.token;
     },
     ...mapGetters([
-      "user"
+      "user",
+      "token"
     ])
   },
 
@@ -143,6 +144,7 @@ export default {
     },
     logout() {
       localStorage.removeItem('museum_token');
+      this.$store.commit('SET_TOKEN', null);
       this.$router.push({path: '/'});
     }
   },

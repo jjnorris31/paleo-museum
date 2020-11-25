@@ -1,5 +1,5 @@
 
-const stdRules = v => /^([ñÑáéíóúÁÉÍÓÚaa-zA-Z0-9]+(\s)?)+$|^$/.test(v) || 'Sólo aceptamos números y letras...';
+const stdRules = v => /^([ñÑáéíóúÁÉÍÓÚaa-zA-Z0-9]+(\s)?)+$|^$/.test(v) || 'Escribe números y letras';
 const requiredRules =  v => !!v || 'Campo requerido';
 const columnsRules = v => v.length > 6 || 'Sólo selecciona 6 columnas';
 

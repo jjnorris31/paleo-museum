@@ -12,7 +12,7 @@
                 class="full-height">
         <v-row no-gutters
                style="background-color: white; height: 100%; position: relative"
-               class="pt-15 pl-15">
+               class="pt-15 pl-15 justify-space-between">
           <div style="height: 40px; position: absolute; left: 0"
                class="d-flex align-center ml-4">
             <v-btn icon
@@ -98,7 +98,6 @@
                                     counter
                                     maxlength="30"
                                     type="text"
-                                    :rules="[stdRules]"
                                     placeholder="7500 +-500"
                                     v-model="piece.datacion"
                                     dense>
@@ -135,7 +134,7 @@
                                 maxlength="200"
                                 height="80px"
                                 type="text"
-                                placeholder="Aquí va algo importante..."
+                                placeholder="Aquí va la descripción de la pieza"
                                 v-model="piece.descripcion"
                                 dense>
                     </v-textarea>
@@ -278,8 +277,7 @@
                                   counter
                                   maxlength="200"
                                   height="80px"
-                                  :rules="[stdRules]"
-                                  placeholder="Aquí va algo importante..."
+                                  placeholder="Aquí van las notas taxónomicas"
                                   v-model="piece.notasesttaxo"
                                   dense>
                       </v-textarea>
@@ -374,7 +372,8 @@
                         <v-text-field outlined
                                       counter
                                       maxlength="30"
-                                      placeholder="INSTITUCIÓN 1"
+                                      :rules="[stdRules]"
+                                      placeholder="Institución 1"
                                       v-model="piece.institucion"
                                       dense>
                         </v-text-field>
@@ -448,31 +447,35 @@
             <div class="d-flex justify-center my-5 no-gutters"
                  style="width: 973px">
               <div class="col-5 d-flex justify-center">
-                <v-btn color="secondary"
+                <v-btn color="#C9875E"
                        dark
                        class="mr-2"
                        outlined
                        @click="isEditingItem ? closeEditItem() : closeNewItem()"
                        style="border-width: 2px"
                        height="40px">Cancelar</v-btn>
-                <v-btn color="secondary"
-                       dark
-                       v-if="isAddingItem"
+                <v-btn v-if="isAddingItem"
                        class="ml-2"
+                       depressed
+                       color="primary"
                        elevation="4"
                        @click="savePiece()"
                        height="40px">Guardar pieza
                 </v-btn>
-                <v-btn color="secondary"
-                       dark
-                       v-if="isEditingItem"
+                <v-btn v-if="isEditingItem"
+                       depressed
                        class="ml-2"
+                       color="primary"
                        @click="editDialogActive = true"
                        elevation="4"
                        height="40px">Guardar cambios
                 </v-btn>
               </div>
             </div>
+          </v-col>
+          <v-col cols="5" class="fill-height d-flex align-center">
+            <v-img height="500px" src="../assets/images/arq.svg">
+            </v-img>
           </v-col>
         </v-row>
       </v-dialog>
@@ -574,10 +577,10 @@
                 width="700px">
         <v-card height="100%"
                 style="position: relative">
-          <v-img src="../assets/images/not_found.svg"
-                 height="225px"
-                 gradient="35deg, rgba(0,0,0,0.7035014689469538) 0%, rgba(234,242,23,0) 100%"
+          <v-img src="../assets/images/not_found.png"
+                 height="250"
                  class="mb-4"
+                 position="bottom center"
                  cover>
             <div style="position: absolute; bottom: 0; left: 4px">
               <v-card-title class="white--text text-h3">
@@ -603,8 +606,9 @@
                 <div class="col-4">{{getFormattedData(indItem.datacion)}}</div>
               </v-col>
               <v-col cols="12"
-                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
-                <div class="col-4">Elemento anatómico</div>
+                     class="caption d-flex flex-wrap no-gutters mb-4 ml-2">
+                <div class="col-4">Elemento anatómico
+                </div>
                 <div class="col-4">No. de registro INAH</div>
                 <div class="col-4">Datación</div>
               </v-col>
@@ -618,7 +622,7 @@
                 <div class="col-8">{{getFormattedData(indItem.descripcion)}}</div>
               </v-col>
               <v-col cols="12"
-                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
+                     class="caption d-flex flex-wrap no-gutters mb-4 ml-2">
                 <div class="col-4">Forma de ingreso</div>
                 <div class="col-8">Descripción</div>
               </v-col>
@@ -628,17 +632,17 @@
 
               <!-- begins first row -->
               <v-col cols="12"
-                     class="subtitle-1  d-flex flex-wrap no-gutters ml-2"
+                     class="subtitle-1 d-flex flex-wrap no-gutters ml-2"
                      style="color: rgba(0, 0, 0, 0.87)">
                 <div class="col-4">{{getFormattedData(indItem.estatus)}}</div>
                 <div class="col-4">{{getFormattedData(indItem.estatustaxonomico)}}</div>
-                <div class="col-4">{{getFormattedData(indItem.coleccion)}}</div>
+                <div class="col-4">{{getFormattedData(indItem.institucion)}}</div>
               </v-col>
               <v-col cols="12"
-                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
+                     class="caption d-flex flex-wrap no-gutters mb-4 ml-2">
                 <div class="col-4">Estado</div>
                 <div class="col-4">Estado taxonómico</div>
-                <div class="col-4">Colección</div>
+                <div class="col-4">Institución</div>
               </v-col>
               <!-- ends first row -->
 
@@ -649,7 +653,7 @@
                 <div class="col-12">{{getFormattedData(indItem.notasesttaxo)}}</div>
               </v-col>
               <v-col cols="12"
-                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
+                     class="caption d-flex flex-wrap no-gutters mb-4 ml-2">
                 <div class="col-12">Notas taxonómicas</div>
               </v-col>
               <!-- ends second row -->
@@ -661,14 +665,14 @@
                      class="subtitle-1  d-flex flex-wrap no-gutters ml-2"
                      style="color: rgba(0, 0, 0, 0.87)">
                 <div class="col-4">{{getFormattedData(indItem.pais)}}</div>
-                <div class="col-4">{{getFormattedData(indItem.estatus)}}</div>
-                <div class="col-4">{{getFormattedData(indItem.idl)}}</div>
+                <div class="col-4">{{getFormattedData(indItem.estado)}}</div>
+                <div class="col-4">{{getFormattedData(indItem.municipio)}}</div>
               </v-col>
               <v-col cols="12"
-                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
-                <div class="col-4">Colección</div>
+                     class="caption d-flex flex-wrap no-gutters mb-4 ml-2">
+                <div class="col-4">País</div>
                 <div class="col-4">Estado</div>
-                <div class="col-4">Estado taxonómico</div>
+                <div class="col-4">Municipio</div>
               </v-col>
               <!-- ends first row -->
 
@@ -676,11 +680,13 @@
               <v-col cols="12"
                      class="subtitle-1 d-flex flex-wrap no-gutters ml-2"
                      style="color: rgba(0, 0, 0, 0.87)">
-                <div class="col-4">{{getFormattedData(indItem.estatus)}}</div>
+                <div class="col-4">{{getFormattedData(indItem.latitud)}}</div>
+                <div class="col-4">{{getFormattedData(indItem.longitud)}}</div>
               </v-col>
               <v-col cols="12"
-                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
-                <div class="col-4">Coordenadas</div>
+                     class="caption d-flex flex-wrap no-gutters mb-4 ml-2">
+                <div class="col-4">Latitud</div>
+                <div class="col-4">Longitud</div>
               </v-col>
               <!-- ends second row -->
 
@@ -709,8 +715,8 @@
 
 
                 <!-- begins search input -->
-                <div style="width: 250px">
-                  <div class="input-label">
+                <div style="width: 300px">
+                  <div class="input-label" style="margin-left: 33px">
                     Búsqueda
                   </div>
                   <v-text-field outlined
@@ -720,45 +726,66 @@
                                 append-icon="mdi-magnify"
                                 class="mr-2"
                                 dense>
+                    <template v-slot:prepend>
+                      <v-tooltip left>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-icon v-on="on" v-bind="attrs">mdi-help-circle</v-icon>
+                        </template>
+                        <span>Presiona enter para buscar</span>
+                      </v-tooltip>
+                    </template>
                   </v-text-field>
                 </div>
                 <!-- ends search input -->
 
                 <!-- begins search input -->
                 <div style="width: 300px" class="mx-2">
-                  <div class="input-label">
+                  <div class="input-label"
+                       id="piece-search-column">
                     Buscar en
                   </div>
-                  <v-select
-                    v-model="filterOptions.search.columns"
-                    :items="headers"
-                    multiple
-                    color="secondary"
-                    item-value="value"
-                    outlined
-                    dense>
-                    <template v-slot:selection="{ item, index }">
-                      <div v-if="filterOptions.search.columns.length === headers.length">
-                        <span v-if="index === 0">Todas las columnas</span>
-                      </div>
-                      <div v-else>
-                        <v-chip v-if="index === 0" small>
-                          <span>{{ item.text }}</span>
-                        </v-chip>
-                        <span v-if="index === 1"
-                              class="grey--text caption">(+{{ filterOptions.search.columns.length - 1 }} others)</span>
-                      </div>
+                  <v-tooltip left>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-select
+                        v-bind="attrs"
+                        v-model="filterOptions.search.columns"
+                        flat
+                        v-on="on"
+                        :items="headersNoDisabled"
+                        :menu-props="{offsetY: true,
+                        origin: 'center center',
+                        transition: 'slide-y-transition',
+                        contentClass: 'text--secondary'}"
+                        multiple
+                        item-value="value"
+                        outlined
+                        dense>
+                        <template v-slot:selection="{ item, index }">
+                          <div v-if="filterOptions.search.columns.length === headers.length">
+                            <span v-if="index === 0">Todas las columnas</span>
+                          </div>
+                          <div v-else>
+                            <v-chip v-if="index === 0"
+                                    color="primary"
+                                    small>
+                              <span>{{ item.text }}</span>
+                            </v-chip>
+                            <span v-if="index === 1"
+                                  class="grey--text caption">(+{{ filterOptions.search.columns.length - 1 }} others)</span>
+                          </div>
+                        </template>
+                      </v-select>
                     </template>
-                  </v-select>
+                    <span>Selecciona las columnas</span>
+                  </v-tooltip>
                 </div>
                 <!-- ends search input -->
 
                 <!-- begins add new item button -->
                 <v-btn height="40px"
-                       depressed
-                       outlined
                        class="ml-2"
-                       style="margin-bottom: 26px; border-width: 2px"
+                       depressed
+                       style="margin-bottom: 26px"
                        @click="openNewItem()"
                        color="primary">Añadir pieza
                 </v-btn>
@@ -778,6 +805,7 @@
                     dense
                     hint="Máximo 7 columnas"
                     persistent-hint
+                    :menu-props="{offsetY: true, origin: 'center center', transition: 'slide-y-transition'}"
                     return-object
                     outlined
                     height="40px"
@@ -913,8 +941,6 @@ export default {
           'estatus',
           'estatustaxonomico',
           'datacion',
-          'longitud',
-          'latitud',
           'nombrecientifico'
         ],
       }
@@ -1010,6 +1036,7 @@ export default {
         text: 'No. de catálogo',
         disabled: true,
         align: 'start',
+        class: 'text--primary',
         sortable: true,
         value: 'ncatalogo',
       },
@@ -1076,6 +1103,7 @@ export default {
     editDialogActive: false,
     indivDialog: false,
     pieces: [],
+    endpoint: 'public',
     selectedPieces: [],
     timeout: null,
     mainOverlayActive: false, // page's flag overlay
@@ -1102,6 +1130,12 @@ export default {
     loadingLocal: false,
   }),
   computed: {
+    headersNoDisabled() {
+      return this.headers.map(x => {
+        x.disabled = false
+        return x;
+      })
+    },
     searchPattern() {
       return this.filterOptions.search.pattern;
     },
@@ -1188,9 +1222,13 @@ export default {
     },
   },
   methods: {
+    setEndpoint() {
+      this.endpoint = this.token ? 'forward' : 'public';
+    },
     async getPiecesFromDatabase() {
       const {page, sortBy, sortDesc} = this.options;
       this.loadingTable = true;
+      this.setEndpoint();
       let query = addQueryParameters({
         offset: (25 * (page - 1)),
         orderby: sortBy.length === 0 ? false : {
@@ -1203,19 +1241,37 @@ export default {
         }
       });
 
-      await fetch('http://localhost:3000/forward', {
-        headers: new Headers({
-          'Authorization': `Bearer ${this.token}`,
-          'Content-Type': 'application/json'
-        }),
-        method: 'POST',
-        body: JSON.stringify({
-          table: `pieza/${query}`,
-          options: {
-            method: 'GET'
-          }
+      let res;
+
+      if (this.token) {
+        res = await fetch('http://localhost:3000/forward', {
+          headers: new Headers({
+            'Authorization': `Bearer ${this.token}`,
+            'Content-Type': 'application/json'
+          }),
+          method: 'POST',
+          body: JSON.stringify({
+            table: `pieza/${query}`,
+            options: {
+              method: 'GET'
+            }
+          })
         })
-      }).then(res => res.json()).then(res => {
+      } else {
+        res = await fetch('http://localhost:3000/public', {
+          headers: new Headers({
+            'Content-Type': 'application/json'
+          }),
+          method: 'POST',
+          body: JSON.stringify({
+            options: {
+              method: 'GET'
+            }
+          })
+        })
+      }
+
+      res.json().then(res => {
         if (res.hasMore) {
           // calculating the pagination
           this.totalPieces = ((25 * (page + 1)));
@@ -1418,9 +1474,11 @@ export default {
       this.setMainOverlayText('Abriendo pieza');
       this.showMainOverlay();
       let res = await this.$store.dispatch('getUbietyById', value.idu);
-      this.indItem.country = res.pais;
-      this.indItem.state = res.estado;
-      this.indItem.municipality = res.municipio;
+      res = await res.json();
+      console.log(res);
+      this.indItem.pais = res.pais;
+      this.indItem.estado = res.estado;
+      this.indItem.municipio = res.municipio;
       this.hideMainOverlay();
       this.indivDialog = true;
     },
@@ -1440,6 +1498,7 @@ export default {
      */
     closeNewItem() {
       this.isAddingItem = false;
+      this.isEditingItem = false;
       this.openFormDialog();
     },
     setEditItem(isEdit) {
@@ -1620,6 +1679,7 @@ export default {
     },
     async searchInDb() {
       this.setMainOverlayText('Buscando algo increíble');
+      this.setEndpoint();
       this.showMainOverlay();
       this.options.page = 1;
       this.totalPieces = 25;
@@ -1629,9 +1689,36 @@ export default {
         // timeout to delay the search after the user ends typing
         this.timeout = setTimeout(async () => {
           let query = addQueryParameters(this.filterOptions);
-          await fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/pieza${query}`, {
-            method: 'GET'
-          }).then(res => res.json()).then(res => {
+
+          let res;
+
+          if (this.token) {
+            res = await fetch('http://localhost:3000/forward', {
+              headers: new Headers({
+                'Authorization': `Bearer ${this.token}`,
+                'Content-Type': 'application/json'
+              }),
+              method: 'POST',
+              body: JSON.stringify({
+                table: `pieza/${query}`,
+                options: {
+                  method: 'GET'
+                }
+              })
+            })
+          } else {
+            console.log(query);
+            res = await fetch('http://localhost:3000/public', {
+              headers: new Headers({
+                'Content-Type': 'application/json'
+              }),
+              method: 'POST',
+              body: JSON.stringify({
+                queryParams: query,
+              })
+            })
+          }
+          res.json().then(res => {
             this.pieces = res.items;
           }).catch(err => {
             console.log(err);
@@ -1672,7 +1759,7 @@ export default {
       this.showMainOverlay();
       this.setMainOverlayText('Abriendo pieza');
       let ubietyResponse = await this.$store.dispatch('getUbietyById', item.idu);
-
+      ubietyResponse = await ubietyResponse.json();
       this.setLocationItems([item.idl]);
       this.setPieceIdl(item.idl);
       this.setSpecieItems([item.nombrecientifico]);
@@ -1736,6 +1823,11 @@ export default {
 
   .v-data-footer {
     padding-top: 12px !important;
+  }
+
+  .v-data-table-header tr span {
+    font-size: .8rem;
+    color: rgba(0, 0, 0, 0.6);
   }
 
 </style>

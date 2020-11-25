@@ -31,7 +31,8 @@ const routes = [
     path: '/tablas/piezas',
     name: 'pieces',
     meta: {
-      authentication: true,
+      authentication: false,
+      admin: false,
     },
     component: () => import(/* webpackChunkName: "about" */ '../views/Pieces.vue')
   },
@@ -118,6 +119,7 @@ const router = new VueRouter({
 router.beforeEach(async (to, from, next) => {
 
   let token = localStorage.getItem('museum_token');
+  console.log("ROUTER: ", token)
   let auth = false;
   let res = null;
   let admin = false;
@@ -150,15 +152,7 @@ router.beforeEach(async (to, from, next) => {
       next();
     }
   } else {
-    if (!auth) {
-      next();
-    } else {
-      if (from.path === '/') {
-        next('/tablas/piezas');
-      } else {
-        next(false);
-      }
-    }
+    next();
   }
 
 

@@ -18,7 +18,7 @@ export default new Vuetify({
         light: true,
         themes: {
             light: {
-                primary: '#1460AA', // signal blue
+                primary: '#d98334', // signal blue
                 secondary: '#00A4E1', // aquamarine
                 accent: '#65D9AC',
                 error: '#FF3D33', // south coral

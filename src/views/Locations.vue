@@ -353,7 +353,7 @@
                 <v-btn color="error"
                        dark
                        class="ml-2"
-                       @click="updateSpecie()"
+                       @click="updateLocation()"
                        elevation="4"
                        height="40px">Editar</v-btn>
               </div>
@@ -948,17 +948,18 @@ export default {
         await this.getLocationsFromDatabase();
       }
     },
-    async updateSpecie() {
+    async updateLocation() {
       this.editDialogActive = false;
-      this.setOverlayText('Actualizando especie');
+      this.setOverlayText('Actualizando localidad');
       this.showOverlay();
-      let res = await this.$store.dispatch('updatePiece', this.location);
+      this.location.fechadedatacion = moment(this.location.fechadedatacion).format();
+      let res = await this.$store.dispatch('updateLocation', this.location);
       if (res.ok) {
         this.locationOptions.page = 1;
         this.totalSpecies = 25;
-        this.showSuccessNotification('¡La especie ha sido actualizada!');
+        this.showSuccessNotification('¡La localidad ha sido actualizada!');
       } else {
-        this.showErrorNotification(`¡La especie no se ha actualizado! ERR: ${res.statusText}`)
+        this.showErrorNotification(`¡La localidad no se ha actualizado! ERR: ${res.statusText}`)
       }
       this.closeOverlay();
       this.closeEditItem();
