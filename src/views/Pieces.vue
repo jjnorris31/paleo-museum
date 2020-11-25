@@ -486,15 +486,13 @@
             <h1 class="mb-1 headline font-weight-medium col-12">Borrado de pieza</h1>
             <div class="grey--text col-12 mb-4">¿Estás seguro de borrar esta pieza?</div>
             <div class="col-12 justify-end mb-6 d-flex no-gutters flex-wrap">
-              <v-btn color="secondary"
-                     dark
+              <v-btn color="#C9875E"
                      class="mr-2"
                      outlined
                      @click="closeDeleteConfirmation()"
                      style="border-width: 2px"
                      height="40px">Cancelar</v-btn>
-              <v-btn color="error"
-                     dark
+              <v-btn color="primary"
                      class="ml-2"
                      @click="deleteItem()"
                      elevation="4"
@@ -517,15 +515,13 @@
             <p class="grey--text">¿Estás seguro de guardar los cambios?</p>
             <div class="col-12 d-flex justify-end mb-2 no-gutters">
               <div class="col-5 d-flex no-gutters">
-                <v-btn color="secondary"
-                       dark
+                <v-btn color="#C9875E"
                        class="mr-2"
                        outlined
                        @click="editDialogActive = false"
                        style="border-width: 2px"
                        height="40px">Cancelar</v-btn>
-                <v-btn color="error"
-                       dark
+                <v-btn color="primary"
                        class="ml-2"
                        @click="updatePiece()"
                        elevation="4"
@@ -572,7 +568,7 @@
         <v-card height="100%"
                 style="position: relative">
           <v-img src="../assets/images/not_found.png"
-                 height="250"
+                 height="200"
                  class="mb-4"
                  position="bottom center"
                  cover>
@@ -613,12 +609,24 @@
                      class="subtitle-1 d-flex flex-wrap no-gutters ml-2"
                      style="color: rgba(0, 0, 0, 0.87)">
                 <div class="col-4">{{getFormattedData(indItem.localidad)}}</div>
-                <div class="col-8">{{getFormattedData(indItem.descripcion)}}</div>
+                <div class="col-4">{{getFormattedData(indItem.formaingreso)}}</div>
               </v-col>
               <v-col cols="12"
                      class="caption d-flex flex-wrap no-gutters mb-4 ml-2">
                 <div class="col-4">Localidad</div>
-                <div class="col-8">Descripción</div>
+                <div class="col-4">Forma ingreso</div>
+              </v-col>
+              <!-- ends second row -->
+
+              <!-- begins second row -->
+              <v-col cols="12"
+                     class="subtitle-1 d-flex flex-wrap no-gutters ml-2"
+                     style="color: rgba(0, 0, 0, 0.87)">
+                <div class="col-12">{{getFormattedData(indItem.descripcion)}}</div>
+              </v-col>
+              <v-col cols="12"
+                     class="caption d-flex flex-wrap no-gutters mb-4 ml-2">
+                <div class="col-12">Descripción</div>
               </v-col>
               <!-- ends second row -->
 
