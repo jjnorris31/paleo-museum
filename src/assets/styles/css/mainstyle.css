@@ -19,6 +19,10 @@
     color: #2196F3;
 }
 
+.small-text-field {
+    max-width: 219px !important;
+}
+
 .input-label {
     font-size: .925rem;
     color: rgba(0, 0, 0, 0.6);

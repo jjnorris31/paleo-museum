@@ -42,7 +42,6 @@
                       Número de catálogo
                     </div>
                     <v-text-field outlined
-                                  counter="10"
                                   maxlength="10"
                                   :rules="[requiredRules]"
                                   type="text"
@@ -59,7 +58,6 @@
                       Elemento anatómico
                     </div>
                     <v-text-field outlined
-                                  counter="30"
                                   maxlength="30"
                                   placeholder="Húmero derecho"
                                   :rules="[stdRules]"
@@ -80,7 +78,6 @@
                       </div>
                       <v-text-field outlined
                                     type="text"
-                                    counter
                                     maxlength="30"
                                     placeholder="INAH-REG 123"
                                     v-model="piece.nregistroinah"
@@ -95,7 +92,6 @@
                         Datación
                       </div>
                       <v-text-field outlined
-                                    counter
                                     maxlength="30"
                                     type="text"
                                     placeholder="7500 +-500"
@@ -111,7 +107,7 @@
                         Forma ingreso
                       </div>
                       <v-text-field outlined
-                                    counter
+                                    class="small-text-field"
                                     maxlength="30"
                                     type="text"
                                     :rules="[stdRules]"
@@ -224,7 +220,6 @@
                       <div class="d-flex align-start">
                         <v-text-field outlined
                                       type="text"
-                                      counter
                                       maxlength="30"
                                       :rules="[stdRules]"
                                       placeholder="Paleontología con datos"
@@ -242,7 +237,6 @@
                       </div>
                       <v-text-field outlined
                                     type="text"
-                                    counter
                                     maxlength="30"
                                     :rules="[stdRules]"
                                     placeholder="Catalogado"
@@ -259,7 +253,6 @@
                       </div>
                       <v-text-field outlined
                                     :rules="[stdRules]"
-                                    counter
                                     maxlength="30"
                                     placeholder="Determinado"
                                     v-model="piece.estatustaxonomico"
@@ -370,7 +363,6 @@
                       </div>
                       <div class="d-flex align-start">
                         <v-text-field outlined
-                                      counter
                                       maxlength="30"
                                       :rules="[stdRules]"
                                       placeholder="Institución 1"
@@ -412,7 +404,6 @@
                       </div>
                       <v-text-field outlined
                                     placeholder="Legal"
-                                    counter
                                     maxlength="30"
                                     v-model="piece.longitud"
                                     dense>
@@ -427,7 +418,6 @@
                       </div>
                       <v-text-field outlined
                                     type="text"
-                                    counter
                                     maxlength="30"
                                     placeholder="Legal"
                                     v-model="piece.latitud"
