@@ -27,8 +27,8 @@
             </v-btn>
           </div>
           <v-col cols="6">
-            <h1 class="mb-6 text-h4 font-weight-medium" v-if="isAddingItem">Nuevo preparador</h1>
-            <h1 class="mb-6 text-h4 font-weight-medium" v-if="isEditingItem">Editar preparador</h1>
+            <h1 class="mb-6 text-h4 font-weight-medium" v-if="isAddingItem">Nuevo experto</h1>
+            <h1 class="mb-6 text-h4 font-weight-medium" v-if="isEditingItem">Editar experto</h1>
             <v-form ref="preparatorForm"
                     lazy-validation
                     class="d-flex no-gutters flex-wrap">
@@ -60,7 +60,7 @@
                                         :search-input.sync="searchPerson"
                                         hide-no-data
                                         placeholder="Juan Pérez"
-                                        v-model="preparator.idp"
+                                        v-model="expert.idp"
                                         item-text="nombrespila"
                                         item-value="idp"
                                         dense>
@@ -84,7 +84,7 @@
                                         :search-input.sync="searchPiece"
                                         hide-no-data
                                         placeholder="MPG-15"
-                                        v-model="preparator.ncatalogo"
+                                        v-model="expert.ncatalogo"
                                         dense>
                         </v-autocomplete>
                       </div>
@@ -118,7 +118,7 @@
                         <v-date-picker
                           locale="es-419"
                           @input="birthdayPicker = false"
-                          v-model="preparator.fecha"
+                          v-model="expert.fecha"
                           :allowed-dates="allowedDates"
                         ></v-date-picker>
                       </v-menu>
@@ -126,6 +126,30 @@
                     <!-- begins fecha -->
 
                     </div>
+
+                  <div class="row-form-container">
+
+                    <!-- begins tipo de experto -->
+                    <div>
+                      <div class="input-label">
+                        Tipo de experto
+                      </div>
+                      <div class="d-flex align-start">
+                        <v-select outlined
+                                  :rules="[requiredRules]"
+                                  cache-items
+                                  :items="['Preparador', 'Determinador', 'Colector']"
+                                  hide-no-data
+                                  v-model="expert.tipo"
+                                  dense>
+                        </v-select>
+                      </div>
+                    </div>
+                    <!-- ends tipo de experto  -->
+
+                  </div>
+
+
                     <!-- begin description -->
                   <div style="width: 100%">
                     <div class="input-label">
@@ -137,7 +161,7 @@
                                 height="80px"
                                 type="text"
                                 placeholder="Aquí va algo importante..."
-                                v-model="preparator.descripcion"
+                                v-model="expert.descripcion"
                                 dense>
                     </v-textarea>
                   </div>
@@ -163,8 +187,8 @@
                        v-if="isAddingItem"
                        class="ml-2"
                        elevation="4"
-                       @click="savePreparator()"
-                       height="40px">Guardar preparador
+                       @click="saveExpert()"
+                       height="40px">Guardar experto
                 </v-btn>
                 <v-btn color="primary"
                        v-if="isEditingItem"
@@ -188,18 +212,16 @@
                style="background-color: white; height: 100%"
                class="pt-6 px-7">
           <v-col cols="12" class="d-flex no-gutters flex-wrap">
-            <h1 class="mb-1 headline font-weight-medium col-12">Borrado de preparador</h1>
-            <div class="grey--text col-12 mb-4">¿Estás seguro de borrar este preparador?</div>
+            <h1 class="mb-1 headline font-weight-medium col-12">Borrado de experto</h1>
+            <div class="grey--text col-12 mb-4">¿Estás seguro de borrar este experto?</div>
             <div class="col-12 justify-end mb-6 d-flex no-gutters flex-wrap">
-              <v-btn color="secondary"
-                     dark
+              <v-btn color="#C9875E"
                      class="mr-2"
                      outlined
                      @click="closeDeleteConfirmation()"
                      style="border-width: 2px"
                      height="40px">Cancelar</v-btn>
-              <v-btn color="error"
-                     dark
+              <v-btn color="primary"
                      class="ml-2"
                      @click="deleteItem()"
                      elevation="4"
@@ -219,21 +241,19 @@
                style="background-color: white; height: 100%"
                class="pt-7 px-7">
           <v-col cols="12">
-            <h1 class="mb-1 headline font-weight-medium">Edición de pieza</h1>
+            <h1 class="mb-1 headline font-weight-medium">Edición de experto</h1>
             <p class="grey--text">¿Estás seguro de guardar los cambios?</p>
             <div class="col-12 d-flex justify-end mb-2 no-gutters">
               <div class="col-5 d-flex no-gutters">
-                <v-btn color="secondary"
-                       dark
+                <v-btn color="#C9875E"
                        class="mr-2"
                        outlined
                        @click="editDialogActive = false"
                        style="border-width: 2px"
                        height="40px">Cancelar</v-btn>
-                <v-btn color="error"
-                       dark
+                <v-btn color="primary"
                        class="ml-2"
-                       @click="updatePreparator()"
+                       @click="updateExpert()"
                        elevation="4"
                        height="40px">Editar</v-btn>
               </div>
@@ -310,7 +330,7 @@
 
                 <!-- begins title-->
                 <h2 class="text-h4 font-weight-medium"
-                    style="position: absolute; left: 0; margin-bottom: 26px">Preparadores</h2>
+                    style="position: absolute; left: 0; margin-bottom: 26px">Expertos</h2>
                 <!-- ends title-->
 
 
@@ -320,8 +340,8 @@
                     Búsqueda
                   </div>
                   <v-text-field outlined
-                                @keyup.enter="searchPreparator()"
-                                placeholder="Preparador 1"
+                                @keyup.enter="searchExpert()"
+                                placeholder="9865"
                                 v-model="filterOptions.search.pattern"
                                 append-icon="mdi-magnify"
                                 class="mr-2"
@@ -378,7 +398,7 @@
                        class="ml-2"
                        style="margin-bottom: 26px"
                        @click="openNewItem()"
-                       color="primary">Añadir preparador
+                       color="primary">Añadir experto
                 </v-btn>
                 <!-- ends add new item button -->
               </v-col>
@@ -395,7 +415,7 @@
                   :loading="loadingTable"
                   loader-height="4"
                   item-key="idp"
-                  loading-text="Reuniendo los preparadores"
+                  loading-text="Llamando a los expertos"
                   :headers="tableColumnsToRender"
                   :items="preparators">
                   <template v-slot:item.actions="{item}">
@@ -431,6 +451,11 @@
                   </template>
                   <template v-slot:item.fecha="{item}">
                     <NoDataTableField :field="dateToDisplay(item.fecha)"></NoDataTableField>
+                  </template>
+                  <template v-slot:item.tipo="{item}">
+                    <v-chip :color="getExpertColorByType(item.tipo)" small dark>
+                      {{item.tipo}}
+                    </v-chip>
                   </template>
                 </v-data-table>
               </v-col>
@@ -483,7 +508,8 @@ export default {
           columns: [
             'idp',
             'ncatalogo',
-            'fecha'
+            'fecha',
+            'tipo'
           ],
         }
       },
@@ -508,6 +534,13 @@ export default {
           sortable: true,
           value: 'fecha',
         },
+        {
+          text: 'Tipo',
+          align: 'center',
+          disabled: true,
+          sortable: true,
+          value: 'tipo',
+        },
       ],
       tableColumnsSelected: [
         {
@@ -530,6 +563,13 @@ export default {
           sortable: true,
           value: 'fecha',
         },
+        {
+          text: 'Tipo',
+          align: 'center',
+          disabled: true,
+          sortable: true,
+          value: 'tipo',
+        },
       ],
       tableColumnsToRender: [],
       loadingTable: false,
@@ -540,9 +580,10 @@ export default {
       individualDialog: false,
       deleteDialogActive: false,
       itemToDelete: null,
-      preparator: {
+      expert: {
         idp: '',
         ncatalogo: '',
+        tipo: 'Preparador',
         fecha: '',
         descripcion: ''
       },
@@ -550,7 +591,7 @@ export default {
   },
   computed: {
     formattedDate() {
-      return moment(this.preparator.fecha).format('DD-MM-YYYY');
+      return moment(this.expert.fecha).format('DD-MM-YYYY');
     },
     headersNoDisabled() {
       return this.headers.map(x => {
@@ -589,7 +630,7 @@ export default {
     },
     preparatorOptions: {
       handler() {
-        this.getPreparatorsFromDatabase();
+        this.getExpertsFromDatabase();
       },
       deep: true
     },
@@ -601,20 +642,20 @@ export default {
       if (val === '') {
         this.setOverlayText('Regresando todo a su lugar');
         this.showOverlay();
-        await this.getPreparatorsFromDatabase();
+        await this.getExpertsFromDatabase();
         this.closeOverlay();
       }
     },
     searchPerson(newVal) {
-      newVal && newVal !== this.preparator.idp && this.queryPersons(newVal)
+      newVal && newVal !== this.expert.idp && this.queryPersons(newVal)
     },
     searchPiece(newVal) {
-      newVal && newVal !== this.preparator.ncatalogo && this.queryPieces(newVal)
+      newVal && newVal !== this.expert.ncatalogo && this.queryPieces(newVal)
     },
   },
   methods: {
     setFormattedDate() {
-      this.preparator.fecha = moment(this.preparator.fecha).format('YYYY-MM-DD HH:mm:ss');
+      this.expert.fecha = moment(this.expert.fecha).format('YYYY-MM-DD HH:mm:ss');
     },
     allowedDates(val) {
       return moment(val).isBefore(moment());
@@ -628,11 +669,11 @@ export default {
      */
     async openEditForm(item) {
       this.setEditItem(item);
-      this.setOverlayText('Abriendo preparador');
+      this.setOverlayText('Abriendo experto');
       this.showOverlay();
       this.closeOverlay();
       this.closeFormDialog();
-      this.preparator = item;
+      this.expert = item;
       this.setFormattedDate();
     },
     /**
@@ -640,63 +681,63 @@ export default {
      */
     openNewItem() {
       this.isAddingItem = true;
-      this.resetPreparator();
+      this.resetExpert();
       this.closeFormDialog()
       if (this.$refs.preparatorForm !== undefined) {
         this.$refs.preparatorForm.reset();
       }
     },
-    async savePreparator() {
+    async saveExpert() {
       if (this.$refs.preparatorForm.validate()) {
-        this.setOverlayText('Guardando preparador');
+        this.setOverlayText('Guardando experto');
         this.showOverlay();
-        this.processPreparator();
-        let res = await this.$store.dispatch('savePreparator', this.preparator);
+        this.processExpert();
+        let res = await this.$store.dispatch('saveExpert', this.expert);
         if (res.ok) {
-          this.showSuccessNotification('La pieza ha sido guardada');
+          this.showSuccessNotification('El experto ha sido guardado');
         } else {
-          this.showErrorNotification(`¡La pieza no se ha guardado! ERR: ${res.statusText}`)
+          this.showErrorNotification(`¡La experto no se ha guardado! ERR: ${res.statusText}`)
         }
         this.closeOverlay();
         this.closeNewItem();
-        await this.getPreparatorsFromDatabase();
+        await this.getExpertsFromDatabase();
       }
     },
-    async updatePreparator() {
+    async updateExpert() {
       this.editDialogActive = false;
-      this.setOverlayText('Actualizando preparador');
+      this.setOverlayText('Actualizando experto');
       this.showOverlay();
-      this.processPreparator();
-      let res = await this.$store.dispatch('updatePreparator', this.preparator);
+      this.processExpert();
+      let res = await this.$store.dispatch('updateExpert', this.expert);
       if (res.ok) {
         this.preparatorOptions.page = 1;
         this.totalPreparators = 25;
-        this.showSuccessNotification('¡El preparador ha sido actualizada!');
+        this.showSuccessNotification('¡El experto ha sido actualizado!');
       } else {
-        this.showErrorNotification(`¡El preparador no se ha actualizado! ERR: ${res.statusText}`)
+        this.showErrorNotification(`¡El experto no se ha actualizado! ERR: ${res.statusText}`)
       }
       this.closeOverlay();
       this.closeEditItem();
-      await this.getPreparatorsFromDatabase();
+      await this.getExpertsFromDatabase();
     },
     /**
      * Process the preparator to change the empty fields to null
      */
-    processPreparator() {
-      this.preparator.idp = this.getFmtEmptyField(this.preparator.idp);
-      this.preparator.ncatalogo = this.getFmtEmptyField(this.preparator.ncatalogo);
-      this.preparator.fecha = moment.utc(this.preparator.fecha);
-      this.preparator.descripcion = this.getFmtEmptyField(this.preparator.descripcion);
-      
+    processExpert() {
+      this.expert.idp = this.getFmtEmptyField(this.expert.idp);
+      this.expert.ncatalogo = this.getFmtEmptyField(this.expert.ncatalogo);
+      this.expert.fecha = moment.utc(this.expert.fecha);
+      this.expert.descripcion = this.getFmtEmptyField(this.expert.descripcion);
     },
     /**
      * Erase all the info of the piece selected
      */
-    resetPreparator() {
-      this.preparator = {
+    resetExpert() {
+      this.expert = {
         idp: '',
         ncatalogo: '',
         fecha: moment().format('YYYY-MM-DD HH:mm:ss'),
+        tipo: 'Preparador',
         descripcion: ''
       }
     },
@@ -718,14 +759,14 @@ export default {
      * Dispatch the action to delete an item in the database
      */
     async deleteItem() {
-      this.setOverlayText('Eliminando preparador');
+      this.setOverlayText('Eliminando experto');
       this.showOverlay();
-      let res = await this.$store.dispatch('deletePreparator', this.itemToDelete.idp + ',' + this.itemToDelete.ncatalogo);
+      let res = await this.$store.dispatch('deleteExpert', this.itemToDelete);
       if (res.ok) {
-        await this.getPreparatorsFromDatabase();
-        this.showSuccessNotification('El preparador ha sido eliminada correctamente');
+        await this.getExpertsFromDatabase();
+        this.showSuccessNotification('El experto ha sido eliminado correctamente');
       } else {
-        this.showErrorNotification(`¡El preparador no se ha eliminado! ERR: ${res.statusText}`);
+        this.showErrorNotification(`¡El experto no se ha eliminado! ERR: ${res.statusText}`);
       }
       this.closeOverlay();
       this.closeDeleteConfirmation();
@@ -760,7 +801,7 @@ export default {
      * Get the preparators from the database
      * @returns {Promise<void>}
      */
-    async getPreparatorsFromDatabase() {
+    async getExpertsFromDatabase() {
       const {page, sortBy, sortDesc} = this.preparatorOptions;
       this.loadingTable = true;
       let query = addQueryParameters({
@@ -782,7 +823,7 @@ export default {
         }),
         method: 'POST',
         body: JSON.stringify({
-          table: `preparador/${query}`,
+          table: `experto/${query}`,
           options: {
             method: 'GET',
             headers: {
@@ -807,7 +848,7 @@ export default {
      * Search the given text in the database
      * @returns {Promise<void>}
      */
-    async searchPreparator() {
+    async searchExpert() {
       this.setOverlayText('Buscando algo increíble');
       this.showOverlay();
       this.preparatorOptions.page = 1;
@@ -824,7 +865,7 @@ export default {
             }),
             method: 'POST',
             body: JSON.stringify({
-              table: `preparador/${query}`,
+              table: `experto/${query}`,
               options: {
                 method: 'GET',
                 headers: {
@@ -899,6 +940,16 @@ export default {
       }).catch(err => {
         console.log(err);
       }).finally(() => (this.loadingPieces = false));
+    },
+    getExpertColorByType(type) {
+      switch (type) {
+        case 'Preparador':
+          return '#54BF00';
+        case 'Determinador':
+          return '#FFCC17';
+        case 'Colectores':
+          return '#00A4E1';
+      }
     },
   }
 }

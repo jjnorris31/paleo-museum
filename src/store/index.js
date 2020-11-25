@@ -331,7 +331,7 @@ export default new Vuex.Store({
         return e;
       }
     },
-    async savePreparator(context, preparator) {
+    async saveExpert(context, expert) {
       try {
         return await fetch('http://localhost:3000/forward', {
           headers: new Headers({
@@ -340,10 +340,10 @@ export default new Vuex.Store({
           }),
           method: 'POST',
           body: JSON.stringify({
-            table: `preparador/`,
+            table: `experto/`,
             options: {
               method: 'POST',
-              body: JSON.stringify(preparator),
+              body: JSON.stringify(expert),
               headers: {
                 'Content-Type': 'application/json'
               }
@@ -538,7 +538,7 @@ export default new Vuex.Store({
         return e;
       }
     },
-    async updatePreparator(context, preparator) {
+    async updateExpert(context, expert) {
       try {
         return await fetch('http://localhost:3000/forward', {
           headers: new Headers({
@@ -547,10 +547,10 @@ export default new Vuex.Store({
           }),
           method: 'POST',
           body: JSON.stringify({
-            table: `determinador/${preparator.idp},${preparator.ncatalogo}`,
+            table: `experto/${expert.idp},${expert.ncatalogo}`,
             options: {
               method: 'PUT',
-              body: JSON.stringify(preparator),
+              body: JSON.stringify(expert),
               headers: {
                 'Content-Type': 'application/json'
               }
@@ -732,7 +732,7 @@ export default new Vuex.Store({
         return e;
       }
     },
-    async deletePreparator(context, id) {
+    async deleteExpert(context, expert) {
       try {
         return await fetch('http://localhost:3000/forward', {
           headers: new Headers({
@@ -741,7 +741,7 @@ export default new Vuex.Store({
           }),
           method: 'POST',
           body: JSON.stringify({
-            table: `preparador/${id}`,
+            table: `experto/${expert.idp},${expert.ncatalogo}`,
             options: {
               method: 'DELETE',
             }

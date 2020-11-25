@@ -417,6 +417,10 @@
                     v-model="filterOptions.search.columns"
                     :items="headersNoDisabled"
                     multiple
+                    :menu-props="{offsetY: true,
+                      origin: 'center center',
+                      transition: 'slide-y-transition',
+                      contentClass: 'text--secondary'}"
                     color="secondary"
                     item-value="value"
                     outlined

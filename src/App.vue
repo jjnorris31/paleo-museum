@@ -7,7 +7,7 @@
       <v-row no-gutters class="fill-height">
         <v-col cols="12"
                class="mt-8 mb-4 d-flex justify-center no-gutters">
-          <v-img src="@/assets/images/logo_museum_darkblue.svg"
+          <v-img src="@/assets/images/museum_full_logo.png"
                  contain
                  max-width="250px">
           </v-img>
@@ -143,14 +143,8 @@ export default {
       { text: 'Especies', icon: 'mdi-google-downasaur',
         action: async () => {await router.push({name: 'species'})}
       },
-      { text: 'Preparadores', icon: 'mdi-account-star',
+      { text: 'Expertos', icon: 'mdi-account-star',
         action: async () => {await router.push({name: 'preparators'})}
-      },
-      { text: 'Determinadores', icon: 'mdi-account-question',
-        action: async () => {await router.push({name: 'determinators'})}
-      },
-      { text: 'Colectores', icon: 'mdi-account-search',
-        action: async () => {await router.push({name: 'collectors'})}
       },
       { text: 'Publicaciones', icon: 'mdi-newspaper-variant-multiple-outline',
         action: async () => {await router.push({name: 'publications'})}
