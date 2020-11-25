@@ -42,7 +42,7 @@
                    style="min-width: 973px">
 
                 <!-- begins fields -->
-                <div class="d-flex flex-wrap align-content-lg-space-between no-gutters basic-container">
+                <div class="d-flex flex-wrap no-gutters basic-container">
 
                   <!-- begin nombres -->
                   <div class="mr-2 std-text-field">
@@ -50,9 +50,9 @@
                       Nombres(s)
                     </div>
                     <v-text-field outlined
-                                  counter="30"
                                   maxlength="30"
-                                  :rules="[stdRules]"
+                                  :disabled="isEditingItem"
+                                  :rules="[requiredRules, nameRules]"
                                   type="text"
                                   placeholder="Rafael Elu"
                                   v-model="person.nombrespila"
@@ -67,10 +67,9 @@
                       Apellido paterno
                     </div>
                     <v-text-field outlined
-                                  counter="30"
-                                  maxlength="30"
+                                  maxlength="20"
                                   placeholder="Hernández"
-                                  :rules="[stdRules]"
+                                  :rules="[requiredRules, nameRules]"
                                   type="text"
                                   v-model="person.apellidopaterno"
                                   dense>
@@ -79,7 +78,7 @@
                   <!-- begin apellido paterno -->
 
                   <!-- begins three fields -->
-                  <div class="row-form-container">
+                  <div class="row-form-container" style="max-width: 683px">
 
                     <!-- begin apellido materno -->
                     <div>
@@ -88,8 +87,8 @@
                       </div>
                       <v-text-field outlined
                                     type="text"
-                                    counter
-                                    maxlength="30"
+                                    :rules="[requiredRules, nameRules]"
+                                    maxlength="20"
                                     placeholder="González"
                                     v-model="person.apellidomaterno"
                                     dense>
@@ -103,10 +102,9 @@
                         Teléfono
                       </div>
                       <v-text-field outlined
-                                    counter
-                                    maxlength="30"
                                     type="text"
-                                    :rules="[stdRules]"
+                                    maxlength="10"
+                                    :rules="[stdRules, numberRules]"
                                     placeholder="3312501965"
                                     v-model="person.telefono"
                                     dense>
@@ -120,10 +118,9 @@
                         Correo
                       </div>
                       <v-text-field outlined
-                                    counter
                                     maxlength="30"
                                     type="text"
-                                    :rules="[stdRules]"
+                                    :rules="[emailRules]"
                                     placeholder="test@example.com"
                                     v-model="person.correo"
                                     dense>
@@ -139,9 +136,7 @@
                       Página web
                     </div>
                     <v-text-field outlined
-                                  counter="50"
                                   maxlength="50"
-                                  :rules="[stdRules]"
                                   type="text"
                                   placeholder="Rafael Elu"
                                   v-model="person.paginaweb"
@@ -157,7 +152,6 @@
                     </div>
                     <div class="d-flex align-start">
                     <v-text-field outlined
-                                  counter
                                   maxlength="30"
                                   placeholder="Institución"
                                   v-model="person.institucion"
@@ -217,23 +211,20 @@
             <div class="d-flex justify-center my-5 no-gutters"
                  style="width: 973px">
               <div class="col-5 d-flex justify-center">
-                <v-btn color="secondary"
-                       dark
+                <v-btn color="#C9875E"
                        class="mr-2"
                        outlined
                        @click="isEditingItem ? closeEditItem() : closeNewItem()"
                        style="border-width: 2px"
                        height="40px">Cancelar</v-btn>
-                <v-btn color="secondary"
-                       dark
+                <v-btn color="primary"
                        v-if="isAddingItem"
                        class="ml-2"
                        elevation="4"
                        @click="savePerson()"
                        height="40px">Guardar persona
                 </v-btn>
-                <v-btn color="secondary"
-                       dark
+                <v-btn color="primary"
                        v-if="isEditingItem"
                        class="ml-2"
                        @click="editDialogActive = true"
@@ -258,15 +249,13 @@
             <h1 class="mb-1 headline font-weight-medium col-12">Borrado de especie</h1>
             <div class="grey--text col-12 mb-4">¿Estás seguro de borrar esta especie?</div>
             <div class="col-12 justify-end mb-6 d-flex no-gutters flex-wrap">
-              <v-btn color="secondary"
-                     dark
+              <v-btn color="#C9875E"
                      class="mr-2"
                      outlined
                      @click="closeDeleteConfirmation()"
                      style="border-width: 2px"
                      height="40px">Cancelar</v-btn>
-              <v-btn color="error"
-                     dark
+              <v-btn color="primary"
                      class="ml-2"
                      @click="deleteItem()"
                      elevation="4"
@@ -290,15 +279,13 @@
             <p class="grey--text">¿Estás seguro de guardar los cambios?</p>
             <div class="col-12 d-flex justify-end mb-2 no-gutters">
               <div class="col-5 d-flex no-gutters">
-                <v-btn color="secondary"
-                       dark
+                <v-btn color="#C9875E"
                        class="mr-2"
                        outlined
                        @click="editDialogActive = false"
                        style="border-width: 2px"
                        height="40px">Cancelar</v-btn>
-                <v-btn color="error"
-                       dark
+                <v-btn color="primary"
                        class="ml-2"
                        @click="updatePerson()"
                        elevation="4"
@@ -323,17 +310,17 @@
                 width="700px">
         <v-card height="100%"
                 style="position: relative">
-          <v-img src="../assets/images/not_found.svg"
+          <v-img src="../assets/images/not_found.png"
                  height="225px"
-                 gradient="35deg, rgba(0,0,0,0.7035014689469538) 0%, rgba(234,242,23,0) 100%"
+                 position="bottom center"
                  class="mb-4"
                  cover>
             <div style="position: absolute; bottom: 0; left: 4px">
               <v-card-title class="white--text text-h3">
-                {{specieSelected.nombrecientifico}}
+                {{specieSelected.nombrespila}}
               </v-card-title>
               <v-card-subtitle class="white--text text-h6">
-                {{specieSelected.genero}}
+                {{specieSelected.apellidopaterno}}
               </v-card-subtitle>
             </div>
           </v-img>
@@ -341,21 +328,21 @@
             <v-row no-gutters class="mx-4">
               <v-col cols="12"
                      class="text-h6 mt-4 mb-2"
-                     style="color: rgba(0, 0, 0, 0.87)">Clasificación</v-col>
+                     style="color: rgba(0, 0, 0, 0.87)">Datos personales</v-col>
 
               <!-- begins first row -->
               <v-col cols="12"
-                     class="subtitle-1  d-flex flex-wrap no-gutters ml-2"
+                     class="subtitle-1 d-flex flex-wrap no-gutters ml-2"
                      style="color: rgba(0, 0, 0, 0.87)">
-                <div class="col-4">{{getFormattedData(specieSelected.clase)}}</div>
-                <div class="col-4">{{getFormattedData(specieSelected.reino)}}</div>
-                <div class="col-4">{{getFormattedData(specieSelected.orden)}}</div>
+                <div class="col-4">{{getFormattedData(specieSelected.apellidomaterno)}}</div>
+                <div class="col-4">{{getFormattedData(specieSelected.telefono)}}</div>
+                <div class="col-4">{{getFormattedData(specieSelected.correo)}}</div>
               </v-col>
               <v-col cols="12"
-                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
-                <div class="col-4">Clase</div>
-                <div class="col-4">Reino</div>
-                <div class="col-4">Orden</div>
+                     class="caption d-flex flex-wrap no-gutters mb-4 ml-2">
+                <div class="col-4">Apellido materno</div>
+                <div class="col-4">Teléfono</div>
+                <div class="col-4">Correo</div>
               </v-col>
               <!-- ends first row -->
 
@@ -363,31 +350,15 @@
               <v-col cols="12"
                      class="subtitle-1 d-flex flex-wrap no-gutters ml-2"
                      style="color: rgba(0, 0, 0, 0.87)">
-                <div class="col-4">{{getFormattedData(specieSelected.filum)}}</div>
-                <div class="col-8">{{getFormattedData(specieSelected.descripcion)}}</div>
+                <div class="col-4">{{getFormattedData(specieSelected.institucion)}}</div>
+                <div class="col-8">{{getFormattedData(specieSelected.paginaweb)}}</div>
               </v-col>
               <v-col cols="12"
-                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
-                <div class="col-4">Filum</div>
-                <div class="col-8">Descripción</div>
+                     class="caption d-flex flex-wrap no-gutters mb-4 ml-2">
+                <div class="col-4">Institución</div>
+                <div class="col-8">Página web</div>
               </v-col>
               <!-- ends second row -->
-
-              <!-- begins third row -->
-              <v-col cols="12"
-                     class="subtitle-1  d-flex flex-wrap no-gutters ml-2"
-                     style="color: rgba(0, 0, 0, 0.87)">
-                <div class="col-4">{{getFormattedData(specieSelected.temporalidad)}}</div>
-                <div class="col-4">{{getFormattedData(specieSelected.clado)}}</div>
-                <div class="col-4">{{getFormattedData(specieSelected.subclado)}}</div>
-              </v-col>
-              <v-col cols="12"
-                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
-                <div class="col-4">Temporalidad</div>
-                <div class="col-4">Clado</div>
-                <div class="col-4">Subclado</div>
-              </v-col>
-              <!-- ends third row -->
 
             </v-row>
           </v-card-text>
@@ -414,8 +385,8 @@
 
 
                 <!-- begins search input -->
-                <div style="width: 250px">
-                  <div class="input-label">
+                <div style="width: 300px">
+                  <div class="input-label" style="margin-left: 33px">
                     Búsqueda
                   </div>
                   <v-text-field outlined
@@ -425,6 +396,14 @@
                                 append-icon="mdi-magnify"
                                 class="mr-2"
                                 dense>
+                    <template v-slot:prepend>
+                      <v-tooltip left>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-icon v-on="on" v-bind="attrs">mdi-help-circle</v-icon>
+                        </template>
+                        <span>Presiona enter para buscar</span>
+                      </v-tooltip>
+                    </template>
                   </v-text-field>
                 </div>
                 <!-- ends search input -->
@@ -462,52 +441,13 @@
                 <!-- begins add new item button -->
                 <v-btn height="40px"
                        depressed
-                       outlined
                        class="ml-2"
-                       style="margin-bottom: 26px; border-width: 2px"
+                       style="margin-bottom: 26px"
                        @click="openNewItem()"
                        color="primary">Añadir persona
                 </v-btn>
                 <!-- ends add new item button -->
               </v-col>
-
-
-              <!-- begins columns select -->
-              <v-col cols="12">
-                <div>
-                  <div class="input-label">
-                    Columnas mostradas
-                  </div>
-                  <v-combobox
-                    v-model="tableColumnsSelected"
-                    :items="headers"
-                    dense
-                    hint="Máximo 7 columnas"
-                    persistent-hint
-                    return-object
-                    outlined
-                    height="40px"
-                    multiple
-                    hide-selected
-                    chips>
-                    <template v-slot:selection="{ attrs, item, select, selected }">
-                      <v-chip
-                        :color="!item.disabled ? 'primary' : ''"
-                        v-bind="attrs"
-                        class="my-1"
-                        :input-value="selected"
-                        :close="!item.disabled"
-                        small
-                        :disabled="item.disabled"
-                        @click="select"
-                        @click:close="removeColumn(item)">
-                        <span>{{ item.text }}</span>
-                      </v-chip>
-                    </template>
-                  </v-combobox>
-                </div>
-              </v-col>
-              <!-- ends columns select -->
 
               <v-col cols="12"
                      class="mb-4">
@@ -587,7 +527,7 @@ import MuseumOverlay from "@/components/MuseumOverlay";
 import formatText from "@/misc/formatText";
 import snackbarNotification from "@/mixins/snackbarNotification";
 import deleteDialogController from "@/mixins/deleteDialogController";
-import {stdRules, requiredRules} from "@/misc/rules";
+import {stdRules, requiredRules, numberRules, emailRules, nameRules} from "@/misc/rules";
 import dropImage from "@/misc/dropImage";
 
 
@@ -605,7 +545,10 @@ export default {
   data: () => {
     return {
       stdRules,
+      emailRules,
+      numberRules,
       requiredRules,
+      nameRules,
       filterOptions: {
         search: {
           pattern: '',
@@ -679,6 +622,24 @@ export default {
           disabled: true,
           sortable: false,
           value: 'apellidomaterno',
+        },
+        {
+          text: 'Teléfono',
+          align: 'start',
+          sortable: false,
+          value: 'telefono',
+        },
+        {
+          text: 'Correo',
+          align: 'start',
+          sortable: false,
+          value: 'correo',
+        },
+        {
+          text: 'Institución',
+          align: 'start',
+          sortable: false,
+          value: 'institucion',
         },
       ],
       tableColumnsToRender: [],

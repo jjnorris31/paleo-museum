@@ -209,18 +209,4 @@ export default {
 
 
 
-  .basic-container {
-    width: 692px;
-  }
-
-  .image-container {
-    margin-top: 23px;
-    margin-left: 16px;
-    margin-bottom: 15px;
-    width: 265px;
-    height: 265px;
-  }
-
-
-
 </style>
