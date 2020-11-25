@@ -19,6 +19,13 @@
     color: #2196F3;
 }
 
+.row-form-container {
+    width: 100%;
+    display: grid;
+    grid-column-gap: 16px;
+    grid-template-columns: repeat(3, 1fr);
+}
+
 .small-text-field {
     max-width: 219px !important;
 }

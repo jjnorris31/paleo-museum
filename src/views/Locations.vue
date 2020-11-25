@@ -18,7 +18,7 @@
                 class="full-height">
         <v-row no-gutters
                style="background-color: white; height: 100%; position: relative"
-               class="pt-15 pl-15">
+               class="pt-15 pl-15 justify-space-between">
           <div style="height: 40px; position: absolute; left: 0"
                class="d-flex align-center ml-4">
             <v-btn icon
@@ -26,10 +26,12 @@
               <v-icon color="rgba(0, 0, 0, 0.87)" size="32">mdi-close</v-icon>
             </v-btn>
           </div>
+
+          <!-- begins form -->
           <v-col cols="6">
             <h1 class="mb-6 text-h4 font-weight-medium" v-if="isAddingItem">Nueva localidad</h1>
             <h1 class="mb-6 text-h4 font-weight-medium" v-if="isEditingItem">Editar localidad</h1>
-            <v-form ref="specieForm"
+            <v-form ref="locationForm"
                     lazy-validation
                     class="d-flex no-gutters flex-wrap">
 
@@ -51,8 +53,9 @@
                         Identificador
                       </div>
                       <v-text-field outlined
+                                    :rules="[requiredRules]"
                                     type="text"
-                                    counter
+                                    :disabled="isEditingItem"
                                     maxlength="30"
                                     placeholder="JAL-CHAP-005"
                                     v-model="location.idl"
@@ -67,7 +70,6 @@
                         Nombre
                       </div>
                       <v-text-field outlined
-                                    counter
                                     maxlength="30"
                                     type="text"
                                     :rules="[stdRules]"
@@ -84,7 +86,6 @@
                         Estatus legal
                       </div>
                       <v-text-field outlined
-                                    counter
                                     maxlength="30"
                                     type="text"
                                     :rules="[stdRules]"
@@ -115,6 +116,7 @@
                           <v-text-field
                             outlined
                             :value="formattedDate"
+                            :rules="[requiredRules]"
                             dense
                             placeholder="01-01-1999"
                             readonly
@@ -138,10 +140,8 @@
                         Edad absoluta
                       </div>
                       <v-text-field outlined
-                                    counter
                                     maxlength="100"
                                     type="text"
-                                    :rules="[stdRules]"
                                     placeholder="7500 +- 500"
                                     v-model="location.edadabsoluta"
                                     dense>
@@ -155,7 +155,6 @@
                         Ruta acceso
                       </div>
                       <v-text-field outlined
-                                    counter
                                     maxlength="100"
                                     type="text"
                                     :rules="[stdRules]"
@@ -176,7 +175,6 @@
                       </div>
                       <v-text-field outlined
                                     type="text"
-                                    counter
                                     maxlength="30"
                                     placeholder="Cenozoico"
                                     v-model="location.era"
@@ -191,7 +189,6 @@
                         Periodo
                       </div>
                       <v-text-field outlined
-                                    counter
                                     maxlength="30"
                                     type="text"
                                     :rules="[stdRules]"
@@ -208,7 +205,6 @@
                         Formación
                       </div>
                       <v-text-field outlined
-                                    counter
                                     maxlength="30"
                                     type="text"
                                     :rules="[stdRules]"
@@ -231,7 +227,7 @@
                                 maxlength="250"
                                 height="80px"
                                 type="text"
-                                placeholder="Aquí va algo importante..."
+                                placeholder="Aquí van las notas de geología"
                                 v-model="location.geologia"
                                 dense>
                     </v-textarea>
@@ -247,7 +243,6 @@
                       </div>
                       <v-text-field outlined
                                     type="text"
-                                    counter
                                     maxlength="30"
                                     placeholder="Matorral xerófilo"
                                     v-model="location.vegetacion"
@@ -270,23 +265,20 @@
             <div class="d-flex justify-center my-5 no-gutters"
                  style="width: 973px">
               <div class="col-5 d-flex justify-center">
-                <v-btn color="secondary"
-                       dark
+                <v-btn color="#C9875E"
                        class="mr-2"
                        outlined
                        @click="isEditingItem ? closeEditItem() : closeNewItem()"
                        style="border-width: 2px"
                        height="40px">Cancelar</v-btn>
-                <v-btn color="secondary"
-                       dark
+                <v-btn color="primary"
                        v-if="isAddingItem"
                        class="ml-2"
                        elevation="4"
                        @click="saveLocation()"
                        height="40px">Guardar localidad
                 </v-btn>
-                <v-btn color="secondary"
-                       dark
+                <v-btn color="primary"
                        v-if="isEditingItem"
                        class="ml-2"
                        @click="editDialogActive = true"
@@ -296,6 +288,16 @@
               </div>
             </div>
           </v-col>
+          <!-- ends  form -->
+
+          <!-- begins right image -->
+          <v-col cols="5"
+                 class="fill-height d-flex justify-center">
+            <v-img height="500px" src="../assets/images/arq.svg">
+            </v-img>
+          </v-col>
+          <!-- ends right image -->
+
         </v-row>
       </v-dialog>
       <!-- ends dialog -->
@@ -308,17 +310,17 @@
                style="background-color: white; height: 100%"
                class="pt-6 px-7">
           <v-col cols="12" class="d-flex no-gutters flex-wrap">
-            <h1 class="mb-1 headline font-weight-medium col-12">Borrado de especie</h1>
-            <div class="grey--text col-12 mb-4">¿Estás seguro de borrar esta especie?</div>
+            <h1 class="mb-1 headline font-weight-medium col-12">Borrado de localidad</h1>
+            <div class="grey--text col-12 mb-4">¿Estás seguro de borrar esta localidad?</div>
             <div class="col-12 justify-end mb-6 d-flex no-gutters flex-wrap">
-              <v-btn color="secondary"
+              <v-btn color="#C9875E"
                      dark
                      class="mr-2"
                      outlined
                      @click="closeDeleteConfirmation()"
                      style="border-width: 2px"
                      height="40px">Cancelar</v-btn>
-              <v-btn color="error"
+              <v-btn color="primary"
                      dark
                      class="ml-2"
                      @click="deleteItem()"
@@ -339,18 +341,18 @@
                style="background-color: white; height: 100%"
                class="pt-7 px-7">
           <v-col cols="12">
-            <h1 class="mb-1 headline font-weight-medium">Edición de pieza</h1>
+            <h1 class="mb-1 headline font-weight-medium">Edición de localidad</h1>
             <p class="grey--text">¿Estás seguro de guardar los cambios?</p>
             <div class="col-12 d-flex justify-end mb-2 no-gutters">
               <div class="col-5 d-flex no-gutters">
-                <v-btn color="secondary"
+                <v-btn color="#C9875E"
                        dark
                        class="mr-2"
                        outlined
                        @click="editDialogActive = false"
                        style="border-width: 2px"
                        height="40px">Cancelar</v-btn>
-                <v-btn color="error"
+                <v-btn color="primary"
                        dark
                        class="ml-2"
                        @click="updateLocation()"
@@ -376,9 +378,9 @@
                 width="700px">
         <v-card height="100%"
                 style="position: relative">
-          <v-img src="../assets/images/not_found.svg"
+          <v-img src="../assets/images/not_found.png"
                  height="225px"
-                 gradient="35deg, rgba(0,0,0,0.7035014689469538) 0%, rgba(234,242,23,0) 100%"
+                 position="bottom center"
                  class="mb-4"
                  cover>
             <div style="position: absolute; bottom: 0; left: 4px">
@@ -405,7 +407,7 @@
                 <div class="col-4">{{ getFormattedData(locationSelected.edadabsoluta) }}</div>
               </v-col>
               <v-col cols="12"
-                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
+                     class="caption d-flex flex-wrap no-gutters mb-4 ml-2">
                 <div class="col-4">Estatus legal</div>
                 <div class="col-4">Fecha de datación</div>
                 <div class="col-4">Edad absoluta</div>
@@ -421,7 +423,7 @@
                 <div class="col-4">{{ getFormattedData(locationSelected.periodo) }}</div>
               </v-col>
               <v-col cols="12"
-                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
+                     class="caption d-flex flex-wrap no-gutters mb-4 ml-2">
                 <div class="col-4">Ruta acceso</div>
                 <div class="col-4">Era</div>
                 <div class="col-4">Periodo</div>
@@ -433,24 +435,24 @@
                      class="subtitle-1  d-flex flex-wrap no-gutters ml-2"
                      style="color: rgba(0, 0, 0, 0.87)">
                 <div class="col-4">{{ getFormattedData(locationSelected.formacion) }}</div>
-                <div class="col-8">{{ getFormattedData(locationSelected.geologia) }}</div>
+                <div class="col-4">{{ getFormattedData(locationSelected.vegetacion) }}</div>
               </v-col>
               <v-col cols="12"
-                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
+                     class="caption d-flex flex-wrap no-gutters mb-4 ml-2">
                 <div class="col-4">Formación</div>
-                <div class="col-8">Geología</div>
+                <div class="col-4">Vegetación</div>
               </v-col>
               <!-- ends third row -->
 
               <!-- begins four row -->
               <v-col cols="12"
-                     class="subtitle-1  d-flex flex-wrap no-gutters ml-2"
+                     class="subtitle-1 d-flex flex-wrap no-gutters ml-2"
                      style="color: rgba(0, 0, 0, 0.87)">
-                <div class="col-4">{{ getFormattedData(locationSelected.vegetacion) }}</div>
+                <div class="col-12">{{ getFormattedData(locationSelected.geologia) }}</div>
               </v-col>
               <v-col cols="12"
-                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
-                <div class="col-4">Vegetación</div>
+                     class="caption d-flex flex-wrap no-gutters mb-4 ml-2">
+                <div class="col-12">Geología</div>
               </v-col>
               <!-- ends four row -->
 
@@ -484,7 +486,7 @@
                     Búsqueda
                   </div>
                   <v-text-field outlined
-                                @keyup.enter="searchSpecie()"
+                                @keyup.enter="searchLocation()"
                                 placeholder="JAL-CHAP-005"
                                 v-model="filterOptions.search.pattern"
                                 append-icon="mdi-magnify"
@@ -503,6 +505,10 @@
                     v-model="filterOptions.search.columns"
                     :items="headersNoDisabled"
                     multiple
+                    :menu-props="{offsetY: true,
+                              origin: 'center center',
+                              transition: 'slide-y-transition',
+                              contentClass: 'text--secondary'}"
                     color="secondary"
                     item-value="value"
                     outlined
@@ -512,7 +518,7 @@
                         <span v-if="index === 0">Todas las columnas</span>
                       </div>
                       <div v-else>
-                        <v-chip v-if="index === 0" small>
+                        <v-chip v-if="index === 0" small class="primary">
                           <span>{{ item.text }}</span>
                         </v-chip>
                         <span v-if="index === 1"
@@ -547,6 +553,10 @@
                     v-model="tableColumnsSelected"
                     :items="headers"
                     dense
+                    :menu-props="{offsetY: true,
+                              origin: 'center center',
+                              transition: 'slide-y-transition',
+                              contentClass: 'text--secondary'}"
                     hint="Máximo 7 columnas"
                     persistent-hint
                     return-object
@@ -588,7 +598,7 @@
                   item-key="nombrecientifico"
                   loading-text="Reuniendo las especies"
                   :headers="tableColumnsToRender"
-                  :items="species">
+                  :items="locations">
                   <template v-slot:item.actions="{item}">
                     <v-menu
                       bottom
@@ -691,7 +701,7 @@ export default {
           pattern: '',
           columns: [
             'idl',
-            'nobre',
+            'nombre',
             'estatuslegal',
             'fechadedatacion',
             'edadabsoluta',
@@ -700,7 +710,7 @@ export default {
             'periodo',
             'formacion',
             'geologia',
-            'vegatacion',
+            'vegetacion',
           ],
         }
       },
@@ -816,7 +826,7 @@ export default {
       tableColumnsToRender: [],
       loadingTable: false,
       locationOptions: {},
-      species: [],
+      locations: [],
       totalSpecies: 0,
       locationSelected: null,
       individualDialog: false,
@@ -928,12 +938,12 @@ export default {
       this.isAddingItem = true;
       this.resetLocation();
       this.closeFormDialog()
-      if (this.$refs.specieForm !== undefined) {
-        this.$refs.specieForm.reset();
+      if (this.$refs.locationForm !== undefined) {
+        this.$refs.locationForm.reset();
       }
     },
     async saveLocation() {
-      if (this.$refs.specieForm.validate()) {
+      if (this.$refs.locationForm.validate()) {
         this.setOverlayText('Guardando localidad');
         this.showOverlay();
         this.processLocation();
@@ -1005,6 +1015,7 @@ export default {
      */
     openDeleteConfirmation(item) {
       this.setItemToDelete(item);
+      console.log(item)
       this.deleteDialogActive = true;
     },
     /**
@@ -1019,12 +1030,12 @@ export default {
     async deleteItem() {
       this.setOverlayText('Eliminando especie');
       this.showOverlay();
-      let res = await this.$store.dispatch('deleteSpecie', this.itemToDelete.nombrecientifico);
+      let res = await this.$store.dispatch('deleteLocation', this.itemToDelete.idl);
       if (res.ok) {
         await this.getLocationsFromDatabase();
-        this.showSuccessNotification('La especie ha sido eliminada correctamente');
+        this.showSuccessNotification('La localidad ha sido eliminada correctamente');
       } else {
-        this.showErrorNotification(`¡La especie no se ha eliminado! ERR: ${res.statusText}`);
+        this.showErrorNotification(`¡La localidad no se ha eliminado! ERR: ${res.statusText}`);
       }
       this.closeOverlay();
       this.closeDeleteConfirmation();
@@ -1096,7 +1107,7 @@ export default {
         } else {
           this.totalSpecies = (25 * page);
         }
-        this.species = res.items;
+        this.locations = res.items;
       }).catch(err => {
         console.log(err);
       });
@@ -1106,7 +1117,7 @@ export default {
      * Search the given text in the database
      * @returns {Promise<void>}
      */
-    async searchSpecie() {
+    async searchLocation() {
       this.setOverlayText('Buscando algo increíble');
       this.showOverlay();
       this.locationOptions.page = 1;
@@ -1123,7 +1134,7 @@ export default {
             }),
             method: 'POST',
             body: JSON.stringify({
-              table: `especie/${query}`,
+              table: `localidad/${query}`,
               options: {
                 method: 'GET',
                 headers: {
@@ -1132,7 +1143,7 @@ export default {
               }
             })
           }).then(res => res.json()).then(res => {
-            this.species = res.items;
+            this.locations = res.items;
           }).catch(err => {
             console.log(err);
           }).finally(() => (this.closeOverlay()));

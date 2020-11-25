@@ -463,10 +463,14 @@
               </div>
             </div>
           </v-col>
+
+          <!-- begins right image -->
           <v-col cols="5" class="fill-height d-flex align-center">
             <v-img height="500px" src="../assets/images/arq.svg">
             </v-img>
           </v-col>
+          <!-- ends right image -->
+
         </v-row>
       </v-dialog>
       <!-- ends dialog -->
@@ -608,12 +612,12 @@
               <v-col cols="12"
                      class="subtitle-1 d-flex flex-wrap no-gutters ml-2"
                      style="color: rgba(0, 0, 0, 0.87)">
-                <div class="col-4">{{getFormattedData(indItem.formaingreso)}}</div>
+                <div class="col-4">{{getFormattedData(indItem.localidad)}}</div>
                 <div class="col-8">{{getFormattedData(indItem.descripcion)}}</div>
               </v-col>
               <v-col cols="12"
                      class="caption d-flex flex-wrap no-gutters mb-4 ml-2">
-                <div class="col-4">Forma de ingreso</div>
+                <div class="col-4">Localidad</div>
                 <div class="col-8">Descripción</div>
               </v-col>
               <!-- ends second row -->
@@ -738,10 +742,10 @@
                       v-model="filterOptions.search.columns"
                       flat
                       :items="headersNoDisabled"
-                              :menu-props="{offsetY: true,
-                              origin: 'center center',
-                              transition: 'slide-y-transition',
-                              contentClass: 'text--secondary'}"
+                      :menu-props="{offsetY: true,
+                      origin: 'center center',
+                      transition: 'slide-y-transition',
+                      contentClass: 'text--secondary'}"
                       multiple
                       item-value="value"
                       outlined

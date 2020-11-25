@@ -637,6 +637,25 @@ export default new Vuex.Store({
         return e;
       }
     },
+    async deleteLocation(context, id) {
+      try {
+        return await fetch('http://localhost:3000/forward', {
+          headers: new Headers({
+            'Authorization': `Bearer ${context.state.token}`,
+            'Content-Type': 'application/json'
+          }),
+          method: 'POST',
+          body: JSON.stringify({
+            table: `localidad/${id}`,
+            options: {
+              method: 'DELETE',
+            }
+          })
+        });
+      } catch (e) {
+        return e;
+      }
+    },
     async deleteStorage(context, id) {
       try {
         return await fetch('http://localhost:3000/forward', {

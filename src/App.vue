@@ -206,12 +206,7 @@ export default {
     -moz-appearance: textfield;
   }
 
-  .row-form-container {
-    width: 100%;
-    display: grid;
-    grid-column-gap: 16px;
-    grid-template-columns: auto auto auto
-  }
+
 
 
   .basic-container {
