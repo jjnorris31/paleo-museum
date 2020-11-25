@@ -46,12 +46,13 @@
                   <div class="row-form-container">
 
                     <!-- begins persona -->
-                    <div v-if="isAddingItem">
+                    <div>
                       <div class="input-label">
                         Persona
                       </div>
                       <div class="d-flex align-start">
                         <v-autocomplete outlined
+                                        :disabled="isEditingItem"
                                         :rules="[requiredRules]"
                                         cache-items
                                         :loading="loadingPersons"
@@ -69,7 +70,7 @@
                     <!-- ends persona -->
 
                     <!-- begins persona -->
-                    <div v-if="isAddingItem">
+                    <div>
                       <div class="input-label">
                         Pieza
                       </div>
@@ -77,6 +78,7 @@
                         <v-autocomplete outlined
                                         :rules="[requiredRules]"
                                         cache-items
+                                        :disabled="isEditingItem"
                                         :loading="loadingPieces"
                                         :items="pieceItems"
                                         :search-input.sync="searchPiece"
@@ -105,6 +107,7 @@
                           <v-text-field
                             outlined
                             :value="formattedDate"
+                            :rules="[requiredRules]"
                             dense
                             placeholder="01-01-1999"
                             readonly
@@ -150,23 +153,20 @@
             <div class="d-flex justify-center my-5 no-gutters"
                  style="width: 973px">
               <div class="col-5 d-flex justify-center">
-                <v-btn color="secondary"
-                       dark
+                <v-btn color="#C9875E"
                        class="mr-2"
                        outlined
                        @click="isEditingItem ? closeEditItem() : closeNewItem()"
                        style="border-width: 2px"
                        height="40px">Cancelar</v-btn>
-                <v-btn color="secondary"
-                       dark
+                <v-btn color="primary"
                        v-if="isAddingItem"
                        class="ml-2"
                        elevation="4"
                        @click="savePreparator()"
                        height="40px">Guardar preparador
                 </v-btn>
-                <v-btn color="secondary"
-                       dark
+                <v-btn color="primary"
                        v-if="isEditingItem"
                        class="ml-2"
                        @click="editDialogActive = true"
@@ -256,17 +256,17 @@
                 width="700px">
         <v-card height="100%"
                 style="position: relative">
-          <v-img src="../assets/images/not_found.svg"
+          <v-img src="../assets/images/not_found.png"
                  height="225px"
-                 gradient="35deg, rgba(0,0,0,0.7035014689469538) 0%, rgba(234,242,23,0) 100%"
+                 position="bottom center"
                  class="mb-4"
                  cover>
             <div style="position: absolute; bottom: 0; left: 4px">
               <v-card-title class="white--text text-h3">
-                {{preparatorSelected.nombrecientifico}}
+                {{preparatorSelected.idp}}
               </v-card-title>
               <v-card-subtitle class="white--text text-h6">
-                {{preparatorSelected.genero}}
+                {{preparatorSelected.ncatalogo}}
               </v-card-subtitle>
             </div>
           </v-img>
@@ -280,47 +280,15 @@
               <v-col cols="12"
                      class="subtitle-1  d-flex flex-wrap no-gutters ml-2"
                      style="color: rgba(0, 0, 0, 0.87)">
-                <div class="col-4">{{getFormattedData(preparatorSelected.clase)}}</div>
-                <div class="col-4">{{getFormattedData(preparatorSelected.reino)}}</div>
-                <div class="col-4">{{getFormattedData(preparatorSelected.orden)}}</div>
-              </v-col>
-              <v-col cols="12"
-                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
-                <div class="col-4">Clase</div>
-                <div class="col-4">Reino</div>
-                <div class="col-4">Orden</div>
-              </v-col>
-              <!-- ends first row -->
-
-              <!-- begins second row -->
-              <v-col cols="12"
-                     class="subtitle-1 d-flex flex-wrap no-gutters ml-2"
-                     style="color: rgba(0, 0, 0, 0.87)">
-                <div class="col-4">{{getFormattedData(preparatorSelected.filum)}}</div>
+                <div class="col-4">{{dateToDisplay(preparatorSelected.fecha)}}</div>
                 <div class="col-8">{{getFormattedData(preparatorSelected.descripcion)}}</div>
               </v-col>
               <v-col cols="12"
                      class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
-                <div class="col-4">Filum</div>
+                <div class="col-4">Fecha</div>
                 <div class="col-8">Descripción</div>
               </v-col>
-              <!-- ends second row -->
-
-              <!-- begins third row -->
-              <v-col cols="12"
-                     class="subtitle-1  d-flex flex-wrap no-gutters ml-2"
-                     style="color: rgba(0, 0, 0, 0.87)">
-                <div class="col-4">{{getFormattedData(preparatorSelected.temporalidad)}}</div>
-                <div class="col-4">{{getFormattedData(preparatorSelected.clado)}}</div>
-                <div class="col-4">{{getFormattedData(preparatorSelected.subclado)}}</div>
-              </v-col>
-              <v-col cols="12"
-                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
-                <div class="col-4">Temporalidad</div>
-                <div class="col-4">Clado</div>
-                <div class="col-4">Subclado</div>
-              </v-col>
-              <!-- ends third row -->
+              <!-- ends first row -->
 
             </v-row>
           </v-card-text>
@@ -347,8 +315,8 @@
 
 
                 <!-- begins search input -->
-                <div style="width: 250px">
-                  <div class="input-label">
+                <div style="width: 300px">
+                  <div class="input-label" style="margin-left: 33px">
                     Búsqueda
                   </div>
                   <v-text-field outlined
@@ -358,6 +326,14 @@
                                 append-icon="mdi-magnify"
                                 class="mr-2"
                                 dense>
+                    <template v-slot:prepend>
+                      <v-tooltip left>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-icon v-on="on" v-bind="attrs">mdi-help-circle</v-icon>
+                        </template>
+                        <span>Presiona enter para buscar</span>
+                      </v-tooltip>
+                    </template>
                   </v-text-field>
                 </div>
                 <!-- ends search input -->
@@ -371,6 +347,10 @@
                     v-model="filterOptions.search.columns"
                     :items="headersNoDisabled"
                     multiple
+                    :menu-props="{offsetY: true,
+                              origin: 'center center',
+                              transition: 'slide-y-transition',
+                              contentClass: 'text--secondary'}"
                     color="secondary"
                     item-value="value"
                     outlined
@@ -395,52 +375,13 @@
                 <!-- begins add new item button -->
                 <v-btn height="40px"
                        depressed
-                       outlined
                        class="ml-2"
-                       style="margin-bottom: 26px; border-width: 2px"
+                       style="margin-bottom: 26px"
                        @click="openNewItem()"
                        color="primary">Añadir preparador
                 </v-btn>
                 <!-- ends add new item button -->
               </v-col>
-
-
-              <!-- begins columns select -->
-              <v-col cols="12">
-                <div>
-                  <div class="input-label">
-                    Columnas mostradas
-                  </div>
-                  <v-combobox
-                    v-model="tableColumnsSelected"
-                    :items="headers"
-                    dense
-                    hint="Máximo 7 columnas"
-                    persistent-hint
-                    return-object
-                    outlined
-                    height="40px"
-                    multiple
-                    hide-selected
-                    chips>
-                    <template v-slot:selection="{ attrs, item, select, selected }">
-                      <v-chip
-                        :color="!item.disabled ? 'primary' : ''"
-                        v-bind="attrs"
-                        class="my-1"
-                        :input-value="selected"
-                        :close="!item.disabled"
-                        small
-                        :disabled="item.disabled"
-                        @click="select"
-                        @click:close="removeColumn(item)">
-                        <span>{{ item.text }}</span>
-                      </v-chip>
-                    </template>
-                  </v-combobox>
-                </div>
-              </v-col>
-              <!-- ends columns select -->
 
               <v-col cols="12"
                      class="mb-4">
@@ -602,7 +543,8 @@ export default {
       preparator: {
         idp: '',
         ncatalogo: '',
-        fecha: ''
+        fecha: '',
+        descripcion: ''
       },
     }
   },
@@ -671,6 +613,9 @@ export default {
     },
   },
   methods: {
+    setFormattedDate() {
+      this.preparator.fecha = moment(this.preparator.fecha).format('YYYY-MM-DD HH:mm:ss');
+    },
     allowedDates(val) {
       return moment(val).isBefore(moment());
     },
@@ -688,6 +633,7 @@ export default {
       this.closeOverlay();
       this.closeFormDialog();
       this.preparator = item;
+      this.setFormattedDate();
     },
     /**
      * Open the new item dialog and reset the piece variable
@@ -750,7 +696,7 @@ export default {
       this.preparator = {
         idp: '',
         ncatalogo: '',
-        fecha: '',
+        fecha: moment().format('YYYY-MM-DD HH:mm:ss'),
         descripcion: ''
       }
     },
