@@ -51,10 +51,10 @@
                         Identificador
                       </div>
                       <v-text-field outlined
+                                    :disabled="isEditingItem"
                                     type="text"
-                                    counter
                                     maxlength="30"
-                                    :rules="[requiredRules]"
+                                    :rules="[requiredRules, numberRules]"
                                     placeholder="100"
                                     v-model="storage.ida"
                                     dense>
@@ -68,8 +68,7 @@
                         Edificio
                       </div>
                       <v-text-field outlined
-                                    counter
-                                    maxlength="20"
+                                    maxlength="30"
                                     type="text"
                                     :rules="[stdRules]"
                                     placeholder="Edificio 1"
@@ -82,13 +81,11 @@
                     <!-- begins clase -->
                     <div>
                       <div class="input-label">
-                        Estante
+                        Estantes
                       </div>
                       <v-text-field outlined
-                                    counter
+                                    type="text"
                                     maxlength="3"
-                                    type="number"
-                                    :rules="[stdRules]"
                                     placeholder="1"
                                     v-model="storage.estante"
                                     dense>
@@ -107,6 +104,7 @@
                       </div>
                       <v-text-field outlined
                                     type="text"
+                                    :rules="[numberRules]"
                                     placeholder="1"
                                     v-model="storage.numanaquel"
                                     dense>
@@ -126,23 +124,20 @@
             <div class="d-flex justify-center my-5 no-gutters"
                  style="width: 973px">
               <div class="col-5 d-flex justify-center">
-                <v-btn color="secondary"
-                       dark
+                <v-btn color="#C9875E"
                        class="mr-2"
                        outlined
                        @click="isEditingItem ? closeEditItem() : closeNewItem()"
                        style="border-width: 2px"
                        height="40px">Cancelar</v-btn>
-                <v-btn color="secondary"
-                       dark
+                <v-btn color="primary"
                        v-if="isAddingItem"
                        class="ml-2"
                        elevation="4"
                        @click="saveStorage()"
                        height="40px">Guardar almacenamiento
                 </v-btn>
-                <v-btn color="secondary"
-                       dark
+                <v-btn color="primary"
                        v-if="isEditingItem"
                        class="ml-2"
                        @click="editDialogActive = true"
@@ -167,15 +162,13 @@
             <h1 class="mb-1 headline font-weight-medium col-12">Borrado de almacenamiento</h1>
             <div class="grey--text col-12 mb-4">¿Estás seguro de borrar este almacenamiento?</div>
             <div class="col-12 justify-end mb-6 d-flex no-gutters flex-wrap">
-              <v-btn color="secondary"
-                     dark
+              <v-btn color="#C9875E"
                      class="mr-2"
                      outlined
                      @click="closeDeleteConfirmation()"
                      style="border-width: 2px"
                      height="40px">Cancelar</v-btn>
-              <v-btn color="error"
-                     dark
+              <v-btn color="primary"
                      class="ml-2"
                      @click="deleteItem()"
                      elevation="4"
@@ -198,15 +191,13 @@
             <p class="grey--text">¿Estás seguro de guardar los cambios?</p>
             <div class="col-12 d-flex justify-end mb-2 no-gutters">
               <div class="col-5 d-flex no-gutters">
-                <v-btn color="secondary"
-                       dark
+                <v-btn color="#C9875E"
                        class="mr-2"
                        outlined
                        @click="editDialogActive = false"
                        style="border-width: 2px"
                        height="40px">Cancelar</v-btn>
-                <v-btn color="error"
-                       dark
+                <v-btn color="primary"
                        class="ml-2"
                        @click="updateStorage()"
                        elevation="4"
@@ -231,9 +222,9 @@
                 width="700px">
         <v-card height="100%"
                 style="position: relative">
-          <v-img src="../assets/images/not_found.svg"
+          <v-img src="../assets/images/not_found.png"
                  height="225px"
-                 gradient="35deg, rgba(0,0,0,0.7035014689469538) 0%, rgba(234,242,23,0) 100%"
+                 position="bottom center"
                  class="mb-4"
                  cover>
             <div style="position: absolute; bottom: 0; left: 4px">
@@ -259,7 +250,7 @@
                 <div class="col-4">{{ getFormattedData(storageSelected.numanaquel) }}</div>
               </v-col>
               <v-col cols="12"
-                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
+                     class="caption d-flex flex-wrap no-gutters mb-4 ml-2">
                 <div class="col-4">Estante</div>
                 <div class="col-4">Número de anaquel</div>
               </v-col>
@@ -287,8 +278,8 @@
 
 
                 <!-- begins search input -->
-                <div style="width: 250px">
-                  <div class="input-label">
+                <div style="width: 300px">
+                  <div class="input-label" style="margin-left: 33px">
                     Búsqueda
                   </div>
                   <v-text-field outlined
@@ -298,6 +289,14 @@
                                 append-icon="mdi-magnify"
                                 class="mr-2"
                                 dense>
+                    <template v-slot:prepend>
+                      <v-tooltip left>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-icon v-on="on" v-bind="attrs">mdi-help-circle</v-icon>
+                        </template>
+                        <span>Presiona enter para buscar</span>
+                      </v-tooltip>
+                    </template>
                   </v-text-field>
                 </div>
                 <!-- ends search input -->
@@ -335,9 +334,8 @@
                 <!-- begins add new item button -->
                 <v-btn height="40px"
                        depressed
-                       outlined
                        class="ml-2"
-                       style="margin-bottom: 26px; border-width: 2px"
+                       style="margin-bottom: 26px"
                        @click="openNewItem()"
                        color="primary">Añadir almacenamiento
                 </v-btn>
@@ -416,7 +414,7 @@ import MuseumOverlay from "@/components/MuseumOverlay";
 import formatText from "@/misc/formatText";
 import snackbarNotification from "@/mixins/snackbarNotification";
 import deleteDialogController from "@/mixins/deleteDialogController";
-import {stdRules, requiredRules} from "@/misc/rules";
+import {stdRules, requiredRules, numberRules} from "@/misc/rules";
 
 
 export default {
@@ -432,6 +430,7 @@ export default {
   data: () => {
     return {
       stdRules,
+      numberRules,
       requiredRules,
       filterOptions: {
         search: {

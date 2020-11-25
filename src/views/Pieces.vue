@@ -42,6 +42,7 @@
                       Número de catálogo
                     </div>
                     <v-text-field outlined
+                                  :disabled="isEditingItem"
                                   maxlength="10"
                                   :rules="[requiredRules]"
                                   type="text"
