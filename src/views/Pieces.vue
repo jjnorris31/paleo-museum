@@ -680,12 +680,14 @@
 
               <!-- begins second row -->
               <v-col cols="12"
+                     v-if="user"
                      class="subtitle-1 d-flex flex-wrap no-gutters ml-2"
                      style="color: rgba(0, 0, 0, 0.87)">
                 <div class="col-4">{{getFormattedData(indItem.latitud)}}</div>
                 <div class="col-4">{{getFormattedData(indItem.longitud)}}</div>
               </v-col>
               <v-col cols="12"
+                     v-if="user"
                      class="caption d-flex flex-wrap no-gutters mb-4 ml-2">
                 <div class="col-4">Latitud</div>
                 <div class="col-4">Longitud</div>
@@ -780,6 +782,7 @@
                 <v-btn height="40px"
                        class="ml-2"
                        depressed
+                       v-if="user"
                        style="margin-bottom: 26px"
                        @click="openNewItem()"
                        color="primary">Añadir pieza
@@ -1141,6 +1144,7 @@ export default {
         ['getCollections',
           'getInstitutions',
           'getSpecies',
+          'user',
           'token',
           'getLocalities']
     ),
@@ -1468,12 +1472,13 @@ export default {
       this.indItem = value;
       this.setMainOverlayText('Abriendo pieza');
       this.showMainOverlay();
-      let res = await this.$store.dispatch('getUbietyById', value.idu);
-      res = await res.json();
-      console.log(res);
-      this.indItem.pais = res.pais;
-      this.indItem.estado = res.estado;
-      this.indItem.municipio = res.municipio;
+      if (this.user) {
+        let res = await this.$store.dispatch('getUbietyById', value.idu);
+        res = await res.json();
+        this.indItem.pais = res.pais;
+        this.indItem.estado = res.estado;
+        this.indItem.municipio = res.municipio;
+      }
       this.hideMainOverlay();
       this.indivDialog = true;
     },

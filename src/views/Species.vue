@@ -430,8 +430,8 @@
 
 
                 <!-- begins search input -->
-                <div style="width: 250px">
-                  <div class="input-label">
+                <div style="width: 300px">
+                  <div class="input-label" style="margin-left: 33px">
                     Búsqueda
                   </div>
                   <v-text-field outlined
@@ -441,6 +441,14 @@
                                 append-icon="mdi-magnify"
                                 class="mr-2"
                                 dense>
+                    <template v-slot:prepend>
+                      <v-tooltip left>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-icon v-on="on" v-bind="attrs">mdi-help-circle</v-icon>
+                        </template>
+                        <span>Presiona enter para buscar</span>
+                      </v-tooltip>
+                    </template>
                   </v-text-field>
                 </div>
                 <!-- ends search input -->
@@ -478,9 +486,8 @@
                 <!-- begins add new item button -->
                 <v-btn height="40px"
                        depressed
-                       outlined
                        class="ml-2"
-                       style="margin-bottom: 26px; border-width: 2px"
+                       style="margin-bottom: 26px"
                        @click="openNewItem()"
                        color="primary">Añadir especie
                 </v-btn>
