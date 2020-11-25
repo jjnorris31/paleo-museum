@@ -222,7 +222,8 @@ export default {
           });
           let {accessToken} = await res.json();
           localStorage.setItem('museum_token', accessToken);
-          await this.$router.go({name: 'tablas/piezas'});
+          this.$store.commit('SET_TOKEN', accessToken);
+          await this.$router.push({name: 'pieces'});
         } catch (e) {
           this.resetPassword();
           this.showErrorNotification('Las credenciales no son correctas')

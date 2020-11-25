@@ -2,7 +2,7 @@
   <v-app>
     <v-navigation-drawer clipped
                          app
-                         v-if="inDashboard"
+                         v-if="inApp"
                          width="300">
       <v-row no-gutters class="fill-height">
         <v-col cols="12"
@@ -18,7 +18,7 @@
               <v-list-item @click="showMessage()"
                            v-if="false"
                            dense
-                           color="#000000"
+                           color="primary"
                            class="list-item">
                 <v-list-item-icon>
                   <v-icon>mdi-home</v-icon>
@@ -26,7 +26,6 @@
                 <v-list-item-title>Inicio</v-list-item-title>
               </v-list-item>
               <v-list-group
-                color="#000000"
                 :value="true"
                 no-action
                 prepend-icon="mdi-table">
@@ -34,7 +33,7 @@
                   <v-list-item-title>Tablas</v-list-item-title>
                 </template>
                   <v-list-item @click="item.action()"
-                               color="#000000"
+                               color="primary"
                                v-for="item in tableItems"
                                :key="item.text">
                     <v-list-item-icon>
@@ -46,6 +45,7 @@
 
               <v-list-item @click="goToUsers()"
                            v-if="user"
+                           color="primary"
                            class="list-item">
                 <v-list-item-icon>
                   <v-icon>mdi-pencil</v-icon>
@@ -58,18 +58,40 @@
           </v-list>
         </v-col>
         <v-col cols="12"
-               style="height: 80px"
                class="align-self-end d-flex justify-center">
-          <v-btn flat
-                 outlined
-                 @click="logout()"
-                 depressed
-                 class="caption font-weight-medium"
-                 style="border-width: 2px"
-                 color="lightgray">
-            <v-icon class="mr-1">mdi-logout</v-icon>
-            Cerrar sesión
-          </v-btn>
+          <v-row no-gutters>
+
+            <!-- begins icon -->
+            <v-col cols="12"
+                   class="mb-4">
+              <v-row no-gutters
+                     class="justify-center">
+                <div class="mr-4">
+                  <v-icon x-large>mdi-account-circle</v-icon>
+                </div>
+                <div>
+                  <div class="caption">Usuario actual:</div>
+                  <div>{{email}}</div>
+                </div>
+              </v-row>
+            </v-col>
+            <!-- ends icon -->
+
+            <!-- begins logout button -->
+            <v-col cols="12"
+                   class="d-flex justify-center no-gutters mb-8">
+              <v-btn outlined
+                     @click="logout()"
+                     depressed
+                     color="rgba(0, 0, 0, 0.6)"
+                     class="caption font-weight-medium"
+                     style="border-width: 2px">
+                <v-icon class="mr-1">mdi-logout</v-icon>
+                Cerrar sesión
+              </v-btn>
+            </v-col>
+            <!-- ends logout button -->
+          </v-row>
         </v-col>
       </v-row>
     </v-navigation-drawer>
@@ -90,11 +112,12 @@ export default {
   },
 
   computed: {
-    inDashboard() {
-      return this.$route.name !== 'landing' && this.token;
+    inApp() {
+      return this.$route.name !== 'landing' && this.user;
     },
     ...mapGetters([
       "user",
+      "email",
       "token"
     ])
   },
@@ -148,9 +171,10 @@ export default {
       this.$router.push({path: '/'});
     }
   },
-  mounted() {
+  created() {
     let token = localStorage.getItem('museum_token');
     if (token) {
+      console.log(token);
       this.$store.commit('SET_TOKEN', token);
     }
   }

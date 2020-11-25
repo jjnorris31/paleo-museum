@@ -16,6 +16,7 @@ export default new Vuex.Store({
     pieces: [],
     token: null,
     user: null,
+    email: null
   },
   getters: {
     locations(state)  {
@@ -44,6 +45,9 @@ export default new Vuex.Store({
     },
     user: state => {
       return state.user;
+    },
+    email: state => {
+      return state.email;
     }
   },
   mutations: {
@@ -73,6 +77,9 @@ export default new Vuex.Store({
     },
     SET_USER(state, user) {
       state.user = user;
+    },
+    SET_EMAIL(state, email) {
+      state.email = email;
     }
   },
   actions: {

@@ -744,40 +744,33 @@
                        id="piece-search-column">
                     Buscar en
                   </div>
-                  <v-tooltip left>
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-select
-                        v-bind="attrs"
-                        v-model="filterOptions.search.columns"
-                        flat
-                        v-on="on"
-                        :items="headersNoDisabled"
-                        :menu-props="{offsetY: true,
-                        origin: 'center center',
-                        transition: 'slide-y-transition',
-                        contentClass: 'text--secondary'}"
-                        multiple
-                        item-value="value"
-                        outlined
-                        dense>
-                        <template v-slot:selection="{ item, index }">
-                          <div v-if="filterOptions.search.columns.length === headers.length">
-                            <span v-if="index === 0">Todas las columnas</span>
-                          </div>
-                          <div v-else>
-                            <v-chip v-if="index === 0"
-                                    color="primary"
-                                    small>
-                              <span>{{ item.text }}</span>
-                            </v-chip>
-                            <span v-if="index === 1"
-                                  class="grey--text caption">(+{{ filterOptions.search.columns.length - 1 }} others)</span>
-                          </div>
-                        </template>
-                      </v-select>
-                    </template>
-                    <span>Selecciona las columnas</span>
-                  </v-tooltip>
+                    <v-select
+                      v-model="filterOptions.search.columns"
+                      flat
+                      :items="headersNoDisabled"
+                              :menu-props="{offsetY: true,
+                              origin: 'center center',
+                              transition: 'slide-y-transition',
+                              contentClass: 'text--secondary'}"
+                      multiple
+                      item-value="value"
+                      outlined
+                      dense>
+                      <template v-slot:selection="{ item, index }">
+                        <div v-if="filterOptions.search.columns.length === headers.length">
+                          <span v-if="index === 0">Todas las columnas</span>
+                        </div>
+                        <div v-else>
+                          <v-chip v-if="index === 0"
+                                  color="primary"
+                                  small>
+                            <span>{{ item.text }}</span>
+                          </v-chip>
+                          <span v-if="index === 1"
+                                class="grey--text caption">(+{{ filterOptions.search.columns.length - 1 }} others)</span>
+                        </div>
+                      </template>
+                    </v-select>
                 </div>
                 <!-- ends search input -->
 

@@ -123,6 +123,7 @@ router.beforeEach(async (to, from, next) => {
   let auth = false;
   let res = null;
   let admin = false;
+  let email = null;
 
   if (token) {
     res = await fetch('http://localhost:3000/auth', {
@@ -135,20 +136,26 @@ router.beforeEach(async (to, from, next) => {
     auth = res.status === 200;
     let tmp = await res.json();
     admin = tmp.tipo === 'ADMIN';
+    email = tmp.email;
   }
   store.commit('SET_USER', admin);
+  store.commit('SET_EMAIL', email);
 
   if (to.matched.some(record => record.meta.authentication) && to.matched.some(record => record.meta.admin)) {
     if (!auth) { // not admin!
       next('/');
+      console.log("not auth");
     } else if (auth && !admin){ // user logged
+      console.log("not admin");
     } else {
       next();
     }
   } else if (to.matched.some(record => record.meta.authentication)) {
     if (!auth) { // not logged
       next('/');
+      console.log("not auth");
     } else { // user logged
+      console.log("let's go");
       next();
     }
   } else {
