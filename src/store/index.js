@@ -355,29 +355,23 @@ export default new Vuex.Store({
       }
     },
     async updatePiece(context, payload) {
-
-      let url = payload.piece.imagen;
       console.log(payload.photoFile);
       if (payload.photoFile) {
         let formData = new FormData();
         formData.append("file", payload.photoFile, payload.photoFile.name);
         formData.append("name", payload.piece.ncatalogo);
         try {
-          let res = await fetch('http://localhost:3000/images', {
+          await fetch('http://localhost:3000/images', {
             headers: new Headers({
               'Authorization': `Bearer ${context.state.token}`
             }),
             method: 'PUT',
             body: formData,
           });
-          url = await res.text();
         } catch (e) {
           this.showErrorNotification(`¡La foto no se ha actualizado! ERR: ${e.statusText}`)
         }
       }
-
-      payload.piece.imagen = url;
-      console.log(url);
 
       try {
         return await fetch('http://localhost:3000/forward', {
