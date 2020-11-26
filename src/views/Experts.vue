@@ -27,9 +27,9 @@
             </v-btn>
           </div>
           <v-col cols="6">
-            <h1 class="mb-6 text-h4 font-weight-medium" v-if="isAddingItem">Nueva publicación</h1>
-            <h1 class="mb-6 text-h4 font-weight-medium" v-if="isEditingItem">Editar publicación</h1>
-            <v-form ref="publicationForm"
+            <h1 class="mb-6 text-h4 font-weight-medium" v-if="isAddingItem">Nuevo experto</h1>
+            <h1 class="mb-6 text-h4 font-weight-medium" v-if="isEditingItem">Editar experto</h1>
+            <v-form ref="preparatorForm"
                     lazy-validation
                     class="d-flex no-gutters flex-wrap">
 
@@ -45,88 +45,22 @@
 
                   <div class="row-form-container">
 
-                    <!-- begins nombre -->
-                    <div>
-                      <div class="input-label">
-                        Nombre
-                      </div>
-                      <v-text-field outlined
-                                    maxlength="30"
-                                    type="text"
-                                    :rules="[requiredRules]"
-                                    placeholder="Publicación 1"
-                                    v-model="publication.nombre"
-                                    dense>
-                      </v-text-field>
-                    </div>
-                    <!-- ends nombre -->
-
-                    <!-- begins anopublicacion -->
-                    <div>
-                      <div class="input-label">
-                        Año de Publicación
-                      </div>
-                      <v-text-field outlined
-                                    type="text"
-                                    :rules="[requiredRules, numberRules]"
-                                    placeholder="1990"
-                                    v-model="publication.anopublicacion"
-                                    dense>
-                      </v-text-field>
-                    </div>
-                    <!-- ends anopublicacion -->
-
-                    <!-- begins editorial -->
-                    <div>
-                      <div class="input-label">
-                        Editorial
-                      </div>
-                      <v-text-field outlined
-                                    type="text"
-                                    maxlength="30"
-                                    placeholder="Editorial 1"
-                                    v-model="publication.editorial"
-                                    dense>
-                      </v-text-field>
-                    </div>
-                    <!-- begins editorial -->
-
-                  </div>
-
-                  <div class="row-form-container">
-
-                    <!-- begins url -->
-                    <div>
-                      <div class="input-label">
-                        URL
-                      </div>
-                      <v-text-field outlined
-                                    maxlength="150"
-                                    type="text"
-                                    :rules="[emailRules]"
-                                    placeholder="https://ejemplo.com"
-                                    v-model="publication.url"
-                                    dense>
-                      </v-text-field>
-                    </div>
-                    <!-- ends url -->
-
-                    <!-- begin persona -->
+                    <!-- begins persona -->
                     <div>
                       <div class="input-label">
                         Persona
                       </div>
                       <div class="d-flex align-start">
                         <v-autocomplete outlined
+                                        :disabled="isEditingItem"
                                         :rules="[requiredRules]"
                                         cache-items
-                                        :disabled="isEditingItem"
                                         :loading="loadingPersons"
                                         :items="personItems"
                                         :search-input.sync="searchPerson"
                                         hide-no-data
                                         placeholder="Juan Pérez"
-                                        v-model="publication.idp"
+                                        v-model="expert.idp"
                                         item-text="nombrespila"
                                         item-value="idp"
                                         dense>
@@ -135,9 +69,105 @@
                     </div>
                     <!-- ends persona -->
 
+                    <!-- begins persona -->
+                    <div>
+                      <div class="input-label">
+                        Pieza
+                      </div>
+                      <div class="d-flex align-start">
+                        <v-autocomplete outlined
+                                        :rules="[requiredRules]"
+                                        cache-items
+                                        :disabled="isEditingItem"
+                                        :loading="loadingPieces"
+                                        :items="pieceItems"
+                                        :search-input.sync="searchPiece"
+                                        hide-no-data
+                                        placeholder="MPG-15"
+                                        v-model="expert.ncatalogo"
+                                        dense>
+                        </v-autocomplete>
+                      </div>
+                    </div>
+                    <!-- ends persona -->
+
+                    <!-- begins fecha -->
+                    <div>
+                      <div class="input-label">
+                        Fecha
+                      </div>
+                      <v-menu
+                        v-model="birthdayPicker"
+                        :close-on-content-click="false"
+                        transition="scale-transition"
+                        offset-y
+                        min-width="290px"
+                      >
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-text-field
+                            outlined
+                            :value="formattedDate"
+                            :rules="[requiredRules]"
+                            dense
+                            placeholder="01-01-1999"
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
+                          ></v-text-field>
+                        </template>
+                        <v-date-picker
+                          locale="es-419"
+                          @input="birthdayPicker = false"
+                          v-model="expert.fecha_mov"
+                          :allowed-dates="allowedDates"
+                        ></v-date-picker>
+                      </v-menu>
+                    </div>
+                    <!-- begins fecha -->
+
+                    </div>
+
+                  <div class="row-form-container">
+
+                    <!-- begins tipo de experto -->
+                    <div>
+                      <div class="input-label">
+                        Tipo de experto
+                      </div>
+                      <div class="d-flex align-start">
+                        <v-select outlined
+                                  :rules="[requiredRules]"
+                                  cache-items
+                                  :items="['Preparador', 'Determinador', 'Colector']"
+                                  hide-no-data
+                                  v-model="expert.tipo"
+                                  dense>
+                        </v-select>
+                      </div>
+                    </div>
+                    <!-- ends tipo de experto  -->
+
                   </div>
 
-                </div>
+
+                    <!-- begin description -->
+                  <div style="width: 100%">
+                    <div class="input-label">
+                      Descripción
+                    </div>
+                    <v-textarea outlined
+                                counter
+                                maxlength="200"
+                                height="80px"
+                                type="text"
+                                placeholder="Aquí va algo importante..."
+                                v-model="expert.descripcion"
+                                dense>
+                    </v-textarea>
+                  </div>
+                  <!-- ends description -->
+
+                  </div>
                 <!-- ends fields -->
 
               </div>
@@ -157,8 +187,8 @@
                        v-if="isAddingItem"
                        class="ml-2"
                        elevation="4"
-                       @click="savePublication()"
-                       height="40px">Guardar publicación
+                       @click="saveExpert()"
+                       height="40px">Guardar experto
                 </v-btn>
                 <v-btn color="primary"
                        v-if="isEditingItem"
@@ -182,8 +212,8 @@
                style="background-color: white; height: 100%"
                class="pt-6 px-7">
           <v-col cols="12" class="d-flex no-gutters flex-wrap">
-            <h1 class="mb-1 headline font-weight-medium col-12">Borrado de publicación</h1>
-            <div class="grey--text col-12 mb-4">¿Estás seguro de borrar esta publicación?</div>
+            <h1 class="mb-1 headline font-weight-medium col-12">Borrado de experto</h1>
+            <div class="grey--text col-12 mb-4">¿Estás seguro de borrar este experto?</div>
             <div class="col-12 justify-end mb-6 d-flex no-gutters flex-wrap">
               <v-btn color="#C9875E"
                      class="mr-2"
@@ -211,21 +241,19 @@
                style="background-color: white; height: 100%"
                class="pt-7 px-7">
           <v-col cols="12">
-            <h1 class="mb-1 headline font-weight-medium">Edición de pieza</h1>
+            <h1 class="mb-1 headline font-weight-medium">Edición de experto</h1>
             <p class="grey--text">¿Estás seguro de guardar los cambios?</p>
             <div class="col-12 d-flex justify-end mb-2 no-gutters">
               <div class="col-5 d-flex no-gutters">
-                <v-btn color="secondary"
-                       dark
+                <v-btn color="#C9875E"
                        class="mr-2"
                        outlined
                        @click="editDialogActive = false"
                        style="border-width: 2px"
                        height="40px">Cancelar</v-btn>
-                <v-btn color="error"
-                       dark
+                <v-btn color="primary"
                        class="ml-2"
-                       @click="updatePublication()"
+                       @click="updateExpert()"
                        elevation="4"
                        height="40px">Editar</v-btn>
               </div>
@@ -244,21 +272,21 @@
       <!-- ends error snackbar -->
 
       <v-dialog v-model="individualDialog"
-                v-if="publicationSelected !== null"
+                v-if="expertSelected !== null"
                 width="700px">
         <v-card height="100%"
                 style="position: relative">
-          <v-img src="../assets/images/not_found.svg"
+          <v-img src="../assets/images/not_found.png"
                  height="225px"
-                 gradient="35deg, rgba(0,0,0,0.7035014689469538) 0%, rgba(234,242,23,0) 100%"
+                 position="bottom center"
                  class="mb-4"
                  cover>
             <div style="position: absolute; bottom: 0; left: 4px">
               <v-card-title class="white--text text-h3">
-                {{publicationSelected.idpub}}
+                {{ expertSelected.nombrespila }}
               </v-card-title>
               <v-card-subtitle class="white--text text-h6">
-                {{publicationSelected.nombre}}
+                {{ expertSelected.ncatalogo }}
               </v-card-subtitle>
             </div>
           </v-img>
@@ -266,53 +294,21 @@
             <v-row no-gutters class="mx-4">
               <v-col cols="12"
                      class="text-h6 mt-4 mb-2"
-                     style="color: rgba(0, 0, 0, 0.87)">Publicación</v-col>
+                     style="color: rgba(0, 0, 0, 0.87)">Datos</v-col>
 
               <!-- begins first row -->
               <v-col cols="12"
                      class="subtitle-1  d-flex flex-wrap no-gutters ml-2"
                      style="color: rgba(0, 0, 0, 0.87)">
-                <div class="col-4">{{getFormattedData(publicationSelected.anopublicacion)}}</div>
-                <div class="col-4">{{getFormattedData(publicationSelected.reino)}}</div>
-                <div class="col-4">{{getFormattedData(publicationSelected.orden)}}</div>
+                <div class="col-4">{{ dateToDisplay(expertSelected.fecha_mov) }}</div>
+                <div class="col-8">{{ getFormattedData(expertSelected.descripcion) }}</div>
               </v-col>
               <v-col cols="12"
                      class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
-                <div class="col-4">Clase</div>
-                <div class="col-4">Reino</div>
-                <div class="col-4">Orden</div>
-              </v-col>
-              <!-- ends first row -->
-
-              <!-- begins second row -->
-              <v-col cols="12"
-                     class="subtitle-1 d-flex flex-wrap no-gutters ml-2"
-                     style="color: rgba(0, 0, 0, 0.87)">
-                <div class="col-4">{{getFormattedData(publicationSelected.filum)}}</div>
-                <div class="col-8">{{getFormattedData(publicationSelected.descripcion)}}</div>
-              </v-col>
-              <v-col cols="12"
-                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
-                <div class="col-4">Filum</div>
+                <div class="col-4">Fecha</div>
                 <div class="col-8">Descripción</div>
               </v-col>
-              <!-- ends second row -->
-
-              <!-- begins third row -->
-              <v-col cols="12"
-                     class="subtitle-1  d-flex flex-wrap no-gutters ml-2"
-                     style="color: rgba(0, 0, 0, 0.87)">
-                <div class="col-4">{{getFormattedData(publicationSelected.temporalidad)}}</div>
-                <div class="col-4">{{getFormattedData(publicationSelected.clado)}}</div>
-                <div class="col-4">{{getFormattedData(publicationSelected.subclado)}}</div>
-              </v-col>
-              <v-col cols="12"
-                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
-                <div class="col-4">Temporalidad</div>
-                <div class="col-4">Clado</div>
-                <div class="col-4">Subclado</div>
-              </v-col>
-              <!-- ends third row -->
+              <!-- ends first row -->
 
             </v-row>
           </v-card-text>
@@ -334,7 +330,7 @@
 
                 <!-- begins title-->
                 <h2 class="text-h4 font-weight-medium"
-                    style="position: absolute; left: 0; margin-bottom: 26px">Publicaciones</h2>
+                    style="position: absolute; left: 0; margin-bottom: 26px">Expertos</h2>
                 <!-- ends title-->
 
 
@@ -344,8 +340,8 @@
                     Búsqueda
                   </div>
                   <v-text-field outlined
-                                @keyup.enter="searchPublication()"
-                                placeholder="Publicación 1"
+                                @keyup.enter="searchExpert()"
+                                placeholder="9865"
                                 v-model="filterOptions.search.pattern"
                                 append-icon="mdi-magnify"
                                 class="mr-2"
@@ -371,6 +367,10 @@
                     v-model="filterOptions.search.columns"
                     :items="headersNoDisabled"
                     multiple
+                    :menu-props="{offsetY: true,
+                              origin: 'center center',
+                              transition: 'slide-y-transition',
+                              contentClass: 'text--secondary'}"
                     color="secondary"
                     item-value="value"
                     outlined
@@ -380,7 +380,7 @@
                         <span v-if="index === 0">Todas las columnas</span>
                       </div>
                       <div v-else>
-                        <v-chip v-if="index === 0" small class="primary">
+                        <v-chip v-if="index === 0" small>
                           <span>{{ item.text }}</span>
                         </v-chip>
                         <span v-if="index === 1"
@@ -396,9 +396,9 @@
                 <v-btn height="40px"
                        depressed
                        class="ml-2"
-                       style="margin-bottom: 26px; border-width: 2px"
+                       style="margin-bottom: 26px"
                        @click="openNewItem()"
-                       color="primary">Añadir publicación
+                       color="primary">Añadir experto
                 </v-btn>
                 <!-- ends add new item button -->
               </v-col>
@@ -406,18 +406,18 @@
               <v-col cols="12"
                      class="mb-4">
                 <v-data-table
-                  :server-items-length="totalPublications"
+                  :server-items-length="totalExperts"
                   @click:row="openIndividualItem"
                   height="600px"
                   fixed-header
                   :items-per-page="25"
-                  :options.sync="publicationOptions"
+                  :options.sync="expertOptions"
                   :loading="loadingTable"
                   loader-height="4"
-                  item-key="nombrecientifico"
-                  loading-text="Reuniendo las publicaciones"
+                  item-key="idp"
+                  loading-text="Llamando a los expertos"
                   :headers="tableColumnsToRender"
-                  :items="publications">
+                  :items="experts">
                   <template v-slot:item.actions="{item}">
                     <v-menu
                       bottom
@@ -443,23 +443,19 @@
                       </v-list>
                     </v-menu>
                   </template>
-                  <template v-slot:item.idpub="{item}" >
-                    <NoDataTableField :field="item.idpub"></NoDataTableField>
-                  </template>
-                  <template v-slot:item.nombre="{item}" >
-                    <NoDataTableField :field="item.nombre"></NoDataTableField>
-                  </template>
-                  <template v-slot:item.anopublicacion="{item}">
-                    <NoDataTableField :field="item.anopublicacion"></NoDataTableField>
-                  </template>
-                  <template v-slot:item.editorial="{item}">
-                    <NoDataTableField :field="item.editorial"></NoDataTableField>
-                  </template>
-                  <template v-slot:item.url="{item}">
-                    <NoDataTableField :field="item.url"></NoDataTableField>
-                  </template>
-                  <template v-slot:item.idp="{item}">
+                  <template v-slot:item.idp="{item}" >
                     <NoDataTableField :field="item.idp"></NoDataTableField>
+                  </template>
+                  <template v-slot:item.ncatalogo="{item}" >
+                    <NoDataTableField :field="item.ncatalogo"></NoDataTableField>
+                  </template>
+                  <template v-slot:item.fecha_mov="{item}">
+                    <NoDataTableField :field="dateToDisplay(item.fecha_mov)"></NoDataTableField>
+                  </template>
+                  <template v-slot:item.tipo="{item}">
+                    <v-chip :color="getExpertColorByType(item.tipo)" small dark>
+                      {{item.tipo}}
+                    </v-chip>
                   </template>
                 </v-data-table>
               </v-col>
@@ -481,11 +477,12 @@ import MuseumOverlay from "@/components/MuseumOverlay";
 import formatText from "@/misc/formatText";
 import snackbarNotification from "@/mixins/snackbarNotification";
 import deleteDialogController from "@/mixins/deleteDialogController";
-import {stdRules, requiredRules, numberRules} from "@/misc/rules";
+import {stdRules, requiredRules} from "@/misc/rules";
+import moment from "moment";
 
 
 export default {
-  name: "Publications",
+  name: "Experts",
   mixins: [overlayController,
     deleteDialogController,
     formatText,
@@ -496,118 +493,108 @@ export default {
   },
   data: () => {
     return {
+      birthdayPicker: false,
       loadingPersons: false,
       personItems: [],
       searchPerson: null,
+      loadingPieces: false,
+      pieceItems: [],
+      searchPiece: null,
       stdRules,
       requiredRules,
-      numberRules,
       filterOptions: {
         search: {
           pattern: '',
           columns: [
-            'idpub',
-            'nombre',
-            'anopublicacion',
-            'editorial',
-            'url',
             'idp',
+            'ncatalogo',
+            'fecha_mov',
+            'tipo'
           ],
         }
       },
       headers: [
         {
-          text: 'Nombre',
+          text: 'IDP',
+          disabled: true,
           align: 'start',
           sortable: true,
-          value: 'nombre',
-        },
-        {
-          text: 'Año de publicación',
-          align: 'start',
-          disabled: true,
-          sortable: false,
-          value: 'anopublicacion',
-        },
-        {
-          text: 'Editorial',
-          disabled: true,
-          align: 'start',
-          sortable: false,
-          value: 'editorial',
-        },
-        {
-          text: 'URL',
-          align: 'start',
-          sortable: false,
-          value: 'url',
-        },
-        {
-          text: 'IDP',
-          align: 'start',
-          sortable: false,
           value: 'idp',
+        },
+        {
+          text: 'Número de catálogo',
+          align: 'start',
+          sortable: true,
+          value: 'ncatalogo',
+        },
+        {
+          text: 'Fecha',
+          align: 'start',
+          disabled: true,
+          sortable: true,
+          value: 'fecha_mov',
+        },
+        {
+          text: 'Tipo',
+          align: 'center',
+          disabled: true,
+          sortable: true,
+          value: 'tipo',
         },
       ],
       tableColumnsSelected: [
         {
-          text: 'Nombre',
+          text: 'IDP',
+          disabled: true,
           align: 'start',
           sortable: true,
-          value: 'nombre',
-        },
-        {
-          text: 'Año de publicación',
-          align: 'start',
-          disabled: true,
-          sortable: false,
-          value: 'anopublicacion',
-        },
-        {
-          text: 'Editorial',
-          disabled: true,
-          align: 'start',
-          sortable: false,
-          value: 'editorial',
-        },
-        {
-          text: 'URL',
-          align: 'start',
-          sortable: false,
-          value: 'url',
-        },
-        {
-          text: 'IDP',
-          align: 'start',
-          sortable: false,
           value: 'idp',
         },
+        {
+          text: 'Número de catálogo',
+          disabled: true,
+          align: 'start',
+          sortable: true,
+          value: 'ncatalogo',
+        },
+        {
+          text: 'Fecha',
+          align: 'start',
+          sortable: true,
+          value: 'fecha_mov',
+        },
+        {
+          text: 'Tipo',
+          align: 'center',
+          disabled: true,
+          sortable: true,
+          value: 'tipo',
+        },
       ],
+      isEditingItem: false,
+      isAddingItem: false,
       tableColumnsToRender: [],
       loadingTable: false,
-      publicationOptions: {},
-      publications: [],
-      totalPublications: 0,
-      publicationSelected: null,
+      expertOptions: {},
+      experts: [],
+      totalExperts: 0,
+      expertSelected: null,
       individualDialog: false,
       deleteDialogActive: false,
       itemToDelete: null,
-      publication: {
-        nombrecientifico: '',
-        genero: '',
-        clase: '',
-        reino: '',
-        orden: '',
-        filum: '',
-        descripcion: '',
-        temporalidad: '',
-        clado: '',
-        subclado: '',
-        latitud: ''
+      expert: {
+        idp: '',
+        ncatalogo: '',
+        tipo: 'Preparador',
+        fecha_mov: '',
+        descripcion: ''
       },
     }
   },
   computed: {
+    formattedDate() {
+      return moment(this.expert.fecha_mov).format('DD-MM-YYYY');
+    },
     headersNoDisabled() {
       return this.headers.map(x => {
         x.disabled = false
@@ -643,9 +630,9 @@ export default {
       },
       immediate: true,
     },
-    publicationOptions: {
+    expertOptions: {
       handler() {
-        this.getPublicationsFromDatabase();
+        this.getExpertsFromDatabase();
       },
       deep: true
     },
@@ -657,92 +644,123 @@ export default {
       if (val === '') {
         this.setOverlayText('Regresando todo a su lugar');
         this.showOverlay();
-        await this.getPublicationsFromDatabase();
+        await this.getExpertsFromDatabase();
         this.closeOverlay();
       }
     },
     searchPerson(newVal) {
-      newVal && newVal !== this.publication.idp && this.queryPersons(newVal)
+      newVal && newVal !== this.expert.idp && this.queryPersons(newVal)
+    },
+    searchPiece(newVal) {
+      newVal && newVal !== this.expert.ncatalogo && this.queryPieces(newVal)
     },
   },
   methods: {
+    /**
+     * Sets the state items to be displayed in the state's list
+     */
+    setPersonItems(persons) {
+      this.personItems = persons;
+    },
+    /**
+     * Sets the state items to be displayed in the state's list
+     */
+    setPieceItems(pieces) {
+      this.pieceItems = pieces;
+    },
+    setPersonIdp(id) {
+      this.expert.idp = id;
+    },
+    setFormattedDate() {
+      this.expert.fecha_mov = moment(this.expert.fecha_mov).format('YYYY-MM-DD HH:mm:ss');
+    },
+    allowedDates(val) {
+      return moment(val).isBefore(moment());
+    },
+    dateToDisplay(date) {
+      return moment(date).format('DD-MM-YYYY')
+    },
     /**
      * Opens the edit form
      * @params item - The item to be modified
      */
     async openEditForm(item) {
-      this.setEditItem(item);
-      this.setOverlayText('Abriendo publication');
+      this.setEditItem(true);
+      this.setOverlayText('Abriendo experto');
       this.showOverlay();
+      let personResponse = await this.$store.dispatch('getPersonById', item.idp);
+      personResponse = await personResponse.json();
+      this.setPersonItems([personResponse]);
+      this.setPieceItems([item.ncatalogo])
+      this.setPersonIdp(personResponse.idp);
       this.closeOverlay();
       this.closeFormDialog();
-      this.publication = item;
+      this.expert = item;
+      this.setFormattedDate();
     },
     /**
      * Open the new item dialog and reset the piece variable
      */
     openNewItem() {
       this.isAddingItem = true;
-      this.resetPublication();
+      this.resetExpert();
       this.closeFormDialog()
-      if (this.$refs.publicationForm !== undefined) {
-        this.$refs.publicationForm.reset();
+      if (this.$refs.preparatorForm !== undefined) {
+        this.$refs.preparatorForm.reset();
       }
     },
-    async savePublication() {
-      if (this.$refs.publicationForm.validate()) {
-        this.setOverlayText('Guardando publicación');
+    async saveExpert() {
+      if (this.$refs.preparatorForm.validate()) {
+        this.setOverlayText('Guardando experto');
         this.showOverlay();
-        this.processPublication();
-        let res = await this.$store.dispatch('savePublication', this.publication);
+        this.processExpert();
+        let res = await this.$store.dispatch('saveExpert', this.expert);
         if (res.ok) {
-          this.showSuccessNotification('La publicación ha sido guardada');
+          this.showSuccessNotification('El experto ha sido guardado');
         } else {
-          this.showErrorNotification(`¡La publicación no se ha guardado! ERR: ${res.statusText}`)
+          this.showErrorNotification(`¡La experto no se ha guardado! ERR: ${res.statusText}`)
         }
         this.closeOverlay();
         this.closeNewItem();
-        await this.getPublicationsFromDatabase();
+        await this.getExpertsFromDatabase();
       }
     },
-    async updatePublication() {
+    async updateExpert() {
       this.editDialogActive = false;
-      this.setOverlayText('Actualizando publication');
+      this.setOverlayText('Actualizando experto');
       this.showOverlay();
-      let res = await this.$store.dispatch('updatePublication', this.publication);
+      this.processExpert();
+      let res = await this.$store.dispatch('updateExpert', this.expert);
       if (res.ok) {
-        this.publicationOptions.page = 1;
-        this.totalPublications = 25;
-        this.showSuccessNotification('¡La publication ha sido actualizada!');
+        this.expertOptions.page = 1;
+        this.totalExperts = 25;
+        this.showSuccessNotification('¡El experto ha sido actualizado!');
       } else {
-        this.showErrorNotification(`¡La publication no se ha actualizado! ERR: ${res.statusText}`)
+        this.showErrorNotification(`¡El experto no se ha actualizado! ERR: ${res.statusText}`)
       }
       this.closeOverlay();
       this.closeEditItem();
-      await this.getPublicationsFromDatabase();
+      await this.getExpertsFromDatabase();
     },
     /**
-     * Process the publication to change the empty fields to null
+     * Process the preparator to change the empty fields to null
      */
-    processPublication() {
-      this.publication.idpub = Math.round(Math.random() * 1000000);
-      this.publication.nombre = this.getFmtEmptyField(this.publication.nombre);
-      this.publication.anopublicacion = this.getFmtEmptyField(this.publication.anopublicacion);
-      this.publication.editorial = this.getFmtEmptyField(this.publication.editorial);
-      this.publication.url = this.getFmtEmptyField(this.publication.url);
-      this.publication.idp = this.getFmtEmptyField(this.publication.idp);
+    processExpert() {
+      this.expert.idp = this.getFmtEmptyField(this.expert.idp);
+      this.expert.ncatalogo = this.getFmtEmptyField(this.expert.ncatalogo);
+      this.expert.fecha_mov = moment(this.expert.fecha_mov).format();
+      this.expert.descripcion = this.getFmtEmptyField(this.expert.descripcion);
     },
     /**
      * Erase all the info of the piece selected
      */
-    resetPublication() {
-      this.publication = {
-        idpub: '',
-        nombre: '',
-        anopublicacion: '',
-        editorial: '',
-        url: '',
-        idp: ''
+    resetExpert() {
+      this.expert = {
+        idp: '',
+        ncatalogo: '',
+        fecha_mov: moment().format('YYYY-MM-DD HH:mm:ss'),
+        tipo: 'Preparador',
+        descripcion: ''
       }
     },
     /**
@@ -763,14 +781,14 @@ export default {
      * Dispatch the action to delete an item in the database
      */
     async deleteItem() {
-      this.setOverlayText('Eliminando publicación');
+      this.setOverlayText('Eliminando experto');
       this.showOverlay();
-      let res = await this.$store.dispatch('deletePublication', this.itemToDelete.idpub);
+      let res = await this.$store.dispatch('deleteExpert', this.itemToDelete);
       if (res.ok) {
-        await this.getPublicationsFromDatabase();
-        this.showSuccessNotification('La publicación ha sido eliminada correctamente');
+        await this.getExpertsFromDatabase();
+        this.showSuccessNotification('El experto ha sido eliminado correctamente');
       } else {
-        this.showErrorNotification(`¡La publicación no se ha eliminado! ERR: ${res.statusText}`);
+        this.showErrorNotification(`¡El experto no se ha eliminado! ERR: ${res.statusText}`);
       }
       this.closeOverlay();
       this.closeDeleteConfirmation();
@@ -795,23 +813,26 @@ export default {
      * Opens individual item dialog
      */
     async openIndividualItem(value) {
-      this.publicationSelected = value;
-      this.setOverlayText('Abriendo pieza');
+      this.expertSelected = value;
+      this.setOverlayText('Abriendo experto');
       this.showOverlay();
+      let personResponse = await this.$store.dispatch('getPersonById', value.idp);
+      personResponse = await personResponse.json();
+      this.expertSelected.nombrespila = personResponse.nombrespila;
       this.closeOverlay();
       this.individualDialog = true;
     },
     /**
-     * Get the publications from the database
+     * Get the preparators from the database
      * @returns {Promise<void>}
      */
-    async getPublicationsFromDatabase() {
-      const {page, sortBy, sortDesc} = this.publicationOptions;
+    async getExpertsFromDatabase() {
+      const {page, sortBy, sortDesc} = this.expertOptions;
       this.loadingTable = true;
       let query = addQueryParameters({
         offset: (25 * (page - 1)),
         orderby: sortBy.length === 0 ? false : {
-          column: 'idpub',
+          column: 'idp',
           direction: sortDesc[0] ? 'DESC' : 'ASC',
         },
         search: this.filterOptions.search.pattern === '' ? false : {
@@ -827,7 +848,7 @@ export default {
         }),
         method: 'POST',
         body: JSON.stringify({
-          table: `publicacion/${query}`,
+          table: `experto/${query}`,
           options: {
             method: 'GET',
             headers: {
@@ -838,11 +859,11 @@ export default {
       }).then(res => res.json()).then(res => {
         if (res.hasMore) {
           // calculating the pagination
-          this.totalPublications = ((25 * (page + 1)));
+          this.totalExperts = ((25 * (page + 1)));
         } else {
-          this.totalPublications = (25 * page);
+          this.totalExperts = (25 * page);
         }
-        this.publications = res.items;
+        this.experts = res.items;
       }).catch(err => {
         console.log(err);
       });
@@ -852,11 +873,11 @@ export default {
      * Search the given text in the database
      * @returns {Promise<void>}
      */
-    async searchPublication() {
+    async searchExpert() {
       this.setOverlayText('Buscando algo increíble');
       this.showOverlay();
-      this.publicationOptions.page = 1;
-      this.totalPublications = 25;
+      this.expertOptions.page = 1;
+      this.totalExperts = 25;
       if (this.filterOptions.search.pattern !== '') {
         clearTimeout(this.timeout);
         // timeout to delay the search after the user ends typing
@@ -869,7 +890,7 @@ export default {
             }),
             method: 'POST',
             body: JSON.stringify({
-              table: `publication/${query}`,
+              table: `experto/${query}`,
               options: {
                 method: 'GET',
                 headers: {
@@ -878,7 +899,7 @@ export default {
               }
             })
           }).then(res => res.json()).then(res => {
-            this.publications = res.items;
+            this.experts = res.items;
           }).catch(err => {
             console.log(err);
           }).finally(() => (this.closeOverlay()));
@@ -914,6 +935,46 @@ export default {
       }).catch(err => {
         console.log(err);
       }).finally(() => (this.loadingPersons = false));
+    },
+    /**
+     * Gets the piece items from the database to fill the autocomplete
+     * with the user start to typing
+     * @param v: the text typed by the user
+     */
+    queryPieces(v) {
+      // Lazily load input items
+      this.loadingPieces = true;
+      let query = `{"ncatalogo": {"$instr":"${v}"}}`;
+      fetch('http://localhost:3000/forward', {
+        headers: new Headers({
+          'Authorization': `Bearer ${this.token}`,
+          'Content-Type': 'application/json'
+        }),
+        method: 'POST',
+        body: JSON.stringify({
+          table: `pieza?q=${query}`,
+          options: {
+            method: 'GET'
+          }
+        })
+      }).then(res => res.json()).then(res => {
+        this.pieceItems = [];
+        res.items.forEach(item => {
+          this.pieceItems.push(item.ncatalogo);
+        });
+      }).catch(err => {
+        console.log(err);
+      }).finally(() => (this.loadingPieces = false));
+    },
+    getExpertColorByType(type) {
+      switch (type) {
+        case 'Preparador':
+          return '#54BF00';
+        case 'Determinador':
+          return '#262261';
+        case 'Colectores':
+          return '#00A4E1';
+      }
     },
   }
 }

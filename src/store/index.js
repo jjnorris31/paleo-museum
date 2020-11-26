@@ -788,6 +788,25 @@ export default new Vuex.Store({
         return e;
       }
     },
+    async getPersonById(context, id) {
+      try {
+        return await fetch('http://localhost:3000/forward', {
+          headers: new Headers({
+            'Authorization': `Bearer ${context.state.token}`,
+            'Content-Type': 'application/json'
+          }),
+          method: 'POST',
+          body: JSON.stringify({
+            table: `persona/${id}`,
+            options: {
+              method: 'GET',
+            }
+          })
+        });
+      } catch (e) {
+        return e;
+      }
+    },
     async getLocationById(context, id) {
       let res = await fetch(`https://tpzok3gzaufsnmg-museumdb.adb.us-phoenix-1.oraclecloudapps.com/ords/admin/localidad/${id}`, {
         method: 'GET'

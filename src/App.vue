@@ -144,7 +144,7 @@ export default {
         action: async () => {await router.push({name: 'species'})}
       },
       { text: 'Expertos', icon: 'mdi-account-star',
-        action: async () => {await router.push({name: 'preparators'})}
+        action: async () => {await router.push({name: 'experts'})}
       },
       { text: 'Publicaciones', icon: 'mdi-newspaper-variant-multiple-outline',
         action: async () => {await router.push({name: 'publications'})}

@@ -1756,7 +1756,7 @@ export default {
      * @params item - The item to be modified
      */
     async openEditForm(item) {
-      this.setEditItem(item);
+      this.setEditItem(true);
       this.showMainOverlay();
       this.setMainOverlayText('Abriendo pieza');
       let ubietyResponse = await this.$store.dispatch('getUbietyById', item.idu);
