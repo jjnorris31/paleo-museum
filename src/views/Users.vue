@@ -54,7 +54,7 @@
                       </div>
                       <v-text-field outlined
                                     type="text"
-                                    counter
+                                    :rules="[requiredRules, emailRules]"
                                     maxlength="30"
                                     placeholder="test@example.com"
                                     v-model="user.email"
@@ -69,10 +69,9 @@
                         Nombre
                       </div>
                       <v-text-field outlined
-                                    counter
+                                    :rules="[requiredRules, stdRules]"
                                     maxlength="30"
                                     type="text"
-                                    :rules="[stdRules]"
                                     placeholder="Rafael777"
                                     v-model="user.nombre"
                                     dense>
@@ -86,10 +85,9 @@
                         Contraseña
                       </div>
                       <v-text-field outlined
-                                    counter
+                                    :rules="[requiredRules]"
                                     maxlength="30"
                                     type="text"
-                                    :rules="[stdRules]"
                                     placeholder="*********"
                                     v-model="user.password"
                                     dense>
@@ -129,23 +127,20 @@
             <div class="d-flex justify-center my-5 no-gutters"
                  style="width: 973px">
               <div class="col-5 d-flex justify-center">
-                <v-btn color="secondary"
-                       dark
+                <v-btn color="#C9875E"
                        class="mr-2"
                        outlined
                        @click="isEditingItem ? closeEditItem() : closeNewItem()"
                        style="border-width: 2px"
                        height="40px">Cancelar</v-btn>
-                <v-btn color="secondary"
-                       dark
+                <v-btn color="primary"
                        v-if="isAddingItem"
                        class="ml-2"
                        elevation="4"
                        @click="saveUser()"
                        height="40px">Guardar usuario
                 </v-btn>
-                <v-btn color="secondary"
-                       dark
+                <v-btn color="primary"
                        v-if="isEditingItem"
                        class="ml-2"
                        @click="editDialogActive = true"
@@ -170,15 +165,13 @@
             <h1 class="mb-1 headline font-weight-medium col-12">Borrado de usuario</h1>
             <div class="grey--text col-12 mb-4">¿Estás seguro de borrar a este usuario?</div>
             <div class="col-12 justify-end mb-6 d-flex no-gutters flex-wrap">
-              <v-btn color="secondary"
-                     dark
+              <v-btn color="#C9875E"
                      class="mr-2"
                      outlined
                      @click="closeDeleteConfirmation()"
                      style="border-width: 2px"
                      height="40px">Cancelar</v-btn>
-              <v-btn color="error"
-                     dark
+              <v-btn color="primary"
                      class="ml-2"
                      @click="deleteItem()"
                      elevation="4"
@@ -315,6 +308,10 @@
                     v-model="filterOptions.search.columns"
                     :items="headersNoDisabled"
                     multiple
+                    :menu-props="{offsetY: true,
+                              origin: 'center center',
+                              transition: 'slide-y-transition',
+                              contentClass: 'text--secondary'}"
                     color="secondary"
                     item-value="value"
                     outlined
@@ -324,7 +321,7 @@
                         <span v-if="index === 0">Todas las columnas</span>
                       </div>
                       <div v-else>
-                        <v-chip v-if="index === 0" small>
+                        <v-chip v-if="index === 0" small class="primary">
                           <span>{{ item.text }}</span>
                         </v-chip>
                         <span v-if="index === 1"
@@ -339,7 +336,6 @@
                 <!-- begins add new item button -->
                 <v-btn height="40px"
                        depressed
-                       outlined
                        class="ml-2"
                        style="margin-bottom: 26px; border-width: 2px"
                        @click="openNewItem()"
@@ -353,7 +349,6 @@
                      class="mb-4">
                 <v-data-table
                   :server-items-length="totalSpecies"
-                  @click:row="openIndividualItem"
                   height="600px"
                   fixed-header
                   :items-per-page="25"
@@ -396,7 +391,7 @@
                     <NoDataTableField :field="item.nombre"></NoDataTableField>
                   </template>
                   <template v-slot:item.tipo="{item}">
-                    <v-chip :color="item.tipo === 'ADMIN' ? 'error' : 'primary'" small>
+                    <v-chip :color="item.tipo === 'ADMIN' ? '#FF3D33' : '#54BF00'" small dark>
                       {{item.tipo}}
                     </v-chip>
                   </template>
@@ -420,7 +415,7 @@ import MuseumOverlay from "@/components/MuseumOverlay";
 import formatText from "@/misc/formatText";
 import snackbarNotification from "@/mixins/snackbarNotification";
 import deleteDialogController from "@/mixins/deleteDialogController";
-import {stdRules, requiredRules} from "@/misc/rules";
+import {stdRules, requiredRules, emailRules} from "@/misc/rules";
 import dropImage from "@/misc/dropImage";
 
 
@@ -439,6 +434,7 @@ export default {
     return {
       stdRules,
       requiredRules,
+      emailRules,
       filterOptions: {
         search: {
           pattern: '',

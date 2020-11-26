@@ -138,7 +138,7 @@
                         <v-select outlined
                                   :rules="[requiredRules]"
                                   cache-items
-                                  :items="['Preparador', 'Determinador', 'Colector']"
+                                  :items="expertTypes"
                                   hide-no-data
                                   v-model="expert.tipo"
                                   dense>
@@ -500,6 +500,7 @@ export default {
       loadingPieces: false,
       pieceItems: [],
       searchPiece: null,
+      expertTypes: ['Preparador', 'Determinador', 'Colector'],
       stdRules,
       requiredRules,
       filterOptions: {
@@ -696,6 +697,7 @@ export default {
       this.closeOverlay();
       this.closeFormDialog();
       this.expert = item;
+      this.expert.tipo = 'Preparador';
       this.setFormattedDate();
     },
     /**
