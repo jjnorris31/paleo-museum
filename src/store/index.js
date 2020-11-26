@@ -372,7 +372,7 @@ export default new Vuex.Store({
           });
           url = await res.text();
         } catch (e) {
-          this.showErrorNotification(`¡La pieza no se ha guardado! ERR: ${e.statusText}`)
+          this.showErrorNotification(`¡La foto no se ha actualizado! ERR: ${e.statusText}`)
         }
       }
 
@@ -585,7 +585,22 @@ export default new Vuex.Store({
         return e;
       }
     },
-    async deletePiece(context, id) {
+    async deletePiece(context, piece) {
+
+      if (piece.imagen) {
+        try {
+          let res = await fetch(`http://localhost:3000/images/${piece.ncatalogo}`, {
+            headers: new Headers({
+              'Authorization': `Bearer ${context.state.token}`
+            }),
+            method: 'DELETE',
+          });
+          console.log(await res.text());
+        } catch (e) {
+          this.showErrorNotification(`¡La foto no se ha eliminado! ERR: ${e.statusText}`)
+        }
+      }
+
       try {
         return await fetch('http://localhost:3000/forward', {
           headers: new Headers({
@@ -594,7 +609,7 @@ export default new Vuex.Store({
           }),
           method: 'POST',
           body: JSON.stringify({
-            table: `pieza/${id}`,
+            table: `pieza/${piece.ncatalogo}`,
             options: {
               method: 'DELETE',
             }

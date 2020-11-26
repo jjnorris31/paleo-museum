@@ -1661,7 +1661,7 @@ export default {
     async deleteItem() {
       this.setMainOverlayText('Eliminando pieza');
       this.showMainOverlay();
-      let res = await this.$store.dispatch('deletePiece', this.itemToDelete.ncatalogo);
+      let res = await this.$store.dispatch('deletePiece', this.itemToDelete);
       if (res.ok) {
         await this.getPiecesFromDatabase();
         this.showSuccessNotification('La pieza ha sido eliminada correctamente');
