@@ -508,7 +508,7 @@ export default {
           columns: [
             'idp',
             'ncatalogo',
-            'fecha',
+            'fecha_mov',
             'tipo'
           ],
         }
@@ -532,7 +532,7 @@ export default {
           align: 'start',
           disabled: true,
           sortable: true,
-          value: 'fecha',
+          value: 'fecha_mov',
         },
         {
           text: 'Tipo',
@@ -561,7 +561,7 @@ export default {
           text: 'Fecha',
           align: 'start',
           sortable: true,
-          value: 'fecha',
+          value: 'fecha_mov',
         },
         {
           text: 'Tipo',
@@ -584,7 +584,7 @@ export default {
         idp: '',
         ncatalogo: '',
         tipo: 'Preparador',
-        fecha: '',
+        fecha_mov: '',
         descripcion: ''
       },
     }
@@ -726,7 +726,7 @@ export default {
     processExpert() {
       this.expert.idp = this.getFmtEmptyField(this.expert.idp);
       this.expert.ncatalogo = this.getFmtEmptyField(this.expert.ncatalogo);
-      this.expert.fecha = moment.utc(this.expert.fecha);
+      this.expert.fecha_mov = moment(this.expert.fecha_mov).format();
       this.expert.descripcion = this.getFmtEmptyField(this.expert.descripcion);
     },
     /**
@@ -736,7 +736,7 @@ export default {
       this.expert = {
         idp: '',
         ncatalogo: '',
-        fecha: moment().format('YYYY-MM-DD HH:mm:ss'),
+        fecha_mov: moment().format('YYYY-MM-DD HH:mm:ss'),
         tipo: 'Preparador',
         descripcion: ''
       }
@@ -946,7 +946,7 @@ export default {
         case 'Preparador':
           return '#54BF00';
         case 'Determinador':
-          return '#FFCC17';
+          return '#262261';
         case 'Colectores':
           return '#00A4E1';
       }

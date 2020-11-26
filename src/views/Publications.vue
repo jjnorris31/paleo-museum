@@ -51,7 +51,6 @@
                         Nombre
                       </div>
                       <v-text-field outlined
-                                    counter
                                     maxlength="30"
                                     type="text"
                                     :rules="[requiredRules]"
@@ -69,7 +68,7 @@
                       </div>
                       <v-text-field outlined
                                     type="text"
-                                    :rules="[requiredRules]"
+                                    :rules="[requiredRules, numberRules]"
                                     placeholder="1990"
                                     v-model="publication.anopublicacion"
                                     dense>
@@ -84,7 +83,6 @@
                       </div>
                       <v-text-field outlined
                                     type="text"
-                                    counter
                                     maxlength="30"
                                     placeholder="Editorial 1"
                                     v-model="publication.editorial"
@@ -103,7 +101,6 @@
                         URL
                       </div>
                       <v-text-field outlined
-                                    counter
                                     maxlength="150"
                                     type="text"
                                     :rules="[emailRules]"
@@ -346,8 +343,8 @@
 
 
                 <!-- begins search input -->
-                <div style="width: 250px">
-                  <div class="input-label">
+                <div style="width: 300px">
+                  <div class="input-label" style="margin-left: 33px">
                     Búsqueda
                   </div>
                   <v-text-field outlined
@@ -357,6 +354,14 @@
                                 append-icon="mdi-magnify"
                                 class="mr-2"
                                 dense>
+                    <template v-slot:prepend>
+                      <v-tooltip left>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-icon v-on="on" v-bind="attrs">mdi-help-circle</v-icon>
+                        </template>
+                        <span>Presiona enter para buscar</span>
+                      </v-tooltip>
+                    </template>
                   </v-text-field>
                 </div>
                 <!-- ends search input -->
@@ -379,7 +384,7 @@
                         <span v-if="index === 0">Todas las columnas</span>
                       </div>
                       <div v-else>
-                        <v-chip v-if="index === 0" small>
+                        <v-chip v-if="index === 0" small class="primary">
                           <span>{{ item.text }}</span>
                         </v-chip>
                         <span v-if="index === 1"
@@ -394,7 +399,6 @@
                 <!-- begins add new item button -->
                 <v-btn height="40px"
                        depressed
-                       outlined
                        class="ml-2"
                        style="margin-bottom: 26px; border-width: 2px"
                        @click="openNewItem()"
@@ -402,44 +406,6 @@
                 </v-btn>
                 <!-- ends add new item button -->
               </v-col>
-
-
-              <!-- begins columns select -->
-              <v-col cols="12">
-                <div>
-                  <div class="input-label">
-                    Columnas mostradas
-                  </div>
-                  <v-combobox
-                    v-model="tableColumnsSelected"
-                    :items="headers"
-                    dense
-                    hint="Máximo 7 columnas"
-                    persistent-hint
-                    return-object
-                    outlined
-                    height="40px"
-                    multiple
-                    hide-selected
-                    chips>
-                    <template v-slot:selection="{ attrs, item, select, selected }">
-                      <v-chip
-                        :color="!item.disabled ? 'primary' : ''"
-                        v-bind="attrs"
-                        class="my-1"
-                        :input-value="selected"
-                        :close="!item.disabled"
-                        small
-                        :disabled="item.disabled"
-                        @click="select"
-                        @click:close="removeColumn(item)">
-                        <span>{{ item.text }}</span>
-                      </v-chip>
-                    </template>
-                  </v-combobox>
-                </div>
-              </v-col>
-              <!-- ends columns select -->
 
               <v-col cols="12"
                      class="mb-4">
@@ -519,7 +485,7 @@ import MuseumOverlay from "@/components/MuseumOverlay";
 import formatText from "@/misc/formatText";
 import snackbarNotification from "@/mixins/snackbarNotification";
 import deleteDialogController from "@/mixins/deleteDialogController";
-import {stdRules, requiredRules} from "@/misc/rules";
+import {stdRules, requiredRules, numberRules} from "@/misc/rules";
 
 
 export default {
@@ -539,6 +505,7 @@ export default {
       searchPerson: null,
       stdRules,
       requiredRules,
+      numberRules,
       filterOptions: {
         search: {
           pattern: '',
@@ -590,7 +557,6 @@ export default {
         {
           text: 'Nombre',
           align: 'start',
-          disabled: true,
           sortable: true,
           value: 'nombre',
         },
@@ -598,15 +564,27 @@ export default {
           text: 'Año de publicación',
           align: 'start',
           disabled: true,
-          sortable: true,
+          sortable: false,
           value: 'anopublicacion',
         },
         {
           text: 'Editorial',
           disabled: true,
           align: 'start',
-          sortable: true,
+          sortable: false,
           value: 'editorial',
+        },
+        {
+          text: 'URL',
+          align: 'start',
+          sortable: false,
+          value: 'url',
+        },
+        {
+          text: 'IDP',
+          align: 'start',
+          sortable: false,
+          value: 'idp',
         },
       ],
       tableColumnsToRender: [],
