@@ -1685,7 +1685,6 @@ export default {
       this.options.page = 1;
       this.totalPieces = 25;
       if (this.filterOptions.search.pattern !== '') {
-        console.log("SEARCH TEXT: ", this.filterOptions.search.pattern);
         clearTimeout(this.timeout);
         // timeout to delay the search after the user ends typing
         this.timeout = setTimeout(async () => {

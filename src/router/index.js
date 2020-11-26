@@ -103,7 +103,6 @@ const router = new VueRouter({
 router.beforeEach(async (to, from, next) => {
 
   let token = localStorage.getItem('museum_token');
-  console.log("ROUTER: ", token)
   let auth = false;
   let res = null;
   let admin = false;
@@ -128,18 +127,14 @@ router.beforeEach(async (to, from, next) => {
   if (to.matched.some(record => record.meta.authentication) && to.matched.some(record => record.meta.admin)) {
     if (!auth) { // not admin!
       next('/');
-      console.log("not auth");
     } else if (auth && !admin){ // user logged
-      console.log("not admin");
     } else {
       next();
     }
   } else if (to.matched.some(record => record.meta.authentication)) {
     if (!auth) { // not logged
       next('/');
-      console.log("not auth");
     } else { // user logged
-      console.log("let's go");
       next();
     }
   } else {

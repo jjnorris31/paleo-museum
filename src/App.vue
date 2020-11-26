@@ -157,7 +157,6 @@ export default {
       this.$router.push({name: 'users'})
     },
     showMessage() {
-      console.log("clicked");
     },
     logout() {
       localStorage.removeItem('museum_token');
@@ -168,7 +167,6 @@ export default {
   created() {
     let token = localStorage.getItem('museum_token');
     if (token) {
-      console.log(token);
       this.$store.commit('SET_TOKEN', token);
     }
   }

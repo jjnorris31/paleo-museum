@@ -745,7 +745,6 @@ export default {
         })
       }).then(res => res.json()).then(res => {
         if (res.hasMore) {
-          console.log("RES: ", res);
           // calculating the pagination
           this.totalSpecies = ((25 * (page + 1)));
         } else {
