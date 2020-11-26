@@ -123,7 +123,7 @@
             <v-col cols="8" offset="1">
               <p style="color: #5f5f5f"
                  class="text-h6 font-weight-light">Ahora nuestra colección está disponible para
-                consulta pública, consulta cualquier pieza desde la comodidad de tu hogar</p>
+                consulta pública. Consulta cualquier pieza desde la comodidad de tu hogar.</p>
             </v-col>
             <v-col cols="8" offset="1">
               <v-btn height="40px"
