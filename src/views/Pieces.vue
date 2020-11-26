@@ -1106,18 +1106,6 @@ export default {
         value: 'datacion',
       },
       {
-        text: 'Longitud',
-        align: 'start',
-        sortable: false,
-        value: 'longitud',
-      },
-      {
-        text: 'Latitud',
-        align: 'start',
-        sortable: false,
-        value: 'latitud',
-      },
-      {
         text: 'Nombre científico',
         align: 'start',
         disabled: true,
@@ -1884,6 +1872,23 @@ export default {
       this.formDialogActive = true;
     },
   },
+  mounted() {
+    if (this.user) {
+      this.headers.push(
+        {
+          text: 'Longitud',
+          align: 'start',
+          sortable: false,
+          value: 'longitud',
+        },
+        {
+          text: 'Latitud',
+          align: 'start',
+          sortable: false,
+          value: 'latitud',
+        })
+    }
+  }
 }
 </script>
 
