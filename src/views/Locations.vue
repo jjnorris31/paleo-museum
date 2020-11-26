@@ -927,7 +927,7 @@ export default {
      * @params item - The item to be modified
      */
     async openEditForm(item) {
-      this.setEditItem(item);
+      this.setEditItem(true);
       this.setOverlayText('Abriendo localidad');
       this.showOverlay();
       this.closeOverlay();

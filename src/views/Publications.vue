@@ -103,7 +103,6 @@
                       <v-text-field outlined
                                     maxlength="150"
                                     type="text"
-                                    :rules="[emailRules]"
                                     placeholder="https://ejemplo.com"
                                     v-model="publication.url"
                                     dense>
@@ -211,19 +210,17 @@
                style="background-color: white; height: 100%"
                class="pt-7 px-7">
           <v-col cols="12">
-            <h1 class="mb-1 headline font-weight-medium">Edición de pieza</h1>
+            <h1 class="mb-1 headline font-weight-medium">Edición de publicación</h1>
             <p class="grey--text">¿Estás seguro de guardar los cambios?</p>
             <div class="col-12 d-flex justify-end mb-2 no-gutters">
               <div class="col-5 d-flex no-gutters">
-                <v-btn color="secondary"
-                       dark
+                <v-btn color="#C9875E"
                        class="mr-2"
                        outlined
                        @click="editDialogActive = false"
                        style="border-width: 2px"
                        height="40px">Cancelar</v-btn>
-                <v-btn color="error"
-                       dark
+                <v-btn color="primary"
                        class="ml-2"
                        @click="updatePublication()"
                        elevation="4"
@@ -248,17 +245,17 @@
                 width="700px">
         <v-card height="100%"
                 style="position: relative">
-          <v-img src="../assets/images/not_found.svg"
+          <v-img src="../assets/images/not_found.png"
                  height="225px"
-                 gradient="35deg, rgba(0,0,0,0.7035014689469538) 0%, rgba(234,242,23,0) 100%"
+                 position="bottom center"
                  class="mb-4"
                  cover>
             <div style="position: absolute; bottom: 0; left: 4px">
               <v-card-title class="white--text text-h3">
-                {{publicationSelected.idpub}}
+                {{publicationSelected.nombre}}
               </v-card-title>
               <v-card-subtitle class="white--text text-h6">
-                {{publicationSelected.nombre}}
+                {{publicationSelected.anopublicacion}}
               </v-card-subtitle>
             </div>
           </v-img>
@@ -272,15 +269,13 @@
               <v-col cols="12"
                      class="subtitle-1  d-flex flex-wrap no-gutters ml-2"
                      style="color: rgba(0, 0, 0, 0.87)">
-                <div class="col-4">{{getFormattedData(publicationSelected.anopublicacion)}}</div>
-                <div class="col-4">{{getFormattedData(publicationSelected.reino)}}</div>
-                <div class="col-4">{{getFormattedData(publicationSelected.orden)}}</div>
+                <div class="col-4">{{getFormattedData(publicationSelected.editorial)}}</div>
+                <div class="col-8">{{getFormattedData(publicationSelected.url)}}</div>
               </v-col>
               <v-col cols="12"
-                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
-                <div class="col-4">Clase</div>
-                <div class="col-4">Reino</div>
-                <div class="col-4">Orden</div>
+                     class="caption d-flex flex-wrap no-gutters mb-4 ml-2">
+                <div class="col-4">Editorial</div>
+                <div class="col-8">URL</div>
               </v-col>
               <!-- ends first row -->
 
@@ -288,31 +283,13 @@
               <v-col cols="12"
                      class="subtitle-1 d-flex flex-wrap no-gutters ml-2"
                      style="color: rgba(0, 0, 0, 0.87)">
-                <div class="col-4">{{getFormattedData(publicationSelected.filum)}}</div>
-                <div class="col-8">{{getFormattedData(publicationSelected.descripcion)}}</div>
+                <div class="col-4">{{getFormattedData(publicationSelected.nombrespila)}}</div>
               </v-col>
               <v-col cols="12"
-                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
-                <div class="col-4">Filum</div>
-                <div class="col-8">Descripción</div>
+                     class="caption d-flex flex-wrap no-gutters mb-4 ml-2">
+                <div class="col-4">Autor</div>
               </v-col>
               <!-- ends second row -->
-
-              <!-- begins third row -->
-              <v-col cols="12"
-                     class="subtitle-1  d-flex flex-wrap no-gutters ml-2"
-                     style="color: rgba(0, 0, 0, 0.87)">
-                <div class="col-4">{{getFormattedData(publicationSelected.temporalidad)}}</div>
-                <div class="col-4">{{getFormattedData(publicationSelected.clado)}}</div>
-                <div class="col-4">{{getFormattedData(publicationSelected.subclado)}}</div>
-              </v-col>
-              <v-col cols="12"
-                     class="caption font-italic d-flex flex-wrap no-gutters mb-4 ml-2">
-                <div class="col-4">Temporalidad</div>
-                <div class="col-4">Clado</div>
-                <div class="col-4">Subclado</div>
-              </v-col>
-              <!-- ends third row -->
 
             </v-row>
           </v-card-text>
@@ -481,7 +458,7 @@ import MuseumOverlay from "@/components/MuseumOverlay";
 import formatText from "@/misc/formatText";
 import snackbarNotification from "@/mixins/snackbarNotification";
 import deleteDialogController from "@/mixins/deleteDialogController";
-import {stdRules, requiredRules, numberRules} from "@/misc/rules";
+import {stdRules, requiredRules, numberRules, emailRules} from "@/misc/rules";
 
 
 export default {
@@ -500,6 +477,7 @@ export default {
       personItems: [],
       searchPerson: null,
       stdRules,
+      emailRules,
       requiredRules,
       numberRules,
       filterOptions: {
@@ -667,15 +645,29 @@ export default {
   },
   methods: {
     /**
+     * Sets the state items to be displayed in the state's list
+     */
+    setPersonItems(persons) {
+      this.personItems = persons;
+    },
+    setPersonIdp(id) {
+      this.publication.idp = id;
+    },
+    /**
      * Opens the edit form
      * @params item - The item to be modified
      */
     async openEditForm(item) {
-      this.setEditItem(item);
-      this.setOverlayText('Abriendo publication');
+      this.setEditItem(true);
+      this.setOverlayText('Abriendo publicación');
       this.showOverlay();
+      let personResponse = await this.$store.dispatch('getPersonById', item.idp);
+      personResponse = await personResponse.json();
+      this.setPersonItems([personResponse]);
+      this.setPersonIdp(personResponse.idp);
       this.closeOverlay();
       this.closeFormDialog();
+      console.log(item);
       this.publication = item;
     },
     /**
@@ -707,7 +699,7 @@ export default {
     },
     async updatePublication() {
       this.editDialogActive = false;
-      this.setOverlayText('Actualizando publication');
+      this.setOverlayText('Actualizando publicación');
       this.showOverlay();
       let res = await this.$store.dispatch('updatePublication', this.publication);
       if (res.ok) {
@@ -798,6 +790,9 @@ export default {
       this.publicationSelected = value;
       this.setOverlayText('Abriendo pieza');
       this.showOverlay();
+      let personResponse = await this.$store.dispatch('getPersonById', value.idp);
+      personResponse = await personResponse.json();
+      this.publicationSelected.nombrespila = personResponse.nombrespila;
       this.closeOverlay();
       this.individualDialog = true;
     },
@@ -869,7 +864,7 @@ export default {
             }),
             method: 'POST',
             body: JSON.stringify({
-              table: `publication/${query}`,
+              table: `publicacion/${query}`,
               options: {
                 method: 'GET',
                 headers: {

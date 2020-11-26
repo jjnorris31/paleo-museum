@@ -662,14 +662,14 @@ export default {
     setPersonItems(persons) {
       this.personItems = persons;
     },
+    setPersonIdp(id) {
+      this.expert.idp = id;
+    },
     /**
      * Sets the state items to be displayed in the state's list
      */
     setPieceItems(pieces) {
       this.pieceItems = pieces;
-    },
-    setPersonIdp(id) {
-      this.expert.idp = id;
     },
     setFormattedDate() {
       this.expert.fecha_mov = moment(this.expert.fecha_mov).format('YYYY-MM-DD HH:mm:ss');
@@ -691,8 +691,8 @@ export default {
       let personResponse = await this.$store.dispatch('getPersonById', item.idp);
       personResponse = await personResponse.json();
       this.setPersonItems([personResponse]);
-      this.setPieceItems([item.ncatalogo])
       this.setPersonIdp(personResponse.idp);
+      this.setPieceItems([item.ncatalogo]);
       this.closeOverlay();
       this.closeFormDialog();
       this.expert = item;
