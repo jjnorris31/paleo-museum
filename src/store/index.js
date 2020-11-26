@@ -354,7 +354,31 @@ export default new Vuex.Store({
         return e;
       }
     },
-    async updatePiece(context, piece) {
+    async updatePiece(context, payload) {
+
+      let url = payload.piece.imagen;
+      console.log(payload.photoFile);
+      if (payload.photoFile) {
+        let formData = new FormData();
+        formData.append("file", payload.photoFile, payload.photoFile.name);
+        formData.append("name", payload.piece.ncatalogo);
+        try {
+          let res = await fetch('http://localhost:3000/images', {
+            headers: new Headers({
+              'Authorization': `Bearer ${context.state.token}`
+            }),
+            method: 'PUT',
+            body: formData,
+          });
+          url = await res.text();
+        } catch (e) {
+          this.showErrorNotification(`¡La pieza no se ha guardado! ERR: ${e.statusText}`)
+        }
+      }
+
+      payload.piece.imagen = url;
+      console.log(url);
+
       try {
         return await fetch('http://localhost:3000/forward', {
           headers: new Headers({
@@ -363,10 +387,10 @@ export default new Vuex.Store({
           }),
           method: 'POST',
           body: JSON.stringify({
-            table: `pieza/${piece.ncatalogo}`,
+            table: `pieza/${payload.piece.ncatalogo}`,
             options: {
               method: 'PUT',
-              body: JSON.stringify(piece),
+              body: JSON.stringify(payload.piece),
               headers: {
                 'Content-Type': 'application/json'
               }

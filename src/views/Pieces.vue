@@ -161,10 +161,19 @@
                           <!--suppress HtmlUnknownTag -->
                           <div class="col-12 d-flex no-gutters justify-center align-center flex-wrap">
                             <v-icon class="mb-2"
-                                    size="96">{{ photoFile !== null ? 'mdi-check' : 'mdi-image-outline' }}</v-icon>
-                            <div class="col-10 text-center input-label" v-if="photoFile === null">
+                                    size="96">
+                              {{ photoFile !== null ||
+                            (piece.imagen !== '' && piece.imagen) ? 'mdi-check' : 'mdi-image-outline' }}</v-icon>
+                            <div class="col-10 text-center input-label"
+                                 v-if="piece.imagen !== '' && piece.imagen">
+                              <span class="font-weight-bold">Ya existe un archivo</span>, para cambiarlo, sube una nueva imagen.
+                            </div>
+
+                            <div class="col-10 text-center input-label"
+                                 v-else-if="photoFile === null">
                               <span class="font-weight-bold">Elige un archivo</span> o arrástralo aquí
                             </div>
+
                             <div class="col-11 text-center caption"
                                  style="color: #828282"
                                  v-else>
@@ -568,7 +577,7 @@
                 width="700px">
         <v-card height="100%"
                 style="position: relative">
-          <v-img src="../assets/images/not_found.png"
+          <v-img :src="imageToShow"
                  height="200"
                  class="mb-4"
                  position="bottom center"
@@ -846,7 +855,7 @@
                     loading-text="Desenterrando los fósiles..."
                     :headers="tableColumnsToRender"
                     :items="pieces">
-                  <template v-slot:item.actions="{item}">
+                  <template v-slot:item.actions="{item}" v-if="user">
                     <v-menu
                         bottom
                         left>
@@ -1135,6 +1144,9 @@ export default {
         return x;
       })
     },
+    imageToShow() {
+      return this.indItem && this.indItem.imagen ? this.indItem.imagen : require('../assets/images/not_found.png');
+    },
     searchPattern() {
       return this.filterOptions.search.pattern;
     },
@@ -1174,14 +1186,16 @@ export default {
           this.$nextTick(() => this.tableColumnsSelected.pop())
         }
         this.tableColumnsToRender = [...this.tableColumnsSelected];
-        this.tableColumnsToRender.push(
-          {
-            text: 'Acciones',
-            align: 'center',
-            disabled: true,
-            sortable: false,
-            value: 'actions'
-          })
+        if (this.user) {
+          this.tableColumnsToRender.push(
+            {
+              text: 'Acciones',
+              align: 'center',
+              disabled: true,
+              sortable: false,
+              value: 'actions'
+            })
+        }
       },
       immediate: true,
     },
@@ -1609,6 +1623,7 @@ export default {
         this.setMainOverlayText('Guardando pieza');
         this.showMainOverlay();
         this.processPiece();
+        this.piece.imagen = await this.uploadPicture();
         let res = await this.$store.dispatch('savePiece', this.piece);
         if (res.ok) {
           this.hideMainOverlay();
@@ -1628,7 +1643,7 @@ export default {
       this.editDialogActive = false;
       this.setMainOverlayText('Actualizando pieza');
       this.showMainOverlay();
-      let res = await this.$store.dispatch('updatePiece', this.piece);
+      let res = await this.$store.dispatch('updatePiece', {piece: this.piece, photoFile: this.photoFile});
       if (res.ok) {
         this.options.page = 1;
         this.totalPieces = 25;
@@ -1659,6 +1674,28 @@ export default {
     },
     getFmtEmptyField(property) {
       return property === '' || !property ? null : property;
+    },
+    /**
+     * Upload a picture in the storage
+     */
+    async uploadPicture() {
+      let formData = new FormData();
+      let url = null;
+      formData.append("file", this.photoFile, this.photoFile.name);
+      formData.append("name", this.piece.ncatalogo);
+      try {
+        let res = await fetch('http://localhost:3000/images', {
+          headers: new Headers({
+            'Authorization': `Bearer ${this.token}`
+          }),
+          method: 'POST',
+          body: formData,
+        });
+        url = await res.text();
+      } catch (e) {
+        this.showErrorNotification(`¡La pieza no se ha guardado! ERR: ${e.statusText}`)
+      }
+      return url;
     },
     /**
      * Process the piece to change the empty fields to null

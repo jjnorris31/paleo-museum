@@ -43,7 +43,7 @@
                                 required
                                 type="text"
                                 validate-on-blur
-                                :rules="emailRules"
+                                :rules="[emailRules]"
                                 placeholder="test@mail.com"
                                 v-model="username"
                                 dense>
@@ -58,7 +58,7 @@
                   </div>
                   <v-text-field outlined
                                 :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                                :rules="passwordRules"
+                                :rules="[passwordRules]"
                                 validate-on-blur
                                 :type="showPassword ? 'text' : 'password'"
                                 @click:append="showPassword = !showPassword"
