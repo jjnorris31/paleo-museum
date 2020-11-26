@@ -603,7 +603,7 @@
                   :loading="loadingTable"
                   loader-height="4"
                   item-key="nombrecientifico"
-                  loading-text="Reuniendo las especies"
+                  loading-text="Encontrando las localidades"
                   :headers="tableColumnsToRender"
                   :items="locations">
                   <template v-slot:item.actions="{item}">
