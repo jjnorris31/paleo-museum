@@ -185,16 +185,44 @@
                           <!--suppress HtmlUnknownTag -->
                           <div class="col-12 d-flex no-gutters justify-center align-center flex-wrap">
                             <v-icon class="mb-2"
-                                    size="96">{{ photoFile !== null ? 'mdi-check' : 'mdi-image-outline' }}</v-icon>
-                            <div class="col-10 text-center input-label" v-if="photoFile === null">
-                              <span class="font-weight-bold">Elige un archivo</span> o arrástralo aquí
+                                    size="96">
+                              {{ photoFile !== null ? 'mdi-check' : 'mdi-image-outline' }}</v-icon>
+
+                            <div v-if="isEditingItem"
+                                 class="col-12 d-flex no-gutters justify-center">
+                              <div class="col-10 text-center input-label"
+                                   v-if="imageState === 'EXISTENT_IMAGE'">
+                                <span class="font-weight-bold">Ya existe un archivo</span>, para cambiarlo, sube una nueva imagen.
+                              </div>
+
+                              <div class="col-10 text-center input-label"
+                                   v-else-if="imageState === 'NOT_PHOTO'">
+                                <span class="font-weight-bold">Elige un archivo</span> o arrástralo aquí
+                              </div>
+
+                              <div class="col-11 text-center caption"
+                                   style="color: #828282"
+                                   v-else>
+                                <span>Archivo</span>: {{photoFile.name}}<br>
+                                <span>Tamaño</span>: {{fileSizeInMb(photoFile).toFixed(2)}}Mb
+                              </div>
                             </div>
-                            <div class="col-11 text-center caption"
-                                 style="color: #828282"
-                                 v-else>
-                              <span>Archivo</span>: {{photoFile.name}}<br>
-                              <span>Tamaño</span>: {{fileSizeInMb(photoFile).toFixed(2)}}Mb
+
+                            <div v-else
+                                 class="col-12 d-flex no-gutters justify-center">
+                              <div class="col-10 text-center input-label"
+                                   v-if="photoFile === null">
+                                <span class="font-weight-bold">Elige un archivo</span> o arrástralo aquí
+                              </div>
+
+                              <div class="col-11 text-center caption"
+                                   style="color: #828282"
+                                   v-else>
+                                <span>Archivo</span>: {{photoFile.name}}<br>
+                                <span>Tamaño</span>: {{fileSizeInMb(photoFile).toFixed(2)}}Mb
+                              </div>
                             </div>
+
                           </div>
                         </label>
                       </div>
@@ -310,7 +338,7 @@
                 width="700px">
         <v-card height="100%"
                 style="position: relative">
-          <v-img src="../assets/images/not_found.png"
+          <v-img :src="imageToShow"
                  height="225px"
                  position="bottom center"
                  class="mb-4"
@@ -669,11 +697,29 @@ export default {
     }
   },
   computed: {
+    imageState() {
+      if (this.isEditingItem) {
+        if (this.photoFile === null && (this.person.imagen === null || this.person.imagen === '')) {
+          // no new photo and no image of piece
+          return 'NOT_PHOTO';
+        } else if (this.photoFile !== null && (this.person.imagen === null || this.person.imagen === '')) {
+          // new photo and no image from piece
+          return 'NEW_IMAGE';
+        } else if (this.photoFile === null && (this.person.imagen !== null || this.person.imagen !== '')) {
+          // no new photo and image from piece
+          return 'EXISTENT_IMAGE';
+        }
+      }
+      return 'NEW_IMAGE';
+    },
     headersNoDisabled() {
       return this.headers.map(x => {
         x.disabled = false
         return x;
       })
+    },
+    imageToShow() {
+      return this.specieSelected && this.specieSelected.imagen ? this.specieSelected.imagen : require('../assets/images/not_found.png');
     },
     ...mapGetters(
       ['token']
@@ -729,8 +775,8 @@ export default {
      * @params item - The item to be modified
      */
     async openEditForm(item) {
-      this.setEditItem(item);
-      this.setOverlayText('Abriendo especie');
+      this.setEditItem(true);
+      this.setOverlayText('Abriendo persona');
       this.showOverlay();
       this.closeOverlay();
       this.closeFormDialog();
@@ -752,6 +798,7 @@ export default {
         this.setOverlayText('Guardando persona');
         this.showOverlay();
         this.processPerson();
+        this.person.imagen = await this.uploadPicture();
         let res = await this.$store.dispatch('savePerson', this.person);
         if (res.ok) {
           this.showSuccessNotification('La pieza ha sido guardada');
@@ -763,11 +810,36 @@ export default {
         await this.getPersonsFromDatabase();
       }
     },
+    /**
+     * Upload a picture in the storage
+     */
+    async uploadPicture() {
+      if (this.photoFile !== null) {
+        let formData = new FormData();
+        let url = null;
+        formData.append("file", this.photoFile, this.photoFile.name);
+        formData.append("name", this.person.idp);
+        try {
+          let res = await fetch('http://localhost:3000/images', {
+            headers: new Headers({
+              'Authorization': `Bearer ${this.token}`
+            }),
+            method: 'POST',
+            body: formData,
+          });
+          url = await res.text();
+        } catch (e) {
+          this.showErrorNotification(`¡La imagen no se ha guardado! ERR: ${e.statusText}`)
+        }
+        return url;
+      }
+      return null;
+    },
     async updatePerson() {
       this.editDialogActive = false;
       this.setOverlayText('Actualizando persona');
       this.showOverlay();
-      let res = await this.$store.dispatch('updatePerson', this.person);
+      let res = await this.$store.dispatch('updatePerson', {person: this.person, photoFile: this.photoFile});
       if (res.ok) {
         this.personOptions.page = 1;
         this.totalSpecies = 25;
@@ -778,6 +850,7 @@ export default {
       this.closeOverlay();
       this.closeEditItem();
       await this.getPersonsFromDatabase();
+      this.$router.go();
     },
     /**
      * Process the person to change the empty fields to null
@@ -829,7 +902,7 @@ export default {
     async deleteItem() {
       this.setOverlayText('Eliminando persona');
       this.showOverlay();
-      let res = await this.$store.dispatch('deletePerson', this.itemToDelete.idp);
+      let res = await this.$store.dispatch('deletePerson', this.itemToDelete);
       if (res.ok) {
         await this.getPersonsFromDatabase();
         this.showSuccessNotification('La persona ha sido eliminada correctamente');
