@@ -1280,7 +1280,7 @@ export default {
       let res;
 
       if (this.token) {
-        res = await fetch('http://localhost:3000/forward', {
+        res = await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${this.token}`,
             'Content-Type': 'application/json'
@@ -1294,7 +1294,7 @@ export default {
           })
         })
       } else {
-        res = await fetch('http://localhost:3000/public', {
+        res = await fetch('http://129.146.241.105:3000/public', {
           headers: new Headers({
             'Content-Type': 'application/json'
           }),
@@ -1338,7 +1338,7 @@ export default {
       // Lazily load input items
       this.loadingSpecies = true;
       let query = `{"nombrecientifico": {"$instr":"${v}"}}`;
-      fetch('http://localhost:3000/forward', {
+      fetch('http://129.146.241.105:3000/forward', {
         headers: new Headers({
           'Authorization': `Bearer ${this.token}`,
           'Content-Type': 'application/json'
@@ -1375,7 +1375,7 @@ export default {
         }
       });
 
-      fetch('http://localhost:3000/forward', {
+      fetch('http://129.146.241.105:3000/forward', {
         headers: new Headers({
           'Authorization': `Bearer ${this.token}`,
           'Content-Type': 'application/json'
@@ -1405,7 +1405,7 @@ export default {
       // Lazily load input items
       this.loadingState = true;
       let query = `{"pais":{"$instr":"${this.countrySelected}"}, "estado":{"$instr":"${v}"}}`;
-      fetch('http://localhost:3000/forward', {
+      fetch('http://129.146.241.105:3000/forward', {
         headers: new Headers({
           'Authorization': `Bearer ${this.token}`,
           'Content-Type': 'application/json'
@@ -1436,7 +1436,7 @@ export default {
       this.loadingMun = true;
       let query = `{"pais":{"$instr":"${this.countrySelected}"}, "estado":{"$instr":"${this.stateSelected}"},"municipio":{"$instr":"${v}"}}`;
 
-      fetch('http://localhost:3000/forward', {
+      fetch('http://129.146.241.105:3000/forward', {
         headers: new Headers({
           'Authorization': `Bearer ${this.token}`,
           'Content-Type': 'application/json'
@@ -1466,7 +1466,7 @@ export default {
       // Lazily load input items
       this.loadingLocal = true;
       let query = `{"idl":{"$instr":"${v}"}}`;
-      fetch('http://localhost:3000/forward', {
+      fetch('http://129.146.241.105:3000/forward', {
         headers: new Headers({
           'Authorization': `Bearer ${this.token}`,
           'Content-Type': 'application/json'
@@ -1708,7 +1708,7 @@ export default {
         formData.append("file", this.photoFile, this.photoFile.name);
         formData.append("name", this.piece.ncatalogo);
         try {
-          let res = await fetch('http://localhost:3000/images', {
+          let res = await fetch('http://129.146.241.105:3000/images', {
             headers: new Headers({
               'Authorization': `Bearer ${this.token}`
             }),
@@ -1756,7 +1756,7 @@ export default {
           let res;
 
           if (this.token) {
-            res = await fetch('http://localhost:3000/forward', {
+            res = await fetch('http://129.146.241.105:3000/forward', {
               headers: new Headers({
                 'Authorization': `Bearer ${this.token}`,
                 'Content-Type': 'application/json'
@@ -1771,7 +1771,7 @@ export default {
             })
           } else {
             console.log(query);
-            res = await fetch('http://localhost:3000/public', {
+            res = await fetch('http://129.146.241.105:3000/public', {
               headers: new Headers({
                 'Content-Type': 'application/json'
               }),

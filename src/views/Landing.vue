@@ -211,7 +211,7 @@ export default {
         this.setOverlayText('Iniciando sesión');
         this.showOverlay();
         try {
-          let res = await fetch('http://localhost:3000/login', {
+          let res = await fetch('http://129.146.241.105:3000/login', {
             headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json'
