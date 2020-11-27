@@ -598,13 +598,12 @@ export default new Vuex.Store({
     async deletePiece(context, piece) {
       if (piece.imagen) {
         try {
-          let res = await fetch(`http://localhost:3000/images/${piece.ncatalogo}`, {
+          await fetch(`http://localhost:3000/images/${piece.ncatalogo}`, {
             headers: new Headers({
               'Authorization': `Bearer ${context.state.token}`
             }),
             method: 'DELETE',
           });
-          console.log(await res.text());
         } catch (e) {
           this.showErrorNotification(`¡La foto no se ha eliminado! ERR: ${e.statusText}`)
         }
@@ -651,13 +650,12 @@ export default new Vuex.Store({
 
       if (person.imagen) {
         try {
-          let res = await fetch(`http://localhost:3000/images/${person.idp}`, {
+          await fetch(`http://localhost:3000/images/${person.idp}`, {
             headers: new Headers({
               'Authorization': `Bearer ${context.state.token}`
             }),
             method: 'DELETE',
           });
-          console.log(await res.text());
         } catch (e) {
           this.showErrorNotification(`¡La foto no se ha eliminado! ERR: ${e.statusText}`)
         }
