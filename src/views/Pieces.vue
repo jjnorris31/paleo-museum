@@ -1886,7 +1886,7 @@ export default {
           align: 'start',
           sortable: false,
           value: 'latitud',
-        })
+        });
     }
   }
 }

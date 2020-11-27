@@ -228,10 +228,11 @@
                 width="700px">
         <v-card height="100%"
                 style="position: relative">
-          <v-img src="../assets/images/not_found.svg"
+          <v-img src="../assets/images/not_found.png"
                  height="225px"
                  gradient="35deg, rgba(0,0,0,0.7035014689469538) 0%, rgba(234,242,23,0) 100%"
                  class="mb-4"
+                 position="bottom center"
                  cover>
             <div style="position: absolute; bottom: 0; left: 4px">
               <v-card-title class="white--text text-h3">

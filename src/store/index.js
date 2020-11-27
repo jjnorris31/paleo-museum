@@ -355,7 +355,6 @@ export default new Vuex.Store({
       }
     },
     async updatePiece(context, payload) {
-      console.log(payload.photoFile);
       if (payload.photoFile) {
         let formData = new FormData();
         formData.append("file", payload.photoFile, payload.photoFile.name);
@@ -441,7 +440,24 @@ export default new Vuex.Store({
         return e;
       }
     },
-    async updatePerson(context, person) {
+    async updatePerson(context, payload) {
+      if (payload.photoFile) {
+        let formData = new FormData();
+        formData.append("file", payload.photoFile, payload.photoFile.name);
+        formData.append("name", payload.person.idp);
+        try {
+          await fetch('http://localhost:3000/images', {
+            headers: new Headers({
+              'Authorization': `Bearer ${context.state.token}`
+            }),
+            method: 'PUT',
+            body: formData,
+          });
+        } catch (e) {
+          this.showErrorNotification(`¡La foto no se ha actualizado! ERR: ${e.statusText}`)
+        }
+      }
+
       try {
         return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
@@ -450,10 +466,10 @@ export default new Vuex.Store({
           }),
           method: 'POST',
           body: JSON.stringify({
-            table: `persona/${person.idp}`,
+            table: `persona/${payload.person.idp}`,
             options: {
               method: 'PUT',
-              body: JSON.stringify(person),
+              body: JSON.stringify(payload.person),
               headers: {
                 'Content-Type': 'application/json'
               }
@@ -580,16 +596,14 @@ export default new Vuex.Store({
       }
     },
     async deletePiece(context, piece) {
-
       if (piece.imagen) {
         try {
-          let res = await fetch(`http://129.146.241.105:3000/images/${piece.ncatalogo}`, {
+          await fetch(`http://129.146.241.105:3000/images/${piece.ncatalogo}`, {
             headers: new Headers({
               'Authorization': `Bearer ${context.state.token}`
             }),
             method: 'DELETE',
           });
-          console.log(await res.text());
         } catch (e) {
           this.showErrorNotification(`¡La foto no se ha eliminado! ERR: ${e.statusText}`)
         }
@@ -632,7 +646,21 @@ export default new Vuex.Store({
         return e;
       }
     },
-    async deletePerson(context, id) {
+    async deletePerson(context, person) {
+
+      if (person.imagen) {
+        try {
+          await fetch(`http://localhost:3000/images/${person.idp}`, {
+            headers: new Headers({
+              'Authorization': `Bearer ${context.state.token}`
+            }),
+            method: 'DELETE',
+          });
+        } catch (e) {
+          this.showErrorNotification(`¡La foto no se ha eliminado! ERR: ${e.statusText}`)
+        }
+      }
+
       try {
         return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
@@ -641,7 +669,7 @@ export default new Vuex.Store({
           }),
           method: 'POST',
           body: JSON.stringify({
-            table: `persona/${id}`,
+            table: `persona/${person.idp}`,
             options: {
               method: 'DELETE',
             }
