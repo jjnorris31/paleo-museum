@@ -637,10 +637,10 @@ export default {
      * Process the specie to change the empty fields to null
      */
     processStorage() {
-      this.storage.ida = this.getFmtEmptyField(this.storage.ida);
+      this.storage.ida = this.getFmtEmptyField(Number(this.storage.ida));
       this.storage.edificio = this.getFmtEmptyField(this.storage.edificio);
-      this.storage.estante = this.getFmtEmptyField(this.storage.estante);
-      this.storage.numanaquel = this.getFmtEmptyField(this.storage.numanaquel);
+      this.storage.estante = this.getFmtEmptyField(Number(this.storage.estante));
+      this.storage.numanaquel = this.getFmtEmptyField(Number(this.storage.numanaquel));
     },
     /**
      * Erase all the info of the piece selected
