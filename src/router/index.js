@@ -103,26 +103,34 @@ router.beforeEach(async (to, from, next) => {
   let admin = false;
   let email = null;
 
-  if (token) {
-    res = await fetch('http://localhost:3000/auth', {
-      method: 'GET',
-      headers: new Headers({
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      })
-    });
-    auth = res.status === 200;
-    let tmp = await res.json();
-    admin = tmp.tipo === 'ADMIN';
-    email = tmp.email;
+  try {
+    if (token) {
+      res = await fetch('http://localhost:3000/auth', {
+        method: 'GET',
+        headers: new Headers({
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        })
+      });
+      auth = res.status === 200;
+      let tmp = await res.json();
+      admin = tmp.tipo === 'ADMIN';
+      email = tmp.email;
+    }
+    store.commit('SET_USER', admin);
+    store.commit('SET_EMAIL', email);
+  } catch (e) {
+    localStorage.removeItem('museum_token');
+    await router.push('/');
   }
-  store.commit('SET_USER', admin);
-  store.commit('SET_EMAIL', email);
+
+
 
   if (to.matched.some(record => record.meta.authentication) && to.matched.some(record => record.meta.admin)) {
     if (!auth) { // not admin!
       next('/');
     } else if (auth && !admin){ // user logged
+      // do nothing
     } else {
       next();
     }
