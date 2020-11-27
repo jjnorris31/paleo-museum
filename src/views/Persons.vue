@@ -820,7 +820,7 @@ export default {
         formData.append("file", this.photoFile, this.photoFile.name);
         formData.append("name", this.person.idp);
         try {
-          let res = await fetch('http://localhost:3000/images', {
+          let res = await fetch('http://129.146.241.105:3000/images', {
             headers: new Headers({
               'Authorization': `Bearer ${this.token}`
             }),

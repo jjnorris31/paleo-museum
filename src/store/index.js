@@ -446,7 +446,7 @@ export default new Vuex.Store({
         formData.append("file", payload.photoFile, payload.photoFile.name);
         formData.append("name", payload.person.idp);
         try {
-          await fetch('http://localhost:3000/images', {
+          await fetch('http://129.146.241.105:3000/images', {
             headers: new Headers({
               'Authorization': `Bearer ${context.state.token}`
             }),
@@ -650,7 +650,7 @@ export default new Vuex.Store({
 
       if (person.imagen) {
         try {
-          await fetch(`http://localhost:3000/images/${person.idp}`, {
+          await fetch(`http://129.146.241.105:3000/images/${person.idp}`, {
             headers: new Headers({
               'Authorization': `Bearer ${context.state.token}`
             }),
