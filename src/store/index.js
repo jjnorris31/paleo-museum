@@ -135,7 +135,7 @@ export default new Vuex.Store({
     },
     async savePiece(context, piece) {
       try {
-        return await fetch('http://localhost:3000/forward', {
+        return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'
@@ -158,7 +158,7 @@ export default new Vuex.Store({
     },
     async saveSpecie(context, specie) {
       try {
-        return await fetch('http://localhost:3000/forward', {
+        return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'
@@ -181,7 +181,7 @@ export default new Vuex.Store({
     },
     async saveLocation(context, location) {
       try {
-        return await fetch('http://localhost:3000/forward', {
+        return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'
@@ -204,7 +204,7 @@ export default new Vuex.Store({
     },
     async saveStorage(context, storage) {
       try {
-        return await fetch('http://localhost:3000/forward', {
+        return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'
@@ -227,7 +227,7 @@ export default new Vuex.Store({
     },
     async savePerson(context, person) {
       try {
-        return await fetch('http://localhost:3000/forward', {
+        return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'
@@ -250,7 +250,7 @@ export default new Vuex.Store({
     },
     async saveUser(context, user) {
       try {
-        return await fetch('http://localhost:3000/register', {
+        return await fetch('http://129.146.241.105:3000/register', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'
@@ -264,7 +264,7 @@ export default new Vuex.Store({
     },
     async savePublication(context, publication) {
       try {
-        return await fetch('http://localhost:3000/forward', {
+        return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'
@@ -287,7 +287,7 @@ export default new Vuex.Store({
     },
     async saveCollector(context, collector) {
       try {
-        return await fetch('http://localhost:3000/forward', {
+        return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'
@@ -310,7 +310,7 @@ export default new Vuex.Store({
     },
     async saveDeterminator(context, determinator) {
       try {
-        return await fetch('http://localhost:3000/forward', {
+        return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'
@@ -333,7 +333,7 @@ export default new Vuex.Store({
     },
     async saveExpert(context, expert) {
       try {
-        return await fetch('http://localhost:3000/forward', {
+        return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'
@@ -360,7 +360,7 @@ export default new Vuex.Store({
         formData.append("file", payload.photoFile, payload.photoFile.name);
         formData.append("name", payload.piece.ncatalogo);
         try {
-          await fetch('http://localhost:3000/images', {
+          await fetch('http://129.146.241.105:3000/images', {
             headers: new Headers({
               'Authorization': `Bearer ${context.state.token}`
             }),
@@ -373,7 +373,7 @@ export default new Vuex.Store({
       }
 
       try {
-        return await fetch('http://localhost:3000/forward', {
+        return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'
@@ -396,7 +396,7 @@ export default new Vuex.Store({
     },
     async updateLocation(context, location) {
       try {
-        return await fetch('http://localhost:3000/forward', {
+        return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'
@@ -419,7 +419,7 @@ export default new Vuex.Store({
     },
     async updateStorage(context, storage) {
       try {
-        return await fetch('http://localhost:3000/forward', {
+        return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'
@@ -459,7 +459,7 @@ export default new Vuex.Store({
       }
 
       try {
-        return await fetch('http://localhost:3000/forward', {
+        return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'
@@ -482,7 +482,7 @@ export default new Vuex.Store({
     },
     async updateSpecie(context, piece) {
       try {
-        return await fetch('http://localhost:3000/forward', {
+        return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'
@@ -505,7 +505,7 @@ export default new Vuex.Store({
     },
     async updatePublication(context, publication) {
       try {
-        return await fetch('http://localhost:3000/forward', {
+        return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'
@@ -528,7 +528,7 @@ export default new Vuex.Store({
     },
     async updateCollector(context, collector) {
       try {
-        return await fetch('http://localhost:3000/forward', {
+        return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'
@@ -551,7 +551,7 @@ export default new Vuex.Store({
     },
     async updateDeterminator(context, determinator) {
       try {
-        return await fetch('http://localhost:3000/forward', {
+        return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'
@@ -574,7 +574,7 @@ export default new Vuex.Store({
     },
     async updateExpert(context, expert) {
       try {
-        return await fetch('http://localhost:3000/forward', {
+        return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'
@@ -598,7 +598,7 @@ export default new Vuex.Store({
     async deletePiece(context, piece) {
       if (piece.imagen) {
         try {
-          await fetch(`http://localhost:3000/images/${piece.ncatalogo}`, {
+          await fetch(`http://129.146.241.105:3000/images/${piece.ncatalogo}`, {
             headers: new Headers({
               'Authorization': `Bearer ${context.state.token}`
             }),
@@ -610,7 +610,7 @@ export default new Vuex.Store({
       }
 
       try {
-        return await fetch('http://localhost:3000/forward', {
+        return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'
@@ -629,7 +629,7 @@ export default new Vuex.Store({
     },
     async deleteUser(context, id) {
       try {
-        return await fetch('http://localhost:3000/forward', {
+        return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'
@@ -662,7 +662,7 @@ export default new Vuex.Store({
       }
 
       try {
-        return await fetch('http://localhost:3000/forward', {
+        return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'
@@ -681,7 +681,7 @@ export default new Vuex.Store({
     },
     async deleteSpecie(context, id) {
       try {
-        return await fetch('http://localhost:3000/forward', {
+        return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'
@@ -700,7 +700,7 @@ export default new Vuex.Store({
     },
     async deleteLocation(context, id) {
       try {
-        return await fetch('http://localhost:3000/forward', {
+        return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'
@@ -719,7 +719,7 @@ export default new Vuex.Store({
     },
     async deleteStorage(context, id) {
       try {
-        return await fetch('http://localhost:3000/forward', {
+        return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'
@@ -738,7 +738,7 @@ export default new Vuex.Store({
     },
     async deletePublication(context, id) {
       try {
-        return await fetch('http://localhost:3000/forward', {
+        return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'
@@ -757,7 +757,7 @@ export default new Vuex.Store({
     },
     async deleteCollector(context, id) {
       try {
-        return await fetch('http://localhost:3000/forward', {
+        return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'
@@ -776,7 +776,7 @@ export default new Vuex.Store({
     },
     async deleteDeterminator(context, id) {
       try {
-        return await fetch('http://localhost:3000/forward', {
+        return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'
@@ -795,7 +795,7 @@ export default new Vuex.Store({
     },
     async deleteExpert(context, expert) {
       try {
-        return await fetch('http://localhost:3000/forward', {
+        return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'
@@ -822,7 +822,7 @@ export default new Vuex.Store({
       let formData = new FormData();
       formData.append(`${imageInfo.id}`, imageInfo.file, `${imageInfo.id}`);
       try {
-        return await fetch("http://localhost:3000/images", {
+        return await fetch("http://129.146.241.105:3000/images", {
           method: 'POST',
           body: formData
         });
@@ -832,7 +832,7 @@ export default new Vuex.Store({
     },
     async getUbietyById(context, id) {
       try {
-        return await fetch('http://localhost:3000/forward', {
+        return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'
@@ -851,7 +851,7 @@ export default new Vuex.Store({
     },
     async getPersonById(context, id) {
       try {
-        return await fetch('http://localhost:3000/forward', {
+        return await fetch('http://129.146.241.105:3000/forward', {
           headers: new Headers({
             'Authorization': `Bearer ${context.state.token}`,
             'Content-Type': 'application/json'

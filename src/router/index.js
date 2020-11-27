@@ -130,7 +130,6 @@ router.beforeEach(async (to, from, next) => {
     if (!auth) { // not admin!
       next('/');
     } else if (auth && !admin){ // user logged
-      // do nothing
     } else {
       next();
     }
