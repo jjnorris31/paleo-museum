@@ -815,7 +815,7 @@ export default {
         }
       });
 
-      await fetch('http://129.146.241.105:3000/forward', {
+      await fetch('http://129.146.80.82:3000/forward', {
         headers: new Headers({
           'Authorization': `Bearer ${this.token}`,
           'Content-Type': 'application/json'
@@ -857,7 +857,7 @@ export default {
         // timeout to delay the search after the user ends typing
         this.timeout = setTimeout(async () => {
           let query = addQueryParameters(this.filterOptions);
-          await fetch('http://129.146.241.105:3000/forward', {
+          await fetch('http://129.146.80.82:3000/forward', {
             headers: new Headers({
               'Authorization': `Bearer ${this.token}`,
               'Content-Type': 'application/json'
@@ -889,7 +889,7 @@ export default {
       // Lazily load input items
       this.loadingPersons = true;
       let query = `{"nombrespila": {"$instr":"${v}"}}`;
-      fetch('http://129.146.241.105:3000/forward', {
+      fetch('http://129.146.80.82:3000/forward', {
         headers: new Headers({
           'Authorization': `Bearer ${this.token}`,
           'Content-Type': 'application/json'

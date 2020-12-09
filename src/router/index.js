@@ -105,7 +105,7 @@ router.beforeEach(async (to, from, next) => {
 
   try {
     if (token) {
-      res = await fetch('http://129.146.241.105:3000/auth', {
+      res = await fetch('http://129.146.80.82:3000/auth', {
         method: 'GET',
         headers: new Headers({
           'Authorization': `Bearer ${token}`,
