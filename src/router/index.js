@@ -114,7 +114,9 @@ router.beforeEach(async (to, from, next) => {
       });
       auth = res.status === 200;
       let tmp = await res.json();
-      admin = tmp.tipo === 'ADMIN';
+      console.log(tmp);
+      admin = tmp.tipo === 'ADMIN' || tmp.tipo === 'USUARIO';
+      store.commit('SET_ADMIN', tmp.tipo === 'ADMIN');
       email = tmp.email;
     }
     store.commit('SET_USER', admin);

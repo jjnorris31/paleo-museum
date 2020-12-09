@@ -44,7 +44,7 @@
               </v-list-group>
 
               <v-list-item @click="goToUsers()"
-                           v-if="user"
+                           v-if="admin"
                            color="primary"
                            class="list-item">
                 <v-list-item-icon>
@@ -118,7 +118,8 @@ export default {
     ...mapGetters([
       "user",
       "email",
-      "token"
+      "token",
+      "admin"
     ])
   },
 

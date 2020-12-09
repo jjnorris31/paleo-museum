@@ -16,7 +16,8 @@ export default new Vuex.Store({
     pieces: [],
     token: null,
     user: null,
-    email: null
+    email: null,
+    admin: false,
   },
   getters: {
     locations(state)  {
@@ -48,6 +49,9 @@ export default new Vuex.Store({
     },
     email: state => {
       return state.email;
+    },
+    admin: state => {
+      return state.admin;
     }
   },
   mutations: {
@@ -80,6 +84,9 @@ export default new Vuex.Store({
     },
     SET_EMAIL(state, email) {
       state.email = email;
+    },
+    SET_ADMIN(state, admin) {
+      state.admin = admin;
     }
   },
   actions: {
